@@ -3,11 +3,11 @@ package com.example.blog_example.model.dto.category.lower;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @AllArgsConstructor
 @Getter
 public class LowerCategoryDeleteDTO {
-    @NotNull
+    @Positive
     private Long lowerCategoryNo;
 }

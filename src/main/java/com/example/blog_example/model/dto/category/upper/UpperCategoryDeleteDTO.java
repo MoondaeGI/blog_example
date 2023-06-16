@@ -1,4 +1,4 @@
-package com.example.blog_example.model.dto.category.lower;
+package com.example.blog_example.model.dto.category.upper;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import javax.validation.constraints.Positive;
 
 @AllArgsConstructor
 @Getter
-public class LowerCategoryFindDTO {
+public class UpperCategoryDeleteDTO {
     @Positive
-    private Long lowerCategoryNo;
+    private Long upperCategoryNo;
 }
