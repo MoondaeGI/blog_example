@@ -2,7 +2,7 @@ package com.example.blog_example.model.domain.category.lower;
 
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.post.post.Post;
-import com.example.blog_example.model.domain.util.TimeStamp;
+import com.example.blog_example.util.TimeStamp;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +33,11 @@ public class LowerCategory extends TimeStamp {
 
     @Builder
     public LowerCategory(String name, UpperCategory upperCategory) {
+        this.name = name;
+        this.upperCategory = upperCategory;
+    }
+
+    public void update(String name, UpperCategory upperCategory) {
         this.name = name;
         this.upperCategory = upperCategory;
     }

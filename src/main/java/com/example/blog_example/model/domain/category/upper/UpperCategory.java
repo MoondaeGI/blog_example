@@ -2,7 +2,7 @@ package com.example.blog_example.model.domain.category.upper;
 
 import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.post.post.Post;
-import com.example.blog_example.model.domain.util.TimeStamp;
+import com.example.blog_example.util.TimeStamp;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

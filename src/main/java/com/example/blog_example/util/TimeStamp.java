@@ -1,4 +1,4 @@
-package com.example.blog_example.model.domain.util;
+package com.example.blog_example.util;
 
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;

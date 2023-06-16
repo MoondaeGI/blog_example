@@ -1,7 +1,55 @@
 package com.example.blog_example.service.post;
 
+import com.example.blog_example.model.domain.post.detail.PostDetail;
+import com.example.blog_example.model.domain.post.detail.PostDetailRepository;
+import com.example.blog_example.model.dto.post.detail.PostDetailAddViewsDTO;
+import com.example.blog_example.model.dto.post.detail.PostDetailFindDTO;
+import com.example.blog_example.model.dto.post.detail.PostDetailSaveDTO;
+import com.example.blog_example.model.dto.post.detail.PostDetailUpdateDTO;
+import com.example.blog_example.model.vo.post.PostDetailVO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Service
 public class PostDetailService {
+    private final PostDetailRepository postDetailRepository;
+
+    @Transactional(readOnly = true)
+    public PostDetailVO find(PostDetailFindDTO postDetailFindDTO) {
+        return PostDetailVO.from(
+                postDetailRepository.findById(postDetailFindDTO.getPostDetailNo())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다.")));
+    }
+
+    @Transactional
+    public Long save(PostDetailSaveDTO postDetailSaveDTO) {
+        return postDetailRepository.save(
+                PostDetail.builder()
+                        .title(postDetailSaveDTO.getTitle())
+                        .content(postDetailSaveDTO.getContent())
+                        .build())
+                .getPostDetailNo();
+    }
+
+    @Transactional
+    public Long update(PostDetailUpdateDTO postDetailUpdateDTO) {
+        PostDetail postDetail =
+                postDetailRepository.findById(postDetailUpdateDTO.getPostDetailNo())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        postDetail.update(postDetailUpdateDTO.getTitle(), postDetailUpdateDTO.getContent());
+
+        return postDetail.getPostDetailNo();
+    }
+
+    @Transactional
+    public Integer addViews(PostDetailAddViewsDTO postDetailAddViewsDTO) {
+        PostDetail postDetail =
+                postDetailRepository.findById(postDetailAddViewsDTO.getPostDetailNo())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        return postDetail.addViews();
+    }
 }

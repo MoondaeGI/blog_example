@@ -1,8 +1,8 @@
 package com.example.blog_example.model.domain.user;
 
-import com.example.blog_example.model.domain.comment.Comment;
+import com.example.blog_example.model.domain.post.comment.Comment;
 import com.example.blog_example.model.domain.post.post.Post;
-import com.example.blog_example.model.domain.util.TimeStamp;
+import com.example.blog_example.util.TimeStamp;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

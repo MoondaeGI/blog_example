@@ -25,7 +25,7 @@ public class PostDetail {
     private String content;
 
     @Column(name = "VIEWS")
-    private Long views;
+    private Integer views;
 
     @OneToOne(mappedBy = "postDetail", orphanRemoval = true)
     private Post post;
@@ -34,10 +34,20 @@ public class PostDetail {
     private List<File> files;
 
     @Builder
-    public PostDetail(String title, String content, Long views, Post post) {
+    public PostDetail(String title, String content) {
         this.title = title;
         this.content = content;
-        this.views = views;
-        this.post = post;
+        this.views = 0;
+    }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    public Integer addViews() {
+        this.views += 1;
+
+        return views;
     }
 }

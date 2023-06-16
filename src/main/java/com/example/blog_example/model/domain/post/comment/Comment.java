@@ -1,8 +1,8 @@
-package com.example.blog_example.model.domain.comment;
+package com.example.blog_example.model.domain.post.comment;
 
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.user.User;
-import com.example.blog_example.model.domain.util.TimeStamp;
+import com.example.blog_example.util.TimeStamp;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,5 +34,9 @@ public class Comment extends TimeStamp {
         this.content = content;
         this.user = user;
         this.post = post;
+    }
+
+    public void update(String content) {
+        this.content = content;
     }
 }

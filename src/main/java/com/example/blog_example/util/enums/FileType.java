@@ -1,4 +1,4 @@
-package com.example.blog_example.model.domain.util.enums;
+package com.example.blog_example.util.enums;
 
 public enum FileType {
     IMAGE,

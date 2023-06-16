@@ -1,8 +1,8 @@
 package com.example.blog_example.model.domain.post.file;
 
 import com.example.blog_example.model.domain.post.detail.PostDetail;
-import com.example.blog_example.model.domain.util.TimeStamp;
-import com.example.blog_example.model.domain.util.enums.FileType;
+import com.example.blog_example.util.TimeStamp;
+import com.example.blog_example.util.enums.FileType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
