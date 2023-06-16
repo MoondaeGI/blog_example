@@ -70,7 +70,7 @@ public class LowerCategoryService {
 
         lowerCategory.update(lowerCategoryUpdateDTO.getName(), upperCategory);
 
-        return lowerCategoryUpdateDTO.getLowerCategoryNo();
+        return lowerCategory.getLowerCategoryNo();
     }
 
     @Transactional
