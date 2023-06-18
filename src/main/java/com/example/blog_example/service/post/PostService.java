@@ -8,6 +8,8 @@ import com.example.blog_example.model.domain.post.detail.PostDetail;
 import com.example.blog_example.model.domain.post.detail.PostDetailRepository;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.post.PostRepository;
+import com.example.blog_example.model.domain.user.User;
+import com.example.blog_example.model.domain.user.UserRepository;
 import com.example.blog_example.model.dto.post.post.*;
 import com.example.blog_example.model.vo.post.PostVO;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class PostService {
     private final PostDetailRepository postDetailRepository;
     private final UpperCategoryRepository upperCategoryRepository;
     private final LowerCategoryRepository lowerCategoryRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public List<PostVO> findAll() {
@@ -75,11 +78,15 @@ public class PostService {
                 postDetailRepository.findById(postSaveDTO.getPostDetailNo())
                         .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
+        User user = userRepository.findById(postSaveDTO.getUserNo())
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
         return postRepository.save(
                 Post.builder()
                         .upperCategory(upperCategory)
                         .lowerCategory(lowerCategory)
                         .postDetail(postDetail)
+                        .user(user)
                         .build())
                 .getPostNo();
     }

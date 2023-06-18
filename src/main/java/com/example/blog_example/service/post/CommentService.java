@@ -1,4 +1,4 @@
-package com.example.blog_example.service.comment;
+package com.example.blog_example.service.post;
 
 import com.example.blog_example.model.domain.post.comment.Comment;
 import com.example.blog_example.model.domain.post.comment.CommentRepository;

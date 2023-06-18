@@ -14,4 +14,6 @@ public class PostSaveDTO {
     private Long lowerCategoryNo;
     @Positive
     private Long postDetailNo;
+    @Positive
+    private Long userNo;
 }
