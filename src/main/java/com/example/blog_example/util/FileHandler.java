@@ -2,7 +2,6 @@ package com.example.blog_example.util;
 
 import com.example.blog_example.model.domain.post.detail.PostDetail;
 import com.example.blog_example.model.domain.post.file.File;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +12,7 @@ import java.util.UUID;
 
 @Component
 public class FileHandler {
-    public File parseMultipartFile(PostDetail postDetail, MultipartFile multipartFile) {
+    public void parseMultipartFile(PostDetail postDetail, MultipartFile multipartFile) {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String currentDate = simpleDateFormat.format(new Date());
@@ -45,7 +44,7 @@ public class FileHandler {
             e.printStackTrace();
         }
 
-        return File.builder()
+        File.builder()
                 .name(uploadedFileName)
                 .originalFileName(originalFileName)
                 .path(path + "/" + uploadedFileName)
@@ -54,7 +53,7 @@ public class FileHandler {
                 .build();
     }
 
-    public void downloadFile() {}
+    public void parseFile(File file) {}
 
     public Boolean deleteFile(File file) {
         java.io.File deleteFile = new java.io.File(file.getPath());

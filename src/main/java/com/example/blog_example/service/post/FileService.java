@@ -53,7 +53,36 @@ public class FileService {
     }
 
     @Transactional
-    public void update(FileUpdateDTO fileUpdateDTO) {}
+    public void update(FileUpdateDTO fileUpdateDTO) {
+        PostDetail postDetail = postDetailRepository.findById(fileUpdateDTO.getPostDetailNo())
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        List<File> files = fileRepository.findByPostDetail(postDetail);
+
+        List<String> multipartFileNames = new ArrayList<>();
+        for (MultipartFile multipartFile : fileUpdateDTO.getMultipartFiles()) {
+            multipartFileNames.add(multipartFile.getName());
+        }
+
+        List<String> fileNames = new ArrayList<>();
+        for (File file : files) {
+            fileNames.add(file.getOriginalFileName());
+        }
+
+        for (MultipartFile multipartFile : fileUpdateDTO.getMultipartFiles()) {
+            String multipartFileName = multipartFile.getOriginalFilename();
+            if (!fileNames.contains(multipartFileName)) {
+                fileHandler.parseMultipartFile(postDetail, multipartFile);
+            }
+        }
+
+        for (File file : files) {
+            String fileName = file.getOriginalFileName();
+            if (!multipartFileNames.contains(fileName)) {
+                fileHandler.deleteFile(file);
+            }
+        }
+    }
 
     @Transactional
     public void delete(FileDeleteDTO fileDeleteDTO) {
