@@ -24,6 +24,9 @@ public class File extends TimeStamp {
     @Column(name = "ORIGINAL_FILE_NAME")
     private String originalFileName;
 
+    @Column(name = "PATH")
+    private String path;
+
     @Column(name = "TYPE")
     private FileType type;
 
@@ -35,9 +38,10 @@ public class File extends TimeStamp {
     private PostDetail postDetail;
 
     @Builder
-    public File(String name, String originalFileName, FileType type, Long size, PostDetail postDetail) {
+    public File(String name, String originalFileName, String path, FileType type, Long size, PostDetail postDetail) {
         this.name = name;
         this.originalFileName = originalFileName;
+        this.path = path;
         this.type = type;
         this.size = size;
         this.postDetail = postDetail;

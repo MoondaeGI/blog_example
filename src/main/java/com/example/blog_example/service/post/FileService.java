@@ -4,9 +4,7 @@ import com.example.blog_example.model.domain.post.detail.PostDetail;
 import com.example.blog_example.model.domain.post.detail.PostDetailRepository;
 import com.example.blog_example.model.domain.post.file.File;
 import com.example.blog_example.model.domain.post.file.FileRepository;
-import com.example.blog_example.model.dto.post.file.FileFindByPostDTO;
-import com.example.blog_example.model.dto.post.file.FileFindDTO;
-import com.example.blog_example.model.dto.post.file.FileSaveDTO;
+import com.example.blog_example.model.dto.post.file.*;
 import com.example.blog_example.model.vo.post.FileVO;
 import com.example.blog_example.util.FileHandler;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,9 +31,9 @@ public class FileService {
     }
 
     @Transactional(readOnly = true)
-    public List<FileVO> findByPostDetailNo(FileFindByPostDTO fileFindByPostDTO) {
+    public List<FileVO> findAll(FileFindAllDTO fileFindAllDTO) {
         PostDetail postDetail =
-                postDetailRepository.findById(fileFindByPostDTO.getPostDetailNo())
+                postDetailRepository.findById(fileFindAllDTO.getPostDetailNo())
                         .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         return fileRepository.findByPostDetail(postDetail).stream()
@@ -51,13 +48,34 @@ public class FileService {
                         .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         for(MultipartFile multipartFile : fileSaveDTO.getMultipartFiles()) {
-            fileHandler.uploadFile(postDetail, multipartFile);
+            fileHandler.parseMultipartFile(postDetail, multipartFile);
         }
     }
 
     @Transactional
-    public void update() {}
+    public void update(FileUpdateDTO fileUpdateDTO) {}
 
     @Transactional
-    public void delete() {}
+    public void delete(FileDeleteDTO fileDeleteDTO) {
+        File file = fileRepository.findById(fileDeleteDTO.getFileNo())
+                .orElseThrow(() -> new IllegalArgumentException("해당 파일이 없습니다."));
+
+        if (fileHandler.deleteFile(file)) {
+            fileRepository.delete(file);
+        }
+    }
+
+    @Transactional
+    public void deleteAll(FileDeleteAllDTO fileDeleteAllDTO) {
+        PostDetail postDetail = postDetailRepository.findById(fileDeleteAllDTO.getPostDetailNo())
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        List<File> files = fileRepository.findByPostDetail(postDetail);
+
+        for (File file : files) {
+            fileHandler.deleteFile(file);
+        }
+
+        fileRepository.deleteByPostDetail(postDetail);
+    }
 }

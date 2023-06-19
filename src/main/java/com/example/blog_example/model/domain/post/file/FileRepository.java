@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface FileRepository extends JpaRepository<File, Long> {
     List<File> findByPostDetail(PostDetail postDetail);
+
+    void deleteByPostDetail(PostDetail postDetail);
 }
