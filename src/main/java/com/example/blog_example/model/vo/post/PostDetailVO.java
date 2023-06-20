@@ -1,6 +1,7 @@
 package com.example.blog_example.model.vo.post;
 
 import com.example.blog_example.model.domain.post.detail.PostDetail;
+import com.example.blog_example.util.enums.OpenYN;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,9 @@ public class PostDetailVO {
     @NotNull
     private String content;
 
+    @NotNull
+    private OpenYN openYN;
+
     @PositiveOrZero
     private Integer views;
 
@@ -28,6 +32,7 @@ public class PostDetailVO {
         this.postDetailNo = postDetail.getPostDetailNo();
         this.title = postDetail.getTitle();
         this.content = postDetail.getContent();
+        this.openYN = postDetail.getOpenYN();
         this.views = postDetail.getViews();
     }
 

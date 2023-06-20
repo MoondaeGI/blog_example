@@ -43,6 +43,16 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
+    public List<PostVO> findByUser(PostFindByObjectDTO postFindByObjectDTO) {
+        User user = userRepository.findById(postFindByObjectDTO.getObjectNo())
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+        return postRepository.findByUser(user).stream()
+                .map(PostVO::from)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public List<PostVO> findByUpperCategory(PostFindByObjectDTO postFindByObjectDTO) {
         UpperCategory upperCategory =
                 upperCategoryRepository.findById(postFindByObjectDTO.getObjectNo())

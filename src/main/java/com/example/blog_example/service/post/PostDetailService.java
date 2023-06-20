@@ -11,10 +11,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class PostDetailService {
     private final PostDetailRepository postDetailRepository;
+
+    @Transactional(readOnly = true)
+    public List<PostDetailVO> findAll() {
+        return postDetailRepository.findAll().stream()
+                .map(PostDetailVO::from)
+                .collect(Collectors.toList());
+    }
 
     @Transactional(readOnly = true)
     public PostDetailVO find(PostDetailFindDTO postDetailFindDTO) {

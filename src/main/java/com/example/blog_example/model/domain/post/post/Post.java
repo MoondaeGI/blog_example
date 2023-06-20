@@ -37,8 +37,7 @@ public class Post extends TimeStamp {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Comment> comments;
 
-    @OneToOne
-    @JoinColumn(name = "POST_DETAIL_NO")
+    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private PostDetail postDetail;
 
     @Builder
