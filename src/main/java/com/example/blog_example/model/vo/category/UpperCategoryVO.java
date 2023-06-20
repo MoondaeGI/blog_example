@@ -4,17 +4,19 @@ import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
 public class UpperCategoryVO {
-    @NotNull
+    @Positive
     private Long upperCategoryNo;
 
-    @NotNull
+    @NotBlank
     private String name;
 
     @PastOrPresent

@@ -2,10 +2,14 @@ package com.example.blog_example.util;
 
 import com.example.blog_example.model.domain.post.detail.PostDetail;
 import com.example.blog_example.model.domain.post.file.File;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -29,7 +33,6 @@ public class FileHandler {
             }
         }
 
-        // String contentType = multipartFile.getContentType();
         String originalFileName = multipartFile.getOriginalFilename();
 
         UUID uuid = UUID.randomUUID();
@@ -53,7 +56,18 @@ public class FileHandler {
                 .build();
     }
 
-    public void parseFile(File file) {}
+    public byte[] parseImageFile(File file) {
+        byte[] imageFile = new byte[0];
+
+        try {
+            InputStream inputStream = Files.newInputStream(Paths.get(file.getPath()));
+            imageFile = IOUtils.toByteArray(inputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return imageFile;
+    }
 
     public Boolean deleteFile(File file) {
         java.io.File deleteFile = new java.io.File(file.getPath());

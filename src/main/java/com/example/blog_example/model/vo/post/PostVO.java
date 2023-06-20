@@ -4,6 +4,9 @@ import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.user.User;
+import com.example.blog_example.model.vo.category.LowerCategoryVO;
+import com.example.blog_example.model.vo.category.UpperCategoryVO;
+import com.example.blog_example.model.vo.user.UserVO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,13 +22,13 @@ public class PostVO {
     private Long postNo;
 
     @NotNull
-    private User user;
+    private UserVO userVO;
 
     @NotNull
-    private UpperCategory upperCategory;
+    private UpperCategoryVO upperCategoryVO;
 
     @NotNull
-    private LowerCategory lowerCategory;
+    private LowerCategoryVO lowerCategoryVO;
 
     @PastOrPresent
     private LocalDateTime regDt;
@@ -35,9 +38,9 @@ public class PostVO {
 
     private PostVO(Post post) {
         this.postNo = post.getPostNo();
-        this.user = post.getUser();
-        this.upperCategory = post.getUpperCategory();
-        this.lowerCategory = post.getLowerCategory();
+        this.userVO = UserVO.from(post.getUser());
+        this.upperCategoryVO = UpperCategoryVO.from(post.getUpperCategory());
+        this.lowerCategoryVO = LowerCategoryVO.from(post.getLowerCategory());
         this.regDt = post.getRegDt();
         this.modDt = post.getModDt();
     }
