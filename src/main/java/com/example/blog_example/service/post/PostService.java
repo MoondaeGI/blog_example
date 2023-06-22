@@ -84,10 +84,6 @@ public class PostService {
                 lowerCategoryRepository.findById(postSaveDTO.getLowerCategoryNo())
                         .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
-        PostDetail postDetail =
-                postDetailRepository.findById(postSaveDTO.getPostDetailNo())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-
         User user = userRepository.findById(postSaveDTO.getUserNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 

@@ -2,6 +2,8 @@ package com.example.blog_example.service.post;
 
 import com.example.blog_example.model.domain.post.detail.PostDetail;
 import com.example.blog_example.model.domain.post.detail.PostDetailRepository;
+import com.example.blog_example.model.domain.post.post.Post;
+import com.example.blog_example.model.domain.post.post.PostRepository;
 import com.example.blog_example.model.dto.post.detail.PostDetailAddViewsDTO;
 import com.example.blog_example.model.dto.post.detail.PostDetailFindDTO;
 import com.example.blog_example.model.dto.post.detail.PostDetailSaveDTO;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class PostDetailService {
     private final PostDetailRepository postDetailRepository;
+    private final PostRepository postRepository;
 
     @Transactional(readOnly = true)
     public List<PostDetailVO> findAll() {
@@ -35,8 +38,12 @@ public class PostDetailService {
 
     @Transactional
     public Long save(PostDetailSaveDTO postDetailSaveDTO) {
+        Post post = postRepository.findById(postDetailSaveDTO.getPostNo())
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
         return postDetailRepository.save(
                 PostDetail.builder()
+                        .post(post)
                         .title(postDetailSaveDTO.getTitle())
                         .content(postDetailSaveDTO.getContent())
                         .build())
