@@ -39,7 +39,8 @@ public class PostDetail {
     private List<File> files;
 
     @Builder
-    public PostDetail(String title, String content) {
+    public PostDetail(Post post, String title, String content) {
+        this.post = post;
         this.title = title;
         this.content = content;
         this.openYN = OpenYN.OPEN;

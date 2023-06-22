@@ -41,11 +41,10 @@ public class Post extends TimeStamp {
     private PostDetail postDetail;
 
     @Builder
-    public Post(User user, UpperCategory upperCategory, LowerCategory lowerCategory, PostDetail postDetail) {
+    public Post(User user, UpperCategory upperCategory, LowerCategory lowerCategory) {
         this.user = user;
         this.upperCategory = upperCategory;
         this.lowerCategory = lowerCategory;
-        this.postDetail = postDetail;
     }
 
     public void update(UpperCategory upperCategory, LowerCategory lowerCategory) {

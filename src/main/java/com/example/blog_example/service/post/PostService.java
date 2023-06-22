@@ -95,7 +95,6 @@ public class PostService {
                 Post.builder()
                         .upperCategory(upperCategory)
                         .lowerCategory(lowerCategory)
-                        .postDetail(postDetail)
                         .user(user)
                         .build())
                 .getPostNo();
