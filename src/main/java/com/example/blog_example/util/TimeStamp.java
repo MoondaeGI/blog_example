@@ -15,12 +15,10 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class TimeStamp {
     @CreationTimestamp
-    @Column(name = "REG_DT", nullable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL")
+    @Column(name = "REG_DT", nullable = false)
     private LocalDateTime regDt;
 
     @UpdateTimestamp
-    @Column(name = "MOD_DT", nullable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL")
+    @Column(name = "MOD_DT", nullable = false)
     private LocalDateTime modDt;
 }
