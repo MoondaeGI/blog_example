@@ -24,7 +24,7 @@ public class CommentVO {
     private UserVO userVO;
 
     @NotNull
-    private PostVO postVO;
+    private PostDetailVO postDetailVO;
 
     @PastOrPresent
     private LocalDateTime regDt;
@@ -36,7 +36,7 @@ public class CommentVO {
         this.commentNo = comment.getCommentNo();
         this.content = comment.getContent();
         this.userVO = UserVO.from(comment.getUser());
-        this.postVO = PostVO.from(comment.getPost());
+        this.postDetailVO = PostDetailVO.from(comment.getPostDetail());
         this.regDt = comment.getRegDt();
         this.modDt = comment.getModDt();
     }

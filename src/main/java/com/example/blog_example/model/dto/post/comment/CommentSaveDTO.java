@@ -12,5 +12,5 @@ public class CommentSaveDTO {
     @NotBlank
     private String content;
     @Positive
-    private Long postNo;
+    private Long postDetailNo;
 }

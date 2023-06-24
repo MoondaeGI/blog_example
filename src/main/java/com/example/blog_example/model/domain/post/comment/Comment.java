@@ -1,5 +1,6 @@
 package com.example.blog_example.model.domain.post.comment;
 
+import com.example.blog_example.model.domain.post.detail.PostDetail;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.user.User;
 import com.example.blog_example.util.TimeStamp;
@@ -27,13 +28,13 @@ public class Comment extends TimeStamp {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_NO")
-    private Post post;
+    private PostDetail postDetail;
 
     @Builder
-    public Comment(String content, User user, Post post) {
+    public Comment(String content, User user, PostDetail postDetail) {
         this.content = content;
         this.user = user;
-        this.post = post;
+        this.postDetail = postDetail;
     }
 
     public void update(String content) {

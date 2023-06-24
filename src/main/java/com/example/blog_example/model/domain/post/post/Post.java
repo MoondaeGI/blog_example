@@ -34,9 +34,6 @@ public class Post extends TimeStamp {
     @JoinColumn(name = "LOWER_CATEGORY_NO")
     private LowerCategory lowerCategory;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Comment> comments;
-
     @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private PostDetail postDetail;
 

@@ -1,5 +1,6 @@
 package com.example.blog_example.model.domain.post.detail;
 
+import com.example.blog_example.model.domain.post.comment.Comment;
 import com.example.blog_example.model.domain.post.file.File;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.util.enums.OpenYN;
@@ -34,6 +35,9 @@ public class PostDetail {
 
     @Column(name = "VIEWS")
     private Integer views;
+
+    @OneToMany(mappedBy = "postDetail", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Comment> comments;
 
     @OneToMany(mappedBy = "postDetail", orphanRemoval = true)
     private List<File> files;

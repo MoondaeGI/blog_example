@@ -2,8 +2,8 @@ package com.example.blog_example.service.post;
 
 import com.example.blog_example.model.domain.post.comment.Comment;
 import com.example.blog_example.model.domain.post.comment.CommentRepository;
-import com.example.blog_example.model.domain.post.post.Post;
-import com.example.blog_example.model.domain.post.post.PostRepository;
+import com.example.blog_example.model.domain.post.detail.PostDetail;
+import com.example.blog_example.model.domain.post.detail.PostDetailRepository;
 import com.example.blog_example.model.dto.post.comment.CommentDeleteDTO;
 import com.example.blog_example.model.dto.post.comment.CommentFindDTO;
 import com.example.blog_example.model.dto.post.comment.CommentSaveDTO;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
+    private final PostDetailRepository postDetailRepository;
 
     @Transactional(readOnly = true)
     public List<CommentVO> findAll() {
@@ -38,13 +38,13 @@ public class CommentService {
 
     @Transactional
     public Long save(CommentSaveDTO commentSaveDTO) {
-        Post post = postRepository.findById(commentSaveDTO.getPostNo())
+        PostDetail postDetail = postDetailRepository.findById(commentSaveDTO.getPostDetailNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         return commentRepository.save(
                 Comment.builder()
                         .content(commentSaveDTO.getContent())
-                        .post(post)
+                        .postDetail(postDetail)
                         .build())
                 .getCommentNo();
     }
