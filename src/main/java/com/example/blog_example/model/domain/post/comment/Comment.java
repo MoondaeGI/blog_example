@@ -16,18 +16,18 @@ import javax.persistence.*;
 @Table(name = "TB_COMMENT")
 public class Comment extends TimeStamp {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "COMMENT_NO")
+    @Column(name = "COMMENT_NO", nullable = false)
     private Long commentNo;
 
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT", nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_NO")
+    @JoinColumn(name = "USER_NO", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "POST_NO")
+    @JoinColumn(name = "POST_NO", nullable = false)
     private PostDetail postDetail;
 
     @Builder

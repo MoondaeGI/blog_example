@@ -19,19 +19,19 @@ import java.util.List;
 @Table(name = "TB_POST")
 public class Post extends TimeStamp {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "POST_NO")
+    @Column(name = "POST_NO", nullable = false)
     private Long postNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_NO")
+    @JoinColumn(name = "USER_NO", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UPPER_CATEGORY_NO")
+    @JoinColumn(name = "UPPER_CATEGORY_NO", nullable = false)
     private UpperCategory upperCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "LOWER_CATEGORY_NO")
+    @JoinColumn(name = "LOWER_CATEGORY_NO", nullable = false)
     private LowerCategory lowerCategory;
 
     @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

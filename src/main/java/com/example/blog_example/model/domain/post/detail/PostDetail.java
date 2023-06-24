@@ -17,23 +17,23 @@ import java.util.List;
 @Table(name = "TB_POST_DETAIL")
 public class PostDetail {
     @Id
-    @Column(name = "POST_NO")
+    @Column(name = "POST_NO", nullable = false)
     private Long postDetailNo;
 
     @OneToOne
     @MapsId @JoinColumn(name = "POST_NO")
     private Post post;
 
-    @Column(name = "TITLE")
+    @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT", nullable = false)
     private String content;
 
-    @Column(name = "OPEN_YN")
+    @Column(name = "OPEN_YN", nullable = false)
     private OpenYN openYN;
 
-    @Column(name = "VIEWS")
+    @Column(name = "VIEWS", nullable = false)
     private Integer views;
 
     @OneToMany(mappedBy = "postDetail", fetch = FetchType.LAZY, orphanRemoval = true)

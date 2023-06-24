@@ -15,23 +15,23 @@ import javax.persistence.*;
 @Table(name = "TB_FILE")
 public class File extends TimeStamp {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "FILE_NO")
+    @Column(name = "FILE_NO", nullable = false)
     private Long fileNo;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "ORIGINAL_FILE_NAME")
+    @Column(name = "ORIGINAL_FILE_NAME", nullable = false)
     private String originalFileName;
 
-    @Column(name = "PATH")
+    @Column(name = "PATH", nullable = false)
     private String path;
 
-    @Column(name = "SIZE")
+    @Column(name = "SIZE", nullable = false)
     private Long size;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "POST_NO")
+    @JoinColumn(name = "POST_NO", nullable = false)
     private PostDetail postDetail;
 
     @Builder

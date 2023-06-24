@@ -17,15 +17,15 @@ import java.util.List;
 @Table(name = "TB_LOWER_CATEGORY")
 public class LowerCategory extends TimeStamp {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "LOWER_CATEGORY_NO")
+    @Column(name = "LOWER_CATEGORY_NO", nullable = false)
     private Long lowerCategoryNo;
 
     @NotNull
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UPPER_CATEGORY_NO")
+    @JoinColumn(name = "UPPER_CATEGORY_NO", nullable = false)
     private UpperCategory upperCategory;
 
     @OneToMany(mappedBy = "lowerCategory")

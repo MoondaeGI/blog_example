@@ -16,10 +16,10 @@ import java.util.List;
 @Table(name = "TB_UPPER_CATEGORY")
 public class UpperCategory extends TimeStamp {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UPPER_CATEGORY_NO")
+    @Column(name = "UPPER_CATEGORY_NO", nullable = false)
     private Long upperCategoryNo;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "upperCategory", orphanRemoval = true)
