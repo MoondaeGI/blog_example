@@ -4,8 +4,6 @@ import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.lower.LowerCategoryRepository;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategoryRepository;
-import com.example.blog_example.model.domain.post.detail.PostDetail;
-import com.example.blog_example.model.domain.post.detail.PostDetailRepository;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.post.PostRepository;
 import com.example.blog_example.model.domain.user.User;
@@ -23,7 +21,6 @@ import java.util.stream.Collectors;
 @Service
 public class PostService {
     private final PostRepository postRepository;
-    private final PostDetailRepository postDetailRepository;
     private final UpperCategoryRepository upperCategoryRepository;
     private final LowerCategoryRepository lowerCategoryRepository;
     private final UserRepository userRepository;
