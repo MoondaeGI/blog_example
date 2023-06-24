@@ -10,13 +10,11 @@ import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.post.PostRepository;
 import com.example.blog_example.model.domain.user.User;
 import com.example.blog_example.model.domain.user.UserRepository;
-import com.example.blog_example.model.dto.post.detail.PostDetailFindDTO;
-import com.example.blog_example.model.dto.post.detail.PostDetailSaveDTO;
-import com.example.blog_example.model.dto.post.post.PostFindByObjectDTO;
-import com.example.blog_example.model.dto.post.post.PostFindDTO;
-import com.example.blog_example.model.dto.post.post.PostSaveDTO;
+import com.example.blog_example.model.dto.post.detail.*;
+import com.example.blog_example.model.dto.post.post.*;
 import com.example.blog_example.service.post.PostDetailService;
 import com.example.blog_example.service.post.PostService;
+import com.example.blog_example.util.enums.OpenYN;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -148,5 +146,77 @@ public class PostServiceTest {
         Long postDetailNo = postDetailService.save(postDetailSaveDTO);
 
         assertThat(postDetailNo).isEqualTo(postNo);
+    }
+
+    @Test
+    public void postUpdateTest() {
+        Long postNo = postRepository.findAll().get(0).getPostNo();
+        Long upperCategoryNo = upperCategoryRepository.save(
+                UpperCategory.builder()
+                        .name("test1")
+                        .build())
+                .getUpperCategoryNo();
+        Long lowerCategoryNo = lowerCategoryRepository.save(
+                LowerCategory.builder()
+                        .name("test1")
+                        .upperCategory(upperCategoryRepository.findAll().get(0))
+                        .build())
+                .getLowerCategoryNo();
+
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO(postNo, upperCategoryNo, lowerCategoryNo);
+
+        postService.update(postUpdateDTO);
+
+        assertThat(upperCategoryNo).isEqualTo(
+                postRepository.findAll().get(0).getUpperCategory().getUpperCategoryNo());
+        assertThat(lowerCategoryNo).isEqualTo(
+                postRepository.findAll().get(0).getLowerCategory().getLowerCategoryNo());
+    }
+
+    @Test
+    public void postDetailUpdateTest() {
+        Long postDetailNo = postDetailRepository.findAll().get(0).getPostDetailNo();
+        String title = "test1";
+        String content = "test1";
+
+        PostDetailUpdateDTO postDetailUpdateDTO = new PostDetailUpdateDTO(postDetailNo, title, content);
+
+        postDetailService.update(postDetailUpdateDTO);
+
+        assertThat(title).isEqualTo(postDetailRepository.findAll().get(0).getTitle());
+        assertThat(content).isEqualTo(postDetailRepository.findAll().get(0).getContent());
+    }
+
+    @Test
+    public void postDeleteTest() {
+        Long postNo = postRepository.findAll().get(0).getPostNo();
+
+        PostDeleteDTO postDeleteDTO = new PostDeleteDTO(postNo);
+
+        postService.delete(postDeleteDTO);
+
+        assertThat(postRepository.findById(postNo)).isEmpty();
+        assertThat(postDetailRepository.findById(postNo)).isEmpty();
+    }
+
+    @Test
+    public void postDetailAddViewsTest() {
+        Long postDetailNo = postDetailRepository.findAll().get(0).getPostDetailNo();
+
+        PostDetailAddViewsDTO postDetailAddViewsDTO = new PostDetailAddViewsDTO(postDetailNo);
+
+        assertThat(postDetailService.addViews(postDetailAddViewsDTO)).isEqualTo(1);
+        assertThat(postDetailService.addViews(postDetailAddViewsDTO)).isEqualTo(2);
+    }
+
+    @Test
+    public void postDetailChangeOpenYN() {
+        Long postDetailNo = postDetailRepository.findAll().get(0).getPostDetailNo();
+
+        PostDetailChangeOpenYNDTO postDetailChangeOpenYNDTO =
+                new PostDetailChangeOpenYNDTO(postDetailNo);
+
+        assertThat(postDetailService.changeOpenYN(postDetailChangeOpenYNDTO)).isEqualTo(OpenYN.CLOSE);
+        assertThat(postDetailService.changeOpenYN(postDetailChangeOpenYNDTO)).isEqualTo(OpenYN.OPEN);
     }
 }

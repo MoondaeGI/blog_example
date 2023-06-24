@@ -4,11 +4,9 @@ import com.example.blog_example.model.domain.post.detail.PostDetail;
 import com.example.blog_example.model.domain.post.detail.PostDetailRepository;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.post.PostRepository;
-import com.example.blog_example.model.dto.post.detail.PostDetailAddViewsDTO;
-import com.example.blog_example.model.dto.post.detail.PostDetailFindDTO;
-import com.example.blog_example.model.dto.post.detail.PostDetailSaveDTO;
-import com.example.blog_example.model.dto.post.detail.PostDetailUpdateDTO;
+import com.example.blog_example.model.dto.post.detail.*;
 import com.example.blog_example.model.vo.post.PostDetailVO;
+import com.example.blog_example.util.enums.OpenYN;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,5 +66,14 @@ public class PostDetailService {
                         .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         return postDetail.addViews();
+    }
+
+    @Transactional
+    public OpenYN changeOpenYN(PostDetailChangeOpenYNDTO postDetailChangeOpenYNDTO) {
+        PostDetail postDetail =
+                postDetailRepository.findById(postDetailChangeOpenYNDTO.getPostDetailNo())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        return postDetail.changeOpenYN();
     }
 }

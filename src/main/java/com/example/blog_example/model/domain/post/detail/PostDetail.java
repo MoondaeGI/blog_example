@@ -55,4 +55,10 @@ public class PostDetail {
     public Integer addViews() {
         return this.views += 1;
     }
+
+    public OpenYN changeOpenYN() {
+        this.openYN = (this.openYN == OpenYN.OPEN) ? OpenYN.CLOSE : OpenYN.OPEN;
+
+        return this.openYN;
+    }
 }
