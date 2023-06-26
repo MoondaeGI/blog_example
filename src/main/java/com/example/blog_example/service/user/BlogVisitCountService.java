@@ -7,12 +7,12 @@ import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountAddDTO;
 import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountByUserDTO;
 import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountDailyDTO;
-import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountSaveDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -21,15 +21,16 @@ public class BlogVisitCountService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void save(BlogVisitCountSaveDTO blogVisitCountSaveDTO) {
-        User user = userRepository.findById(blogVisitCountSaveDTO.getUserNo())
-                .orElseThrow(() -> new IllegalArgumentException("해당 블로그가 없습니다."));
+    public void save() {
+        List<User> userList = userRepository.findAll();
 
-        blogVisitCountRepository.save(
-                BlogVisitCount.builder()
-                        .user(user)
-                        .date(LocalDate.now())
-                        .build());
+        for (User user : userList) {
+            blogVisitCountRepository.save(
+                    BlogVisitCount.builder()
+                            .user(user)
+                            .date(LocalDate.now())
+                            .build());
+        }
     }
 
     @Transactional

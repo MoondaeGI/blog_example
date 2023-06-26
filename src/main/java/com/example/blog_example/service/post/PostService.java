@@ -140,7 +140,7 @@ public class PostService {
         return post.changeOpenYN();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Boolean isLiked(PostIsLikedDTO postIsLikedDTO) {
         Post post = postRepository.findById(postIsLikedDTO.getPostNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));

@@ -28,10 +28,10 @@ public class BlogVisitCount {
     private Integer visitCount;
 
     @Builder
-    public BlogVisitCount(User user, LocalDate date, Integer visitCount) {
+    public BlogVisitCount(User user, LocalDate date) {
         this.user = user;
         this.date = date;
-        this.visitCount = visitCount;
+        this.visitCount = 0;
     }
 
     public Integer addVisitCount() {
