@@ -78,7 +78,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentUpdateDTO.getCommentNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
 
-        comment.update(comment.getContent());
+        comment.update(commentUpdateDTO.getContent());
 
         return comment.getCommentNo();
     }

@@ -73,9 +73,9 @@ public class PostServiceTest {
 
     @AfterEach
     public void tearDown() {
-        upperCategoryRepository.deleteAll();
-        userRepository.deleteAll();
         postRepository.deleteAll();
+        userRepository.deleteAll();
+        upperCategoryRepository.deleteAll();
     }
 
     @Test
