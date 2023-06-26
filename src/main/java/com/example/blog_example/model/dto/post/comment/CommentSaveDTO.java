@@ -14,5 +14,5 @@ public class CommentSaveDTO {
     @Positive
     private Long userNo;
     @Positive
-    private Long postDetailNo;
+    private Long postNo;
 }

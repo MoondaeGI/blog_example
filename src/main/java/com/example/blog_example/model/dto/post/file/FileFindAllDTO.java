@@ -9,5 +9,5 @@ import javax.validation.constraints.Positive;
 @Getter
 public class FileFindAllDTO {
     @Positive
-    private Long postDetailNo;
+    private Long postNo;
 }

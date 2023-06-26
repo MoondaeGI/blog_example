@@ -29,7 +29,7 @@ public class FileVO {
     private Long size;
 
     @NotNull
-    private PostDetailVO postDetailVO;
+    private PostVO postVO;
 
     @PastOrPresent
     private LocalDateTime regDt;
@@ -43,7 +43,7 @@ public class FileVO {
         this.originalFileName = file.getOriginalFileName();
         this.path = file.getPath();
         this.size = file.getSize();
-        this.postDetailVO = PostDetailVO.from(file.getPostDetail());
+        this.postVO = PostVO.from(file.getPost());
         this.regDt = file.getRegDt();
         this.modDt = file.getModDt();
     }

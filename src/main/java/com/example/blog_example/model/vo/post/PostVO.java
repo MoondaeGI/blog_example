@@ -1,9 +1,6 @@
 package com.example.blog_example.model.vo.post;
 
-import com.example.blog_example.model.domain.category.lower.LowerCategory;
-import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.post.post.Post;
-import com.example.blog_example.model.domain.user.User;
 import com.example.blog_example.model.vo.category.LowerCategoryVO;
 import com.example.blog_example.model.vo.category.UpperCategoryVO;
 import com.example.blog_example.model.vo.user.UserVO;

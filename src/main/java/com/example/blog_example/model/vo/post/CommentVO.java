@@ -1,6 +1,6 @@
 package com.example.blog_example.model.vo.post;
 
-import com.example.blog_example.model.domain.post.comment.Comment;
+import com.example.blog_example.model.domain.comment.comment.Comment;
 import com.example.blog_example.model.vo.user.UserVO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ public class CommentVO {
     private UserVO userVO;
 
     @NotNull
-    private PostDetailVO postDetailVO;
+    private PostVO postVO;
 
     @PastOrPresent
     private LocalDateTime regDt;
@@ -36,7 +36,7 @@ public class CommentVO {
         this.commentNo = comment.getCommentNo();
         this.content = comment.getContent();
         this.userVO = UserVO.from(comment.getUser());
-        this.postDetailVO = PostDetailVO.from(comment.getPostDetail());
+        this.postVO = PostVO.from(comment.getPost());
         this.regDt = comment.getRegDt();
         this.modDt = comment.getModDt();
     }

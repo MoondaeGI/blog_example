@@ -1,7 +1,7 @@
 package com.example.blog_example.util;
 
-import com.example.blog_example.model.domain.post.detail.PostDetail;
 import com.example.blog_example.model.domain.post.file.File;
+import com.example.blog_example.model.domain.post.post.Post;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Component
 public class FileHandler {
-    public void parseMultipartFile(PostDetail postDetail, MultipartFile multipartFile) {
+    public void parseMultipartFile(Post post, MultipartFile multipartFile) {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String currentDate = simpleDateFormat.format(new Date());
@@ -52,7 +52,7 @@ public class FileHandler {
                 .originalFileName(originalFileName)
                 .path(path + "/" + uploadedFileName)
                 .size(multipartFile.getSize())
-                .postDetail(postDetail)
+                .post(post)
                 .build();
     }
 

@@ -14,5 +14,5 @@ public class FileSaveDTO {
     @NotNull
     private List<MultipartFile> multipartFiles;
     @Positive
-    private Long postDetailNo;
+    private Long postNo;
 }

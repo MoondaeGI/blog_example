@@ -1,8 +1,7 @@
 package com.example.blog_example.model.domain.post.file;
 
-import com.example.blog_example.model.domain.post.detail.PostDetail;
+import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.util.TimeStamp;
-import com.example.blog_example.util.enums.FileType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,14 +31,14 @@ public class File extends TimeStamp {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_NO", nullable = false)
-    private PostDetail postDetail;
+    private Post post;
 
     @Builder
-    public File(String name, String originalFileName, String path, Long size, PostDetail postDetail) {
+    public File(String name, String originalFileName, String path, Long size, Post post) {
         this.name = name;
         this.originalFileName = originalFileName;
         this.path = path;
         this.size = size;
-        this.postDetail = postDetail;
+        this.post = post;
     }
 }

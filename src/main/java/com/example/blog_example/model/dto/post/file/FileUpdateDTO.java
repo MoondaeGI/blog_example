@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 public class FileUpdateDTO {
     @Positive
-    private Long postDetailNo;
+    private Long postNo;
     @NotNull
     private List<MultipartFile> multipartFiles;
 }

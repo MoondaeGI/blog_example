@@ -23,10 +23,10 @@ public class UpperCategory extends TimeStamp {
     private String name;
 
     @OneToMany(mappedBy = "upperCategory", orphanRemoval = true)
-    private List<LowerCategory> lowerCategories;
+    private List<LowerCategory> lowerCategoryList;
 
     @OneToMany(mappedBy = "upperCategory", orphanRemoval = true)
-    private List<Post> posts;
+    private List<Post> postList;
 
     @Builder
     public UpperCategory(String name) {

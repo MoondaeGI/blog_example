@@ -3,6 +3,7 @@ package com.example.blog_example.model.dto.post.post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 @AllArgsConstructor
@@ -14,4 +15,8 @@ public class PostSaveDTO {
     private Long lowerCategoryNo;
     @Positive
     private Long userNo;
+    @NotBlank
+    private String title;
+    @NotBlank
+    private String content;
 }

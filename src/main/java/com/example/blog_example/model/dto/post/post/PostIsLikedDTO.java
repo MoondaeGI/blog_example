@@ -1,4 +1,4 @@
-package com.example.blog_example.model.dto.post.detail;
+package com.example.blog_example.model.dto.post.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import javax.validation.constraints.Positive;
 
 @AllArgsConstructor
 @Getter
-public class PostDetailFindDTO {
+public class PostIsLikedDTO {
     @Positive
-    private Long postDetailNo;
+    private Long postNo;
 }

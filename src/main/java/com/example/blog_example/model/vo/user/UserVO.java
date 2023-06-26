@@ -1,6 +1,6 @@
 package com.example.blog_example.model.vo.user;
 
-import com.example.blog_example.model.domain.user.User;
+import com.example.blog_example.model.domain.user.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

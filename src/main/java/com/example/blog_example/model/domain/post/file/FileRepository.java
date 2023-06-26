@@ -1,12 +1,12 @@
 package com.example.blog_example.model.domain.post.file;
 
-import com.example.blog_example.model.domain.post.detail.PostDetail;
+import com.example.blog_example.model.domain.post.post.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface FileRepository extends JpaRepository<File, Long> {
-    List<File> findByPostDetail(PostDetail postDetail);
+    List<File> findByPost(Post post);
 
-    void deleteByPostDetail(PostDetail postDetail);
+    void deleteByPost(Post post);
 }

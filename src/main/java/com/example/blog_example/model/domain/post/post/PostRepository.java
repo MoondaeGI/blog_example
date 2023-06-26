@@ -2,7 +2,7 @@ package com.example.blog_example.model.domain.post.post;
 
 import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
-import com.example.blog_example.model.domain.user.User;
+import com.example.blog_example.model.domain.user.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

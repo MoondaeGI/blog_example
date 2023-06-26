@@ -1,11 +1,12 @@
 package com.example.blog_example.service.post;
 
-import com.example.blog_example.model.domain.post.comment.Comment;
-import com.example.blog_example.model.domain.post.comment.CommentRepository;
-import com.example.blog_example.model.domain.post.detail.PostDetail;
-import com.example.blog_example.model.domain.post.detail.PostDetailRepository;
-import com.example.blog_example.model.domain.user.User;
-import com.example.blog_example.model.domain.user.UserRepository;
+import com.example.blog_example.model.domain.comment.comment.Comment;
+import com.example.blog_example.model.domain.comment.comment.CommentRepository;
+import com.example.blog_example.model.domain.comment.commentLiked.CommentLikedRepository;
+import com.example.blog_example.model.domain.post.post.Post;
+import com.example.blog_example.model.domain.post.post.PostRepository;
+import com.example.blog_example.model.domain.user.user.User;
+import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.post.comment.*;
 import com.example.blog_example.model.vo.post.CommentVO;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,9 @@ import java.util.stream.Collectors;
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final PostDetailRepository postDetailRepository;
+    private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentLikedRepository commentLikedRepository;
 
     @Transactional(readOnly = true)
     public List<CommentVO> findAll() {
@@ -37,11 +39,11 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommentVO> findByPostDetail(CommentFindByObjectDTO commentFindByObjectDTO) {
-        PostDetail postDetail = postDetailRepository.findById(commentFindByObjectDTO.getObjectNo())
+    public List<CommentVO> findByPost(CommentFindByObjectDTO commentFindByObjectDTO) {
+        Post post = postRepository.findById(commentFindByObjectDTO.getObjectNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
-        return commentRepository.findByPostDetail(postDetail).stream()
+        return commentRepository.findByPost(post).stream()
                 .map(CommentVO::from)
                 .collect(Collectors.toList());
     }
@@ -61,14 +63,14 @@ public class CommentService {
         User user = userRepository.findById(commentSaveDTO.getUserNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 
-        PostDetail postDetail = postDetailRepository.findById(commentSaveDTO.getPostDetailNo())
+        Post post = postRepository.findById(commentSaveDTO.getPostNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         return commentRepository.save(
                 Comment.builder()
                         .content(commentSaveDTO.getContent())
                         .user(user)
-                        .postDetail(postDetail)
+                        .post(post)
                         .build())
                 .getCommentNo();
     }
@@ -89,5 +91,13 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
 
         commentRepository.delete(comment);
+    }
+
+    @Transactional
+    public Boolean isLiked(CommentIsLikedDTO commentIsLikedDTO) {
+        Comment comment = commentRepository.findById(commentIsLikedDTO.getCommentNo())
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
+
+        return commentLikedRepository.findByComment(comment) != null;
     }
 }

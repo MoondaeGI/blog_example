@@ -29,7 +29,7 @@ public class LowerCategory extends TimeStamp {
     private UpperCategory upperCategory;
 
     @OneToMany(mappedBy = "lowerCategory")
-    private List<Post> posts;
+    private List<Post> postList;
 
     @Builder
     public LowerCategory(String name, UpperCategory upperCategory) {

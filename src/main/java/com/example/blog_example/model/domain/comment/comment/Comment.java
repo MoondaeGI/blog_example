@@ -1,14 +1,15 @@
-package com.example.blog_example.model.domain.post.comment;
+package com.example.blog_example.model.domain.comment.comment;
 
-import com.example.blog_example.model.domain.post.detail.PostDetail;
+import com.example.blog_example.model.domain.comment.commentLiked.CommentLiked;
 import com.example.blog_example.model.domain.post.post.Post;
-import com.example.blog_example.model.domain.user.User;
+import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.util.TimeStamp;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -28,13 +29,16 @@ public class Comment extends TimeStamp {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_NO", nullable = false)
-    private PostDetail postDetail;
+    private Post post;
+
+    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentLiked> commentLikedList;
 
     @Builder
-    public Comment(String content, User user, PostDetail postDetail) {
+    public Comment(String content, User user, Post post) {
         this.content = content;
         this.user = user;
-        this.postDetail = postDetail;
+        this.post = post;
     }
 
     public void update(String content) {
