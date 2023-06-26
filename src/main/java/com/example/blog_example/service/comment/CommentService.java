@@ -1,4 +1,4 @@
-package com.example.blog_example.service.post;
+package com.example.blog_example.service.comment;
 
 import com.example.blog_example.model.domain.comment.comment.Comment;
 import com.example.blog_example.model.domain.comment.comment.CommentRepository;
@@ -7,6 +7,7 @@ import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.post.PostRepository;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
+import com.example.blog_example.model.dto.comment.comment.*;
 import com.example.blog_example.model.dto.post.comment.*;
 import com.example.blog_example.model.vo.post.CommentVO;
 import lombok.RequiredArgsConstructor;
@@ -93,7 +94,7 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Boolean isLiked(CommentIsLikedDTO commentIsLikedDTO) {
         Comment comment = commentRepository.findById(commentIsLikedDTO.getCommentNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));

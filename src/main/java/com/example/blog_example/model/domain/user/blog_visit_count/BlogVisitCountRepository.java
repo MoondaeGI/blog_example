@@ -7,5 +7,5 @@ import java.time.LocalDate;
 
 public interface BlogVisitCountRepository extends JpaRepository<BlogVisitCount, Long> {
     Long countByUser(User user);
-    Long countByUserAndDate(User user, LocalDate localDate);
+    BlogVisitCount findByUserAndDate(User user, LocalDate date);
 }

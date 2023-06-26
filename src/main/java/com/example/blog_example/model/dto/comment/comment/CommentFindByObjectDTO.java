@@ -1,4 +1,4 @@
-package com.example.blog_example.model.dto.post.comment;
+package com.example.blog_example.model.dto.comment.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import javax.validation.constraints.Positive;
 
 @AllArgsConstructor
 @Getter
-public class CommentFindDTO {
+public class CommentFindByObjectDTO {
     @Positive
-    private Long commentNo;
+    private Long objectNo;
 }
