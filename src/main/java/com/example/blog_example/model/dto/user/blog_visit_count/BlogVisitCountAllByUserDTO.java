@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class BlogVisitCountByUserDTO {
+public class BlogVisitCountAllByUserDTO {
     Long userNo;
 }
