@@ -8,10 +8,15 @@ import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.post.postLiked.PostLikedCountDTO;
 import com.example.blog_example.model.dto.post.postLiked.PostLikedDeleteDTO;
+import com.example.blog_example.model.dto.post.postLiked.PostLikedFindPostByUserDTO;
 import com.example.blog_example.model.dto.post.postLiked.PostLikedSaveDTO;
+import com.example.blog_example.model.vo.post.PostVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -19,6 +24,16 @@ public class PostLikedService {
     private final PostLikedRepository postLikedRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+
+    @Transactional(readOnly = true)
+    public List<PostVO> findPostByUser(PostLikedFindPostByUserDTO postLikedFindPostByUserDTO) {
+        User user = userRepository.findById(postLikedFindPostByUserDTO.getUserNo())
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+        return postLikedRepository.findPostByUser(user).stream()
+                .map(PostVO::from)
+                .collect(Collectors.toList());
+    }
 
     @Transactional(readOnly = true)
     public Integer countByPost(PostLikedCountDTO postLikedCountDTO) {
