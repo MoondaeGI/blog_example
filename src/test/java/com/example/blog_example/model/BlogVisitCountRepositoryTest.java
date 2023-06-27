@@ -47,6 +47,8 @@ public class BlogVisitCountRepositoryTest {
 
         assertThat(blogVisitCount.addVisitCount()).isEqualTo(1);
         assertThat(blogVisitCount.addVisitCount()).isEqualTo(2);
+
+        assertThat(blogVisitCountRepository.findAll().get(0).getVisitCount()).isEqualTo(2);
     }
 
     @Test
@@ -73,6 +75,7 @@ public class BlogVisitCountRepositoryTest {
         assertThat(blogVisitCountRepository.sumVisitCountByUser(user)).isEqualTo(0);
 
         BlogVisitCount blogVisitCount = blogVisitCountRepository.findAll().get(0);
+
         blogVisitCount.addVisitCount();
 
         assertThat(blogVisitCountRepository.sumVisitCountByUser(user)).isEqualTo(1);

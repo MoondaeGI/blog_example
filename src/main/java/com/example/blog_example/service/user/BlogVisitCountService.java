@@ -5,7 +5,7 @@ import com.example.blog_example.model.domain.user.blog_visit_count.BlogVisitCoun
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountAddDTO;
-import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountByUserDTO;
+import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountAllByUserDTO;
 import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountDailyDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -45,11 +45,11 @@ public class BlogVisitCountService {
     }
 
     @Transactional(readOnly = true)
-    public Integer countAll(BlogVisitCountByUserDTO blogVisitCountByUserDTO) {
-        User user = userRepository.findById(blogVisitCountByUserDTO.getUserNo())
+    public Integer countAllVisitByUser(BlogVisitCountAllByUserDTO blogVisitCountAllByUserDTO) {
+        User user = userRepository.findById(blogVisitCountAllByUserDTO.getUserNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 블로그가 없습니다."));
 
-        return blogVisitCountRepository.countByUser(user).intValue();
+        return blogVisitCountRepository.sumVisitCountByUser(user).intValue();
     }
 
     @Transactional(readOnly = true)
