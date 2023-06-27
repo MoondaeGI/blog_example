@@ -8,7 +8,6 @@ import com.example.blog_example.model.domain.post.post.PostRepository;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.comment.comment.*;
-import com.example.blog_example.model.dto.post.comment.*;
 import com.example.blog_example.model.vo.post.CommentVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
