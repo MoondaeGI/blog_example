@@ -27,6 +27,8 @@ public class BlogVisitCountRepositoryTest {
                 User.builder()
                         .name("test")
                         .blogName("test")
+                        .email("test")
+                        .password("test")
                         .build());
 
         blogVisitCountRepository.save(

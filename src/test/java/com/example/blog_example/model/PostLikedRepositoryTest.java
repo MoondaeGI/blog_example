@@ -35,6 +35,8 @@ public class PostLikedRepositoryTest {
                 User.builder()
                         .name("test")
                         .blogName("test")
+                        .email("test")
+                        .password("test")
                         .build());
 
         UpperCategory upperCategory = upperCategoryRepository.save(
@@ -110,6 +112,8 @@ public class PostLikedRepositoryTest {
                 User.builder()
                         .name("test1")
                         .blogName("test1")
+                        .email("test")
+                        .password("test")
                         .build());
 
         postLikedRepository.save(

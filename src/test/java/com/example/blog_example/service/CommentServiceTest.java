@@ -42,6 +42,8 @@ public class CommentServiceTest {
                 User.builder()
                         .name("test")
                         .blogName("test")
+                        .email("test")
+                        .password("test")
                         .build());
 
         UpperCategory upperCategory = upperCategoryRepository.save(

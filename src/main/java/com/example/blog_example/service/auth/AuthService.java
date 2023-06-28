@@ -18,7 +18,13 @@ public class AuthService {
     public String signup(UserSignupDTO userSignUpDTO) {
         if (userRepository.existsByEmail(userSignUpDTO.getEmail())) return null;
 
-        User user = new User(userSignUpDTO);
+        User user = User.builder()
+                .name(userSignUpDTO.getName())
+                .blogName(userSignUpDTO.getBlogName())
+                .email(userSignUpDTO.getEmail())
+                .password(userSignUpDTO.getPassword())
+                .build();
+
         user.encryptPassword(passwordEncoder);
 
         return userRepository.save(user)

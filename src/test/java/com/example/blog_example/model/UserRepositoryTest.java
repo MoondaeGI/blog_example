@@ -2,7 +2,6 @@ package com.example.blog_example.model;
 
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
-import com.example.blog_example.model.dto.auth.UserSignupDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,10 +32,13 @@ public class UserRepositoryTest {
     public void passwordEncodeTest() {
         String password = "1234";
 
-        UserSignupDTO userSignupDTO =
-                new UserSignupDTO("test", "test", "test1234@test.com", password);
+        User user = User.builder()
+                .name("test")
+                .blogName("test")
+                .email("test1234@test.com")
+                .password(password)
+                .build();
 
-        User user = new User(userSignupDTO);
         user.encryptPassword(passwordEncoder);
 
         assertThat(password).isNotEqualTo(user.getPassword());

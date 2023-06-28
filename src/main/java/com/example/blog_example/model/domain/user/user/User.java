@@ -5,7 +5,7 @@ import com.example.blog_example.model.domain.comment.liked.CommentLiked;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.liked.PostLiked;
 import com.example.blog_example.model.domain.user.blog_visit_count.BlogVisitCount;
-import com.example.blog_example.model.dto.user.user.UserSignupDTO;
+import com.example.blog_example.model.dto.auth.UserSignupDTO;
 import com.example.blog_example.util.TimeStamp;
 import com.example.blog_example.util.enums.Role;
 import lombok.Builder;
@@ -57,16 +57,11 @@ public class User extends TimeStamp {
     private List<CommentLiked> commentLikedList;
 
     @Builder
-    public User(String name, String blogName) {
+    public User(String name, String blogName, String email, String password) {
         this.name = name;
         this.blogName = blogName;
-    }
-
-    public User(UserSignupDTO userSignUpDTO) {
-        this.name = userSignUpDTO.getName();
-        this.blogName = userSignUpDTO.getBlogName();
-        this.email = userSignUpDTO.getEmail();
-        this.password = userSignUpDTO.getPassword();
+        this.email = email;
+        this.password = password;
         this.role = Role.USER;
     }
 
