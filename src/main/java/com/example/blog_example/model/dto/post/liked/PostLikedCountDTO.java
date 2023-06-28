@@ -1,4 +1,4 @@
-package com.example.blog_example.model.dto.post.postLiked;
+package com.example.blog_example.model.dto.post.liked;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

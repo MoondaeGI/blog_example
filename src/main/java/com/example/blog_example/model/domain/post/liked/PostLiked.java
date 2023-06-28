@@ -1,4 +1,4 @@
-package com.example.blog_example.model.domain.post.postLiked;
+package com.example.blog_example.model.domain.post.liked;
 
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.user.user.User;

@@ -6,20 +6,21 @@ import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategoryRepository;
 import com.example.blog_example.model.domain.comment.comment.Comment;
 import com.example.blog_example.model.domain.comment.comment.CommentRepository;
-import com.example.blog_example.model.domain.comment.commentLiked.CommentLiked;
-import com.example.blog_example.model.domain.comment.commentLiked.CommentLikedRepository;
+import com.example.blog_example.model.domain.comment.liked.CommentLiked;
+import com.example.blog_example.model.domain.comment.liked.CommentLikedRepository;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.post.PostRepository;
-import com.example.blog_example.model.domain.post.postLiked.PostLiked;
-import com.example.blog_example.model.domain.post.postLiked.PostLikedRepository;
+import com.example.blog_example.model.domain.post.liked.PostLiked;
+import com.example.blog_example.model.domain.post.liked.PostLikedRepository;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
-import com.example.blog_example.model.dto.comment.commentLiked.CommentLikedCountDTO;
-import com.example.blog_example.model.dto.comment.commentLiked.CommentLikedDeleteDTO;
-import com.example.blog_example.model.dto.comment.commentLiked.CommentLikedSaveDTO;
-import com.example.blog_example.model.dto.post.postLiked.PostLikedCountDTO;
-import com.example.blog_example.model.dto.post.postLiked.PostLikedDeleteDTO;
-import com.example.blog_example.model.dto.post.postLiked.PostLikedSaveDTO;
+import com.example.blog_example.model.dto.comment.liked.CommentLikedCountDTO;
+import com.example.blog_example.model.dto.comment.liked.CommentLikedDeleteDTO;
+import com.example.blog_example.model.dto.comment.liked.CommentLikedSaveDTO;
+import com.example.blog_example.model.dto.post.liked.PostLikedCountDTO;
+import com.example.blog_example.model.dto.post.liked.PostLikedDeleteDTO;
+import com.example.blog_example.model.dto.post.liked.PostLikedFindPostByUserDTO;
+import com.example.blog_example.model.dto.post.liked.PostLikedSaveDTO;
 import com.example.blog_example.service.comment.CommentLikedService;
 import com.example.blog_example.service.post.PostLikedService;
 import org.junit.jupiter.api.AfterEach;
@@ -195,5 +196,32 @@ public class LikedServiceTest {
         commentLikedService.delete(commentLikedDeleteDTO);
 
         assertThat(commentLikedRepository.findByComment(comment)).isNull();
+    }
+
+    @Test
+    public void findPostByUserTest() {
+        User user = userRepository.findAll().get(0);
+        Long userNo = user.getUserNo();
+
+        PostLikedFindPostByUserDTO postLikedFindPostByUserDTO = new PostLikedFindPostByUserDTO(userNo);
+
+        assertThat(postLikedService.findPostByUser(postLikedFindPostByUserDTO).size()).isEqualTo(1);
+
+        Post post = postRepository.save(
+                Post.builder()
+                        .user(user)
+                        .upperCategory(upperCategoryRepository.findAll().get(0))
+                        .lowerCategory(lowerCategoryRepository.findAll().get(0))
+                        .title("test1")
+                        .content("test1")
+                        .build());
+
+        postLikedRepository.save(
+                PostLiked.builder()
+                        .user(user)
+                        .post(post)
+                        .build());
+
+        assertThat(postLikedService.findPostByUser(postLikedFindPostByUserDTO).size()).isEqualTo(2);
     }
 }

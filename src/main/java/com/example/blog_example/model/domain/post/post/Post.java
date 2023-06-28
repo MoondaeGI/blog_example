@@ -3,7 +3,8 @@ package com.example.blog_example.model.domain.post.post;
 import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.comment.comment.Comment;
-import com.example.blog_example.model.domain.post.postLiked.PostLiked;
+import com.example.blog_example.model.domain.post.file.File;
+import com.example.blog_example.model.domain.post.liked.PostLiked;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.util.TimeStamp;
 import com.example.blog_example.util.enums.OpenYN;
@@ -41,6 +42,7 @@ public class Post extends TimeStamp {
     @Column(name = "CONTENT", nullable = false)
     private String content;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "OPEN_YN", nullable = false)
     private OpenYN openYN;
 
@@ -52,6 +54,9 @@ public class Post extends TimeStamp {
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Comment> commentList;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<File> fileList;
 
     @Builder
     public Post(User user, UpperCategory upperCategory, LowerCategory lowerCategory, String title, String content) {

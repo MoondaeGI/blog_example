@@ -1,4 +1,4 @@
-package com.example.blog_example.model.dto.post.postLiked;
+package com.example.blog_example.model.dto.comment.liked;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import javax.validation.constraints.Positive;
 
 @AllArgsConstructor
 @Getter
-public class PostLikedDeleteDTO {
+public class CommentLikedDeleteDTO {
     @Positive
-    private Long postNo;
+    private Long commentNo;
 }

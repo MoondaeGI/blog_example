@@ -1,4 +1,4 @@
-package com.example.blog_example.model.dto.comment.commentLiked;
+package com.example.blog_example.model.dto.post.liked;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,9 +7,9 @@ import javax.validation.constraints.Positive;
 
 @AllArgsConstructor
 @Getter
-public class CommentLikedSaveDTO {
+public class PostLikedSaveDTO {
     @Positive
-    private Long commentNo;
+    private Long postNo;
     @Positive
     private Long userNo;
 }

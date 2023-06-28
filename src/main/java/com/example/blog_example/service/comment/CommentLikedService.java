@@ -2,13 +2,13 @@ package com.example.blog_example.service.comment;
 
 import com.example.blog_example.model.domain.comment.comment.Comment;
 import com.example.blog_example.model.domain.comment.comment.CommentRepository;
-import com.example.blog_example.model.domain.comment.commentLiked.CommentLiked;
-import com.example.blog_example.model.domain.comment.commentLiked.CommentLikedRepository;
+import com.example.blog_example.model.domain.comment.liked.CommentLiked;
+import com.example.blog_example.model.domain.comment.liked.CommentLikedRepository;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
-import com.example.blog_example.model.dto.comment.commentLiked.CommentLikedCountDTO;
-import com.example.blog_example.model.dto.comment.commentLiked.CommentLikedDeleteDTO;
-import com.example.blog_example.model.dto.comment.commentLiked.CommentLikedSaveDTO;
+import com.example.blog_example.model.dto.comment.liked.CommentLikedCountDTO;
+import com.example.blog_example.model.dto.comment.liked.CommentLikedDeleteDTO;
+import com.example.blog_example.model.dto.comment.liked.CommentLikedSaveDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

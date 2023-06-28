@@ -2,7 +2,7 @@ package com.example.blog_example.service.comment;
 
 import com.example.blog_example.model.domain.comment.comment.Comment;
 import com.example.blog_example.model.domain.comment.comment.CommentRepository;
-import com.example.blog_example.model.domain.comment.commentLiked.CommentLikedRepository;
+import com.example.blog_example.model.domain.comment.liked.CommentLikedRepository;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.post.PostRepository;
 import com.example.blog_example.model.domain.user.user.User;
