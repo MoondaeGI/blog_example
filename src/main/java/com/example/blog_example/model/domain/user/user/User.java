@@ -1,14 +1,17 @@
 package com.example.blog_example.model.domain.user.user;
 
 import com.example.blog_example.model.domain.comment.comment.Comment;
-import com.example.blog_example.model.domain.comment.commentLiked.CommentLiked;
+import com.example.blog_example.model.domain.comment.liked.CommentLiked;
 import com.example.blog_example.model.domain.post.post.Post;
-import com.example.blog_example.model.domain.post.postLiked.PostLiked;
+import com.example.blog_example.model.domain.post.liked.PostLiked;
 import com.example.blog_example.model.domain.user.blog_visit_count.BlogVisitCount;
+import com.example.blog_example.model.dto.user.user.UserSignupDTO;
 import com.example.blog_example.util.TimeStamp;
+import com.example.blog_example.util.enums.Role;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.List;
@@ -27,6 +30,16 @@ public class User extends TimeStamp {
 
     @Column(name = "BLOG_NAME")
     private String blogName;
+
+    @Column(name = "EMAIL")
+    private String email;
+
+    @Column(name = "PASSWORD")
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ROLE")
+    private Role role;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BlogVisitCount> blogVisitCountList;
@@ -47,5 +60,17 @@ public class User extends TimeStamp {
     public User(String name, String blogName) {
         this.name = name;
         this.blogName = blogName;
+    }
+
+    public User(UserSignupDTO userSignUpDTO) {
+        this.name = userSignUpDTO.getName();
+        this.blogName = userSignUpDTO.getBlogName();
+        this.email = userSignUpDTO.getEmail();
+        this.password = userSignUpDTO.getPassword();
+        this.role = Role.USER;
+    }
+
+    public void encryptPassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(password);
     }
 }
