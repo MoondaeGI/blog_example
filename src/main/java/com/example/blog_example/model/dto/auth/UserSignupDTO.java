@@ -1,4 +1,4 @@
-package com.example.blog_example.model.dto.user.user;
+package com.example.blog_example.model.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
