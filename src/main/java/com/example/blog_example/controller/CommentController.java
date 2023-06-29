@@ -26,6 +26,15 @@ public class CommentController {
         return commentService.findAll();
     }
 
+    @GetMapping("/info")
+    public CommentVO find(@RequestParam(name = "no") Long commentNo) {
+        CommentFindDTO commentFindDTO = CommentFindDTO.builder()
+                .commentNo(commentNo)
+                .build();
+
+        return commentService.find(commentFindDTO);
+    }
+
     @GetMapping("/info/post")
     public List<CommentVO> findByPost(@RequestParam(name = "no") Long postNo) {
         CommentFindByObjectDTO commentFindByPostDTO = CommentFindByObjectDTO.builder()
