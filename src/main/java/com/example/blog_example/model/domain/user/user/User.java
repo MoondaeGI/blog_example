@@ -2,10 +2,9 @@ package com.example.blog_example.model.domain.user.user;
 
 import com.example.blog_example.model.domain.comment.comment.Comment;
 import com.example.blog_example.model.domain.comment.liked.CommentLiked;
-import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.liked.PostLiked;
+import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.user.blog_visit_count.BlogVisitCount;
-import com.example.blog_example.model.dto.auth.UserSignupDTO;
 import com.example.blog_example.util.TimeStamp;
 import com.example.blog_example.util.enums.Role;
 import lombok.Builder;
