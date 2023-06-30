@@ -1,15 +1,13 @@
-package com.example.blog_example.model.dto.post.liked;
+package com.example.blog_example.model.dto.post.post;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.Positive;
 
-@Builder
 @AllArgsConstructor
 @Getter
-public class PostLikedSaveDTO {
+public class PostPushLikedDTO {
     @Positive
     private Long postNo;
     @Positive
