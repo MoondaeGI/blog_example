@@ -104,6 +104,7 @@ public class PostController {
                 .postNo(postPushLikedDTO.getPostNo())
                 .userNo(postPushLikedDTO.getUserNo())
                 .build();
+        postLikedService.save(postLikedSaveDTO);
 
         return postService.isLiked(postPushLikedDTO.getPostNo());
     }
