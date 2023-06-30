@@ -49,7 +49,15 @@ public class CategoryController {
 
     @PostMapping("/upper/save")
     public Long upperCategorySave(@RequestBody @Valid UpperCategorySaveDTO upperCategorySaveDTO) {
-        return upperCategoryService.save(upperCategorySaveDTO);
+        Long upperCategoryNo = upperCategoryService.save(upperCategorySaveDTO);
+
+        LowerCategorySaveDTO lowerCategorySaveDTO = LowerCategorySaveDTO.builder()
+                .name("전체")
+                .upperCategoryNo(upperCategoryNo)
+                .build();
+        lowerCategoryService.save(lowerCategorySaveDTO);
+
+        return upperCategoryNo;
     }
 
     @PostMapping("/lower/save")

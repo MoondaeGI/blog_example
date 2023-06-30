@@ -96,7 +96,7 @@ public class PostController {
 
     @GetMapping("/state/liked")
     public Boolean changeLiked(
-            @RequestParam @PositiveOrZero Long postNo, @RequestParam @PositiveOrZero Long userNo) {
+            @RequestParam("post") @PositiveOrZero Long postNo, @RequestParam("user") @PositiveOrZero Long userNo) {
         if (postService.isLiked(postNo)) {
             postLikedService.delete(postNo);
 
