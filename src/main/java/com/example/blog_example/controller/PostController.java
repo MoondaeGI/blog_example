@@ -3,7 +3,7 @@ package com.example.blog_example.controller;
 import com.example.blog_example.model.dto.post.file.FileSaveDTO;
 import com.example.blog_example.model.dto.post.file.FileUpdateDTO;
 import com.example.blog_example.model.dto.post.liked.PostLikedSaveDTO;
-import com.example.blog_example.model.dto.post.post.PostPushLikedDTO;
+import com.example.blog_example.model.dto.post.post.PostChangeLikedDTO;
 import com.example.blog_example.model.dto.post.post.PostSaveDTO;
 import com.example.blog_example.model.dto.post.post.PostUpdateDTO;
 import com.example.blog_example.model.vo.post.PostDetailVO;
@@ -94,23 +94,31 @@ public class PostController {
         postService.delete(postNo);
     }
 
-    @PostMapping("/state/liked")
-    public Boolean changeLiked(@RequestBody PostPushLikedDTO postPushLikedDTO) {
-        if (postService.isLiked(postPushLikedDTO.getPostNo())) {
-            postLikedService.delete(postPushLikedDTO.getPostNo());
+    @GetMapping("/state/change/liked")
+    public Boolean changeLiked(
+            @RequestParam @PositiveOrZero Long postNo, @RequestParam @PositiveOrZero Long userNo) {
+        if (postService.isLiked(postNo)) {
+            postLikedService.delete(postNo);
+
+            return false;
         }
 
         PostLikedSaveDTO postLikedSaveDTO = PostLikedSaveDTO.builder()
-                .postNo(postPushLikedDTO.getPostNo())
-                .userNo(postPushLikedDTO.getUserNo())
+                .postNo(postNo)
+                .userNo(userNo)
                 .build();
         postLikedService.save(postLikedSaveDTO);
 
-        return postService.isLiked(postPushLikedDTO.getPostNo());
+        return true;
     }
 
-    @GetMapping("/state/open")
+    @GetMapping("/state/change/open")
     public String changeOpenYN(@RequestParam(name = "no") @PositiveOrZero Long postNo) {
         return postService.changeOpenYN(postNo).toString();
+    }
+
+    @GetMapping("/state/liked")
+    public Boolean isLiked(@RequestParam(name = "no") @PositiveOrZero Long postNo) {
+        return postService.isLiked(postNo);
     }
 }

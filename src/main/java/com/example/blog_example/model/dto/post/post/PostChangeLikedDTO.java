@@ -7,7 +7,7 @@ import javax.validation.constraints.Positive;
 
 @AllArgsConstructor
 @Getter
-public class PostPushLikedDTO {
+public class PostChangeLikedDTO {
     @Positive
     private Long postNo;
     @Positive
