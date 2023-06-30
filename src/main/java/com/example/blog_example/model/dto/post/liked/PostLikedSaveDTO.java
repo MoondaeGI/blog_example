@@ -16,6 +16,7 @@ public class PostLikedSaveDTO {
     @ApiModelProperty(name = "postNo", value = "게시글 번호", example = "1", required = true)
     @PositiveOrZero
     private Long postNo;
+
     @ApiModelProperty(name = "userNo", value = "유저 번호", example = "1", required = true)
     @PositiveOrZero
     private Long userNo;

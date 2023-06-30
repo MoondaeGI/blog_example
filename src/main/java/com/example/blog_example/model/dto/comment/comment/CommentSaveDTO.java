@@ -16,9 +16,11 @@ public class CommentSaveDTO {
     @ApiModelProperty(name = "content", value = "댓글 내용", example = "example", required = true)
     @NotBlank @Max(150)
     private String content;
+
     @ApiModelProperty(name = "userNo", value = "유저 번호", example = "1", required = true)
     @PositiveOrZero
     private Long userNo;
+
     @ApiModelProperty(name = "postNo", value = "게시글 번호", example = "1", required = true)
     @PositiveOrZero
     private Long postNo;

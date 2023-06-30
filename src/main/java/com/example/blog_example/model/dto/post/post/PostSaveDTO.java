@@ -16,15 +16,19 @@ public class PostSaveDTO {
     @ApiModelProperty(name = "upperCategoryNo", value = "상위 카테고리 번호", example = "1", required = true)
     @PositiveOrZero
     private Long upperCategoryNo;
+
     @ApiModelProperty(name = "lowerCategoryNo", value = "하위 카테고리 번호", example = "1", required = true)
     @PositiveOrZero
     private Long lowerCategoryNo;
+
     @ApiModelProperty(name = "userNo", value = "유저 번호", example = "1", required = true)
     @PositiveOrZero
     private Long userNo;
+
     @ApiModelProperty(name = "title", value = "제목", example = "example", required = true)
     @NotBlank @Max(30)
     private String title;
+
     @ApiModelProperty(name = "content", value = "내용", example = "example", required = true)
     @NotBlank
     private String content;

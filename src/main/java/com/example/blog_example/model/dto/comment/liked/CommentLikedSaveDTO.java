@@ -16,6 +16,7 @@ public class CommentLikedSaveDTO {
     @ApiModelProperty(name = "commentNo", value = "댓글 번호", example = "example", required = true)
     @PositiveOrZero
     private Long commentNo;
+
     @ApiModelProperty(name = "userNo", value = "유저 번호", example = "example", required = true)
     @PositiveOrZero
     private Long userNo;

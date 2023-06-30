@@ -14,15 +14,19 @@ public class PostUpdateDTO {
     @ApiModelProperty(name = "postNo", value = "게시글 번호", example = "1", required = true)
     @PositiveOrZero
     private Long postNo;
+
     @ApiModelProperty(name = "upperCategoryNo", value = "상위 카테고리 번호", example = "1", required = true)
     @PositiveOrZero
     private Long upperCategoryNo;
+
     @ApiModelProperty(name = "lowerCategoryNo", value = "하위 카테고리 번호", example = "1", required = true)
     @PositiveOrZero
     private Long lowerCategoryNo;
+
     @ApiModelProperty(name = "title", value = "제목", example = "example", required = true)
     @NotBlank @Max(30)
     private String title;
+
     @ApiModelProperty(name = "content", value = "내용", example = "example", required = true)
     @NotNull
     private String content;

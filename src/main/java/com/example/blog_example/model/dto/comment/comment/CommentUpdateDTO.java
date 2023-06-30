@@ -16,6 +16,7 @@ public class CommentUpdateDTO {
     @ApiModelProperty(name = "commentNo", value = "댓글 번호", example = "1", required = true)
     @PositiveOrZero
     private Long commentNo;
+
     @ApiModelProperty(name = "content", value = "댓글 내용", example = "example", required = true)
     @NotBlank @Max(150)
     private String content;
