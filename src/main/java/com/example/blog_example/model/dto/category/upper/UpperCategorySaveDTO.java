@@ -1,13 +1,18 @@
 package com.example.blog_example.model.dto.category.upper;
 
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
+@Schema(description = "상위 카테고리 등록 요청 DTO")
 @AllArgsConstructor
 @Getter
 public class UpperCategorySaveDTO {
-    @NotBlank
+    @ApiModelProperty(name = "name", value = "상위 카테고리 이름", example = "example", required = true)
+    @NotBlank @Max(10)
     private String name;
 }
