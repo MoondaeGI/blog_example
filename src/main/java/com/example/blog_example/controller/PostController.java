@@ -95,11 +95,9 @@ public class PostController {
     }
 
     @PostMapping("/state/liked")
-    public Long pushLiked(@RequestBody PostPushLikedDTO postPushLikedDTO) {
+    public Boolean changeLiked(@RequestBody PostPushLikedDTO postPushLikedDTO) {
         if (postService.isLiked(postPushLikedDTO.getPostNo())) {
             postLikedService.delete(postPushLikedDTO.getPostNo());
-
-            return postPushLikedDTO.getPostNo();
         }
 
         PostLikedSaveDTO postLikedSaveDTO = PostLikedSaveDTO.builder()
@@ -107,7 +105,7 @@ public class PostController {
                 .userNo(postPushLikedDTO.getUserNo())
                 .build();
 
-        return postLikedService.save(postLikedSaveDTO);
+        return postService.isLiked(postPushLikedDTO.getPostNo());
     }
 
     @GetMapping("/state/open")
