@@ -32,15 +32,14 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public CommentVO find(CommentFindDTO commentFindDTO) {
-        return CommentVO.from(
-                commentRepository.findById(commentFindDTO.getCommentNo())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다.")));
+    public CommentVO find(Long commentNo) {
+        return CommentVO.from(commentRepository.findById(commentNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다.")));
     }
 
     @Transactional(readOnly = true)
-    public List<CommentVO> findByPost(CommentFindByObjectDTO commentFindByObjectDTO) {
-        Post post = postRepository.findById(commentFindByObjectDTO.getObjectNo())
+    public List<CommentVO> findByPost(Long postNo) {
+        Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         return commentRepository.findByPost(post).stream()
@@ -49,8 +48,8 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommentVO> findByUser(CommentFindByObjectDTO commentFindByObjectDTO) {
-        User user = userRepository.findById(commentFindByObjectDTO.getObjectNo())
+    public List<CommentVO> findByUser(Long userNo) {
+        User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 
         return commentRepository.findByUser(user).stream()
@@ -86,16 +85,16 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(CommentDeleteDTO commentDeleteDTO) {
-        Comment comment = commentRepository.findById(commentDeleteDTO.getCommentNo())
+    public void delete(Long commentNo) {
+        Comment comment = commentRepository.findById(commentNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
 
         commentRepository.delete(comment);
     }
 
     @Transactional(readOnly = true)
-    public Boolean isLiked(CommentIsLikedDTO commentIsLikedDTO) {
-        Comment comment = commentRepository.findById(commentIsLikedDTO.getCommentNo())
+    public Boolean isLiked(Long commentNo) {
+        Comment comment = commentRepository.findById(commentNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
 
         return commentLikedRepository.findByComment(comment) != null;

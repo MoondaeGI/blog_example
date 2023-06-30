@@ -4,9 +4,8 @@ import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.lower.LowerCategoryRepository;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategoryRepository;
-import com.example.blog_example.model.dto.category.lower.*;
-import com.example.blog_example.model.dto.category.upper.UpperCategoryDeleteDTO;
-import com.example.blog_example.model.dto.category.upper.UpperCategoryFindDTO;
+import com.example.blog_example.model.dto.category.lower.LowerCategorySaveDTO;
+import com.example.blog_example.model.dto.category.lower.LowerCategoryUpdateDTO;
 import com.example.blog_example.model.dto.category.upper.UpperCategorySaveDTO;
 import com.example.blog_example.model.dto.category.upper.UpperCategoryUpdateDTO;
 import com.example.blog_example.model.vo.category.LowerCategoryVO;
@@ -75,20 +74,16 @@ public class CategoryServiceTest {
     public void upperCategoryFindTest() {
         Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
 
-        UpperCategoryFindDTO upperCategoryFindDTO = new UpperCategoryFindDTO(upperCategoryNo);
-
         assertThat(upperCategoryNo)
-                .isEqualTo(upperCategoryService.find(upperCategoryFindDTO).getUpperCategoryNo());
+                .isEqualTo(upperCategoryService.find(upperCategoryNo).getUpperCategoryNo());
     }
 
     @Test
     public void lowerCategoryFindTest() {
         Long lowerCategoryNo = lowerCategoryRepository.findAll().get(0).getLowerCategoryNo();
 
-        LowerCategoryFindDTO lowerCategoryFindDTO = new LowerCategoryFindDTO(lowerCategoryNo);
-
         assertThat(lowerCategoryNo)
-                .isEqualTo(lowerCategoryService.find(lowerCategoryFindDTO).getLowerCategoryNo());
+                .isEqualTo(lowerCategoryService.find(lowerCategoryNo).getLowerCategoryNo());
     }
 
     @Test
@@ -101,11 +96,10 @@ public class CategoryServiceTest {
                         .upperCategory(upperCategory)
                         .build());
 
-        LowerCategoryFindByUpperDTO lowerCategoryFindByUpperDTO =
-                new LowerCategoryFindByUpperDTO(upperCategory.getUpperCategoryNo());
+        Long upperCategoryNo = upperCategory.getUpperCategoryNo();
 
         List<LowerCategoryVO> lowerCategoryVOs =
-                lowerCategoryService.findByUpperCategory(lowerCategoryFindByUpperDTO);
+                lowerCategoryService.findByUpperCategory(upperCategoryNo);
 
         assertThat("test").isEqualTo(lowerCategoryVOs.get(0).getName());
         assertThat("test1").isEqualTo(lowerCategoryVOs.get(1).getName());
@@ -182,9 +176,7 @@ public class CategoryServiceTest {
     public void upperCategoryDeleteTest() {
         Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
 
-        UpperCategoryDeleteDTO upperCategoryDeleteDTO = new UpperCategoryDeleteDTO(upperCategoryNo);
-
-        upperCategoryService.delete(upperCategoryDeleteDTO);
+        upperCategoryService.delete(upperCategoryNo);
 
         assertThat(upperCategoryRepository.findById(upperCategoryNo)).isEmpty();
     }
@@ -193,9 +185,7 @@ public class CategoryServiceTest {
     public void lowerCategoryDeleteTest() {
         Long lowerCategoryNo = lowerCategoryRepository.findAll().get(0).getLowerCategoryNo();
 
-        LowerCategoryDeleteDTO lowerCategoryDeleteDTO = new LowerCategoryDeleteDTO(lowerCategoryNo);
-
-        lowerCategoryService.delete(lowerCategoryDeleteDTO);
+        lowerCategoryService.delete(lowerCategoryNo);
 
         assertThat(lowerCategoryRepository.findById(lowerCategoryNo)).isEmpty();
     }

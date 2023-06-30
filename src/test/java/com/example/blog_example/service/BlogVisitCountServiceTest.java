@@ -4,8 +4,6 @@ import com.example.blog_example.model.domain.user.blog_visit_count.BlogVisitCoun
 import com.example.blog_example.model.domain.user.blog_visit_count.BlogVisitCountRepository;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
-import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountAddDTO;
-import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountAllByUserDTO;
 import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountDailyDTO;
 import com.example.blog_example.service.user.BlogVisitCountService;
 import org.junit.jupiter.api.AfterEach;
@@ -57,10 +55,8 @@ public class BlogVisitCountServiceTest {
     public void addVisitCountTest() {
         Long blogVisitCountNo = blogVisitCountRepository.findAll().get(0).getBlogVisitCountNo();
 
-        BlogVisitCountAddDTO blogVisitCountAddDTO = new BlogVisitCountAddDTO(blogVisitCountNo);
-
-        assertThat(blogVisitCountService.addVisitCount(blogVisitCountAddDTO)).isEqualTo(1);
-        assertThat(blogVisitCountService.addVisitCount(blogVisitCountAddDTO)).isEqualTo(2);
+        assertThat(blogVisitCountService.addVisitCount(blogVisitCountNo)).isEqualTo(1);
+        assertThat(blogVisitCountService.addVisitCount(blogVisitCountNo)).isEqualTo(2);
     }
 
     @Test
@@ -68,14 +64,11 @@ public class BlogVisitCountServiceTest {
         Long blogVisitCountNo = blogVisitCountRepository.findAll().get(0).getBlogVisitCountNo();
         Long userNo = userRepository.findAll().get(0).getUserNo();
 
-        BlogVisitCountAllByUserDTO blogVisitCountAllByUserDTO = new BlogVisitCountAllByUserDTO(userNo);
+        assertThat(blogVisitCountService.countAllVisitByUser(userNo)).isEqualTo(0);
 
-        assertThat(blogVisitCountService.countAllVisitByUser(blogVisitCountAllByUserDTO)).isEqualTo(0);
+        blogVisitCountService.addVisitCount(blogVisitCountNo);
 
-        BlogVisitCountAddDTO blogVisitCountAddDTO = new BlogVisitCountAddDTO(blogVisitCountNo);
-        blogVisitCountService.addVisitCount(blogVisitCountAddDTO);
-
-        assertThat(blogVisitCountService.countAllVisitByUser(blogVisitCountAllByUserDTO)).isEqualTo(1);
+        assertThat(blogVisitCountService.countAllVisitByUser(userNo)).isEqualTo(1);
     }
 
     @Test
@@ -83,9 +76,7 @@ public class BlogVisitCountServiceTest {
         User user = userRepository.findAll().get(0);
         Long userNo = user.getUserNo();
 
-        BlogVisitCountAllByUserDTO blogVisitCountAllByUserDTO = new BlogVisitCountAllByUserDTO(userNo);
-
-        assertThat(blogVisitCountService.countAllVisitByUser(blogVisitCountAllByUserDTO)).isEqualTo(0);
+        assertThat(blogVisitCountService.countAllVisitByUser(userNo)).isEqualTo(0);
 
         Long blogVisitCountNo = blogVisitCountRepository.save(
                 BlogVisitCount.builder()
@@ -93,11 +84,9 @@ public class BlogVisitCountServiceTest {
                         .date(LocalDate.of(2022, 1, 1))
                         .build())
                 .getBlogVisitCountNo();
+        blogVisitCountService.addVisitCount(blogVisitCountNo);
 
-        BlogVisitCountAddDTO blogVisitCountAddDTO = new BlogVisitCountAddDTO(blogVisitCountNo);
-        blogVisitCountService.addVisitCount(blogVisitCountAddDTO);
-
-        assertThat(blogVisitCountService.countAllVisitByUser(blogVisitCountAllByUserDTO)).isEqualTo(1);
+        assertThat(blogVisitCountService.countAllVisitByUser(userNo)).isEqualTo(1);
     }
 
     @Test

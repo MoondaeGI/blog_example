@@ -95,9 +95,7 @@ public class CommentServiceTest {
         Comment comment = commentRepository.findAll().get(0);
         Long commentNo = comment.getCommentNo();
 
-        CommentFindDTO commentFindDTO = new CommentFindDTO(commentNo);
-
-        assertThat(commentService.find(commentFindDTO).getContent()).isEqualTo(comment.getContent());
+        assertThat(commentService.find(commentNo).getContent()).isEqualTo(comment.getContent());
     }
 
     @Test
@@ -105,9 +103,7 @@ public class CommentServiceTest {
         String content = commentRepository.findAll().get(0).getContent();
         Long userNo = userRepository.findAll().get(0).getUserNo();
 
-        CommentFindByObjectDTO commentFindByUser = new CommentFindByObjectDTO(userNo);
-
-        assertThat(content).isEqualTo(commentService.findByUser(commentFindByUser).get(0).getContent());
+        assertThat(content).isEqualTo(commentService.findByUser(userNo).get(0).getContent());
     }
 
     @Test
@@ -115,9 +111,7 @@ public class CommentServiceTest {
         String content = commentRepository.findAll().get(0).getContent();
         Long postNo = postRepository.findAll().get(0).getPostNo();
 
-        CommentFindByObjectDTO commentFindByPost = new CommentFindByObjectDTO(postNo);
-
-        assertThat(content).isEqualTo(commentService.findByPost(commentFindByPost).get(0).getContent());
+        assertThat(content).isEqualTo(commentService.findByPost(postNo).get(0).getContent());
     }
 
     @Test
@@ -151,9 +145,7 @@ public class CommentServiceTest {
     public void deleteTest() {
         Long commentNo = commentRepository.findAll().get(0).getCommentNo();
 
-        CommentDeleteDTO commentDeleteDTO = new CommentDeleteDTO(commentNo);
-
-        commentService.delete(commentDeleteDTO);
+        commentService.delete(commentNo);
 
         assertThat(commentRepository.findById(commentNo)).isEmpty();
     }
@@ -164,9 +156,7 @@ public class CommentServiceTest {
         Long commentNo = comment.getCommentNo();
         User user = userRepository.findAll().get(0);
 
-        CommentIsLikedDTO commentIsLikedDTO = new CommentIsLikedDTO(commentNo);
-
-        assertThat(commentService.isLiked(commentIsLikedDTO)).isFalse();
+        assertThat(commentService.isLiked(commentNo)).isFalse();
 
         commentLikedRepository.save(
                 CommentLiked.builder()
@@ -174,6 +164,6 @@ public class CommentServiceTest {
                         .user(user)
                         .build());
 
-        assertThat(commentService.isLiked(commentIsLikedDTO)).isTrue();
+        assertThat(commentService.isLiked(commentNo)).isTrue();
     }
 }

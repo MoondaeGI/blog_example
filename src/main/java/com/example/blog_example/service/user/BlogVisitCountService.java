@@ -4,8 +4,6 @@ import com.example.blog_example.model.domain.user.blog_visit_count.BlogVisitCoun
 import com.example.blog_example.model.domain.user.blog_visit_count.BlogVisitCountRepository;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
-import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountAddDTO;
-import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountAllByUserDTO;
 import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountDailyDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -36,17 +34,16 @@ public class BlogVisitCountService {
     }
 
     @Transactional
-    public Integer addVisitCount(BlogVisitCountAddDTO blogVisitCountAddDTO) {
-        BlogVisitCount blogVisitCount =
-                blogVisitCountRepository.findById(blogVisitCountAddDTO.getBlogVisitCountNo())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 블로그가 없습니다."));
+    public Integer addVisitCount(Long blogVisitCountNo) {
+        BlogVisitCount blogVisitCount = blogVisitCountRepository.findById(blogVisitCountNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 블로그가 없습니다."));
 
         return blogVisitCount.addVisitCount();
     }
 
     @Transactional(readOnly = true)
-    public Integer countAllVisitByUser(BlogVisitCountAllByUserDTO blogVisitCountAllByUserDTO) {
-        User user = userRepository.findById(blogVisitCountAllByUserDTO.getUserNo())
+    public Integer countAllVisitByUser(Long userNo) {
+        User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 블로그가 없습니다."));
 
         return blogVisitCountRepository.sumVisitCountByUser(user).intValue();

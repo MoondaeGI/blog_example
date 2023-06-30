@@ -27,17 +27,15 @@ public class LowerCategoryService {
     }
 
     @Transactional(readOnly = true)
-    public LowerCategoryVO find(LowerCategoryFindDTO lowerCategoryFindDTO) {
-        return LowerCategoryVO.from(
-                lowerCategoryRepository.findById(lowerCategoryFindDTO.getLowerCategoryNo())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다.")));
+    public LowerCategoryVO find(Long lowerCategoryNo) {
+        return LowerCategoryVO.from(lowerCategoryRepository.findById(lowerCategoryNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다.")));
     }
 
     @Transactional(readOnly = true)
-    public List<LowerCategoryVO> findByUpperCategory(LowerCategoryFindByUpperDTO lowerCategoryFindByUpperDTO) {
-        UpperCategory upperCategory =
-                upperCategoryRepository.findById(lowerCategoryFindByUpperDTO.getUpperCategoryNo())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
+    public List<LowerCategoryVO> findByUpperCategory(Long upperCategoryNo) {
+        UpperCategory upperCategory = upperCategoryRepository.findById(upperCategoryNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
         return lowerCategoryRepository.findByUpperCategory(upperCategory).stream()
                 .map(LowerCategoryVO::from)
@@ -74,11 +72,9 @@ public class LowerCategoryService {
     }
 
     @Transactional
-    public void delete(LowerCategoryDeleteDTO lowerCategoryDeleteDTO) {
-        LowerCategory lowerCategory =
-                lowerCategoryRepository.findById(
-                        lowerCategoryDeleteDTO.getLowerCategoryNo())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
+    public void delete(Long lowerCategoryNo) {
+        LowerCategory lowerCategory = lowerCategoryRepository.findById(lowerCategoryNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
         lowerCategoryRepository.delete(lowerCategory);
     }

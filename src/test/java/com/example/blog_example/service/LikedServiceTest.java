@@ -8,18 +8,13 @@ import com.example.blog_example.model.domain.comment.comment.Comment;
 import com.example.blog_example.model.domain.comment.comment.CommentRepository;
 import com.example.blog_example.model.domain.comment.liked.CommentLiked;
 import com.example.blog_example.model.domain.comment.liked.CommentLikedRepository;
-import com.example.blog_example.model.domain.post.post.Post;
-import com.example.blog_example.model.domain.post.post.PostRepository;
 import com.example.blog_example.model.domain.post.liked.PostLiked;
 import com.example.blog_example.model.domain.post.liked.PostLikedRepository;
+import com.example.blog_example.model.domain.post.post.Post;
+import com.example.blog_example.model.domain.post.post.PostRepository;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
-import com.example.blog_example.model.dto.comment.liked.CommentLikedCountDTO;
-import com.example.blog_example.model.dto.comment.liked.CommentLikedDeleteDTO;
 import com.example.blog_example.model.dto.comment.liked.CommentLikedSaveDTO;
-import com.example.blog_example.model.dto.post.liked.PostLikedCountDTO;
-import com.example.blog_example.model.dto.post.liked.PostLikedDeleteDTO;
-import com.example.blog_example.model.dto.post.liked.PostLikedFindPostByUserDTO;
 import com.example.blog_example.model.dto.post.liked.PostLikedSaveDTO;
 import com.example.blog_example.service.comment.CommentLikedService;
 import com.example.blog_example.service.post.PostLikedService;
@@ -111,9 +106,7 @@ public class LikedServiceTest {
         Post post = postRepository.findAll().get(0);
         Long postNo = post.getPostNo();
 
-        PostLikedCountDTO postLikedCountDTO = new PostLikedCountDTO(postNo);
-
-        assertThat(postLikedService.countByPost(postLikedCountDTO)).isEqualTo(1);
+        assertThat(postLikedService.countByPost(postNo)).isEqualTo(1);
 
         User user = userRepository.save(
                 User.builder()
@@ -129,7 +122,7 @@ public class LikedServiceTest {
                         .post(post)
                         .build());
 
-        assertThat(postLikedService.countByPost(postLikedCountDTO)).isEqualTo(2);
+        assertThat(postLikedService.countByPost(postNo)).isEqualTo(2);
     }
 
     @Test
@@ -137,9 +130,7 @@ public class LikedServiceTest {
         Comment comment = commentRepository.findAll().get(0);
         Long commentNo = comment.getCommentNo();
 
-        CommentLikedCountDTO commentLikedCountDTO = new CommentLikedCountDTO(commentNo);
-
-        assertThat(commentLikedService.countByComment(commentLikedCountDTO)).isEqualTo(1);
+        assertThat(commentLikedService.countByComment(commentNo)).isEqualTo(1);
 
         User user = userRepository.save(
                 User.builder()
@@ -155,7 +146,7 @@ public class LikedServiceTest {
                         .comment(comment)
                         .build());
 
-        assertThat(commentLikedService.countByComment(commentLikedCountDTO)).isEqualTo(2);
+        assertThat(commentLikedService.countByComment(commentNo)).isEqualTo(2);
     }
 
     @Test
@@ -185,9 +176,7 @@ public class LikedServiceTest {
         Post post = postRepository.findAll().get(0);
         Long postNo = post.getPostNo();
 
-        PostLikedDeleteDTO postLikedDeleteDTO = new PostLikedDeleteDTO(postNo);
-
-        postLikedService.delete(postLikedDeleteDTO);
+        postLikedService.delete(postNo);
 
         assertThat(postLikedRepository.findByPost(post)).isNull();
     }
@@ -197,9 +186,7 @@ public class LikedServiceTest {
         Comment comment = commentRepository.findAll().get(0);
         Long commentNo = comment.getCommentNo();
 
-        CommentLikedDeleteDTO commentLikedDeleteDTO = new CommentLikedDeleteDTO(commentNo);
-
-        commentLikedService.delete(commentLikedDeleteDTO);
+        commentLikedService.delete(commentNo);
 
         assertThat(commentLikedRepository.findByComment(comment)).isNull();
     }
@@ -209,9 +196,7 @@ public class LikedServiceTest {
         User user = userRepository.findAll().get(0);
         Long userNo = user.getUserNo();
 
-        PostLikedFindPostByUserDTO postLikedFindPostByUserDTO = new PostLikedFindPostByUserDTO(userNo);
-
-        assertThat(postLikedService.findPostByUser(postLikedFindPostByUserDTO).size()).isEqualTo(1);
+        assertThat(postLikedService.findPostByUser(userNo).size()).isEqualTo(1);
 
         Post post = postRepository.save(
                 Post.builder()
@@ -228,6 +213,6 @@ public class LikedServiceTest {
                         .post(post)
                         .build());
 
-        assertThat(postLikedService.findPostByUser(postLikedFindPostByUserDTO).size()).isEqualTo(2);
+        assertThat(postLikedService.findPostByUser(userNo).size()).isEqualTo(2);
     }
 }

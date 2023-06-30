@@ -6,8 +6,6 @@ import com.example.blog_example.model.domain.comment.liked.CommentLiked;
 import com.example.blog_example.model.domain.comment.liked.CommentLikedRepository;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
-import com.example.blog_example.model.dto.comment.liked.CommentLikedCountDTO;
-import com.example.blog_example.model.dto.comment.liked.CommentLikedDeleteDTO;
 import com.example.blog_example.model.dto.comment.liked.CommentLikedSaveDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,8 +19,8 @@ public class CommentLikedService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public Integer countByComment(CommentLikedCountDTO commentLikedCountDTO) {
-        Comment comment = commentRepository.findById(commentLikedCountDTO.getCommentNo())
+    public Integer countByComment(Long commentNo) {
+        Comment comment = commentRepository.findById(commentNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
 
         return commentLikedRepository.countByComment(comment).intValue();
@@ -45,8 +43,8 @@ public class CommentLikedService {
     }
 
     @Transactional
-    public void delete(CommentLikedDeleteDTO commentLikedDeleteDTO) {
-        Comment comment = commentRepository.findById(commentLikedDeleteDTO.getCommentNo())
+    public void delete(Long commentNo) {
+        Comment comment = commentRepository.findById(commentNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
 
         commentLikedRepository.deleteByComment(comment);

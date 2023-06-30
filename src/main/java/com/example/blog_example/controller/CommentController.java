@@ -1,8 +1,7 @@
 package com.example.blog_example.controller;
 
-import com.example.blog_example.model.dto.comment.comment.*;
-import com.example.blog_example.model.dto.comment.liked.CommentLikedCountDTO;
-import com.example.blog_example.model.dto.comment.liked.CommentLikedDeleteDTO;
+import com.example.blog_example.model.dto.comment.comment.CommentSaveDTO;
+import com.example.blog_example.model.dto.comment.comment.CommentUpdateDTO;
 import com.example.blog_example.model.dto.comment.liked.CommentLikedSaveDTO;
 import com.example.blog_example.model.vo.post.CommentVO;
 import com.example.blog_example.service.comment.CommentLikedService;
@@ -28,29 +27,17 @@ public class CommentController {
 
     @GetMapping("/info")
     public CommentVO find(@RequestParam(name = "no") Long commentNo) {
-        CommentFindDTO commentFindDTO = CommentFindDTO.builder()
-                .commentNo(commentNo)
-                .build();
-
-        return commentService.find(commentFindDTO);
+        return commentService.find(commentNo);
     }
 
     @GetMapping("/info/post")
     public List<CommentVO> findByPost(@RequestParam(name = "no") Long postNo) {
-        CommentFindByObjectDTO commentFindByPostDTO = CommentFindByObjectDTO.builder()
-                .objectNo(postNo)
-                .build();
-
-        return commentService.findByPost(commentFindByPostDTO);
+        return commentService.findByPost(postNo);
     }
 
     @GetMapping("/info/user")
     public List<CommentVO> findByUser(@RequestParam(name = "no") Long userNo) {
-        CommentFindByObjectDTO commentFindByUserDTO = CommentFindByObjectDTO.builder()
-                .objectNo(userNo)
-                .build();
-
-        return commentService.findByUser(commentFindByUserDTO);
+        return commentService.findByUser(userNo);
     }
 
     @PostMapping("/save")
@@ -70,37 +57,21 @@ public class CommentController {
 
     @DeleteMapping("/delete")
     public void commentDelete(@RequestParam(name = "no") Long commentNo) {
-        CommentDeleteDTO commentDeleteDTO = CommentDeleteDTO.builder()
-                .commentNo(commentNo)
-                .build();
-
-        commentService.delete(commentDeleteDTO);
+        commentService.delete(commentNo);
     }
 
     @DeleteMapping("/liked/delete")
     public void commentLikedDelete(@RequestParam(name = "no") Long commentNo) {
-        CommentLikedDeleteDTO commentLikedDeleteDTO = CommentLikedDeleteDTO.builder()
-                .commentNo(commentNo)
-                .build();
-
-        commentLikedService.delete(commentLikedDeleteDTO);
+        commentLikedService.delete(commentNo);
     }
 
     @GetMapping("/liked/count")
     public Integer countLiked(@RequestParam(name = "no") Long commentNo) {
-        CommentLikedCountDTO commentLikedCountDTO = CommentLikedCountDTO.builder()
-                .commentNo(commentNo)
-                .build();
-
-        return commentLikedService.countByComment(commentLikedCountDTO);
+        return commentLikedService.countByComment(commentNo);
     }
 
     @GetMapping("/info/liked")
     public Boolean isLiked(@RequestParam(name = "no") Long commentNo) {
-        CommentIsLikedDTO commentIsLikedDTO = CommentIsLikedDTO.builder()
-                .commentNo(commentNo)
-                .build();
-
-        return commentService.isLiked(commentIsLikedDTO);
+        return commentService.isLiked(commentNo);
     }
 }

@@ -36,15 +36,14 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostVO find(PostFindDTO postFindDTO) {
-        return PostVO.from(
-                postRepository.findById(postFindDTO.getPostNo())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다.")));
+    public PostVO find(Long postNo) {
+        return PostVO.from(postRepository.findById(postNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다.")));
     }
 
     @Transactional(readOnly = true)
-    public List<PostVO> findByUser(PostFindByObjectDTO postFindByObjectDTO) {
-        User user = userRepository.findById(postFindByObjectDTO.getObjectNo())
+    public List<PostVO> findByUser(Long userNo) {
+        User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 
         return postRepository.findByUser(user).stream()
@@ -53,10 +52,9 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostVO> findByUpperCategory(PostFindByObjectDTO postFindByObjectDTO) {
-        UpperCategory upperCategory =
-                upperCategoryRepository.findById(postFindByObjectDTO.getObjectNo())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
+    public List<PostVO> findByUpperCategory(Long upperCategoryNo) {
+        UpperCategory upperCategory = upperCategoryRepository.findById(upperCategoryNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
         return postRepository.findByUpperCategory(upperCategory).stream()
                 .map(PostVO::from)
@@ -64,9 +62,9 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostVO> findByLowerCategory(PostFindByObjectDTO postFindByObjectDTO) {
+    public List<PostVO> findByLowerCategory(Long lowerCategoryNo) {
         LowerCategory lowerCategory =
-                lowerCategoryRepository.findById(postFindByObjectDTO.getObjectNo())
+                lowerCategoryRepository.findById(lowerCategoryNo)
                         .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
         return postRepository.findByLowerCategory(lowerCategory).stream()
@@ -117,32 +115,32 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(PostDeleteDTO postDeleteDTO) {
-        Post post = postRepository.findById(postDeleteDTO.getPostNo())
+    public void delete(Long postNo) {
+        Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         postRepository.delete(post);
     }
 
     @Transactional
-    public Integer addViews(PostAddViewsDTO postAddViewsDTO) {
-        Post post = postRepository.findById(postAddViewsDTO.getPostNo())
+    public Integer addViews(Long postNo) {
+        Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         return post.addViews();
     }
 
     @Transactional
-    public OpenYN changeOpenYN(PostChangeOpenYNDTO postChangeOpenYNDTO) {
-        Post post = postRepository.findById(postChangeOpenYNDTO.getPostNo())
+    public OpenYN changeOpenYN(Long postNo) {
+        Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         return post.changeOpenYN();
     }
 
     @Transactional(readOnly = true)
-    public Boolean isLiked(PostIsLikedDTO postIsLikedDTO) {
-        Post post = postRepository.findById(postIsLikedDTO.getPostNo())
+    public Boolean isLiked(Long postNo) {
+        Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         return postLikedRepository.findByPost(post) != null;

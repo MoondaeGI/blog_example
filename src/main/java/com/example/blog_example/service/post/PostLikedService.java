@@ -1,14 +1,11 @@
 package com.example.blog_example.service.post;
 
-import com.example.blog_example.model.domain.post.post.Post;
-import com.example.blog_example.model.domain.post.post.PostRepository;
 import com.example.blog_example.model.domain.post.liked.PostLiked;
 import com.example.blog_example.model.domain.post.liked.PostLikedRepository;
+import com.example.blog_example.model.domain.post.post.Post;
+import com.example.blog_example.model.domain.post.post.PostRepository;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
-import com.example.blog_example.model.dto.post.liked.PostLikedCountDTO;
-import com.example.blog_example.model.dto.post.liked.PostLikedDeleteDTO;
-import com.example.blog_example.model.dto.post.liked.PostLikedFindPostByUserDTO;
 import com.example.blog_example.model.dto.post.liked.PostLikedSaveDTO;
 import com.example.blog_example.model.vo.post.PostVO;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +23,8 @@ public class PostLikedService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<PostVO> findPostByUser(PostLikedFindPostByUserDTO postLikedFindPostByUserDTO) {
-        User user = userRepository.findById(postLikedFindPostByUserDTO.getUserNo())
+    public List<PostVO> findPostByUser(Long userNo) {
+        User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 
         return postLikedRepository.findPostByUser(user).stream()
@@ -36,8 +33,8 @@ public class PostLikedService {
     }
 
     @Transactional(readOnly = true)
-    public Integer countByPost(PostLikedCountDTO postLikedCountDTO) {
-        Post post = postRepository.findById(postLikedCountDTO.getPostNo())
+    public Integer countByPost(Long postNo) {
+        Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         return postLikedRepository.countByPost(post).intValue();
@@ -60,8 +57,8 @@ public class PostLikedService {
     }
 
     @Transactional
-    public void delete(PostLikedDeleteDTO postLikedDeleteDTO) {
-        Post post = postRepository.findById(postLikedDeleteDTO.getPostNo())
+    public void delete(Long postNo) {
+        Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         postLikedRepository.deleteByPost(post);

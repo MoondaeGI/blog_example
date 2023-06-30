@@ -1,8 +1,7 @@
 package com.example.blog_example.controller;
 
-import com.example.blog_example.model.dto.category.lower.*;
-import com.example.blog_example.model.dto.category.upper.UpperCategoryDeleteDTO;
-import com.example.blog_example.model.dto.category.upper.UpperCategoryFindDTO;
+import com.example.blog_example.model.dto.category.lower.LowerCategorySaveDTO;
+import com.example.blog_example.model.dto.category.lower.LowerCategoryUpdateDTO;
 import com.example.blog_example.model.dto.category.upper.UpperCategorySaveDTO;
 import com.example.blog_example.model.dto.category.upper.UpperCategoryUpdateDTO;
 import com.example.blog_example.model.vo.category.LowerCategoryVO;
@@ -35,29 +34,17 @@ public class CategoryController {
 
     @GetMapping("/upper/info")
     public UpperCategoryVO upperCategoryFind(@RequestParam(name = "no") Long upperCategoryNo) {
-        UpperCategoryFindDTO upperCategoryFindDTO = UpperCategoryFindDTO.builder()
-                .upperCategoryNo(upperCategoryNo)
-                .build();
-
-        return upperCategoryService.find(upperCategoryFindDTO);
+        return upperCategoryService.find(upperCategoryNo);
     }
 
     @GetMapping("/lower/info")
     public LowerCategoryVO lowerCategoryFind(@RequestParam(name = "no") Long lowerCategoryNo) {
-        LowerCategoryFindDTO lowerCategoryFindDTO = LowerCategoryFindDTO.builder()
-                .lowerCategoryNo(lowerCategoryNo)
-                .build();
-
-        return lowerCategoryService.find(lowerCategoryFindDTO);
+        return lowerCategoryService.find(lowerCategoryNo);
     }
 
     @GetMapping("/lower/info/upper")
     public List<LowerCategoryVO> lowerCategoryFindByUpper(@RequestParam(name = "no") Long upperCategoryNo) {
-        LowerCategoryFindByUpperDTO lowerCategoryFindByUpperDTO = LowerCategoryFindByUpperDTO.builder()
-                .upperCategoryNo(upperCategoryNo)
-                .build();
-
-        return lowerCategoryService.findByUpperCategory(lowerCategoryFindByUpperDTO);
+        return lowerCategoryService.findByUpperCategory(upperCategoryNo);
     }
 
     @PostMapping("/upper/save")
@@ -82,19 +69,11 @@ public class CategoryController {
 
     @DeleteMapping("/upper/delete")
     public void upperCategoryDelete(@RequestParam(name = "no") Long upperCategoryNo) {
-        UpperCategoryDeleteDTO upperCategoryDeleteDTO = UpperCategoryDeleteDTO.builder()
-                .upperCategoryNo(upperCategoryNo)
-                .build();
-
-        upperCategoryService.delete(upperCategoryDeleteDTO);
+        upperCategoryService.delete(upperCategoryNo);
     }
 
     @DeleteMapping("/lower/delete")
     public void lowerCategoryDelete(@RequestParam(name = "no") Long lowerCategoryNo) {
-        LowerCategoryDeleteDTO lowerCategoryDeleteDTO = LowerCategoryDeleteDTO.builder()
-                .lowerCategoryNo(lowerCategoryNo)
-                .build();
-
-        lowerCategoryService.delete(lowerCategoryDeleteDTO);
+        lowerCategoryService.delete(lowerCategoryNo);
     }
 }

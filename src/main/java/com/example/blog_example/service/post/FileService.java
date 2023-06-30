@@ -24,15 +24,14 @@ public class FileService {
     private final FileHandler fileHandler;
 
     @Transactional(readOnly = true)
-    public FileVO find(FileFindDTO fileFindDTO) {
-        return FileVO.from(
-                fileRepository.findById(fileFindDTO.getFileNo())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 파일이 없습니다.")));
+    public FileVO find(Long fileNo) {
+        return FileVO.from(fileRepository.findById(fileNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 파일이 없습니다.")));
     }
 
     @Transactional(readOnly = true)
-    public List<FileVO> findAll(FileFindAllDTO fileFindAllDTO) {
-        Post post = postRepository.findById(fileFindAllDTO.getPostNo())
+    public List<FileVO> findByPost(Long postNo) {
+        Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         return fileRepository.findByPost(post).stream()
@@ -83,20 +82,21 @@ public class FileService {
     }
 
     @Transactional
-    public void delete(FileDeleteDTO fileDeleteDTO) {
-        File file = fileRepository.findById(fileDeleteDTO.getFileNo())
+    public void delete(Long fileNo) {
+        File file = fileRepository.findById(fileNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 파일이 없습니다."));
 
         if (fileHandler.deleteFile(file)) {
             fileRepository.delete(file);
         }
+
+        fileRepository.delete(file);
     }
 
     @Transactional
-    public void deleteAll(FileDeleteAllDTO fileDeleteAllDTO) {
-        Post post = postRepository.findById(fileDeleteAllDTO.getPostNo())
+    public void deleteByPost(Long postNo) {
+        Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-
         List<File> files = fileRepository.findByPost(post);
 
         for (File file : files) {

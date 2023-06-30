@@ -85,9 +85,7 @@ public class PostServiceTest {
     public void findTest() {
         Post post = postRepository.findAll().get(0);
 
-        PostFindDTO postFindDTO = new PostFindDTO(post.getPostNo());
-
-        assertThat(post.getTitle()).isEqualTo(postService.find(postFindDTO).getTitle());
+        assertThat(post.getTitle()).isEqualTo(postService.find(post.getPostNo()).getTitle());
     }
 
     @Test
@@ -96,17 +94,13 @@ public class PostServiceTest {
         Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
         Long lowerCategoryNo = lowerCategoryRepository.findAll().get(0).getLowerCategoryNo();
 
-        PostFindByObjectDTO postFindByUserDTO = new PostFindByObjectDTO(userNo);
-        PostFindByObjectDTO postFindByUpperCategoryDTO = new PostFindByObjectDTO(upperCategoryNo);
-        PostFindByObjectDTO postFindByLowerCategoryDTO = new PostFindByObjectDTO(lowerCategoryNo);
-
         assertThat(userNo).isEqualTo(
-                postService.findByUser(postFindByUserDTO).get(0).getUserVO().getUserNo());
+                postService.findByUser(userNo).get(0).getUserVO().getUserNo());
         assertThat(upperCategoryNo).isEqualTo(
-                postService.findByUpperCategory(postFindByUpperCategoryDTO).get(0)
+                postService.findByUpperCategory(upperCategoryNo).get(0)
                         .getUpperCategoryVO().getUpperCategoryNo());
         assertThat(lowerCategoryNo).isEqualTo(
-                postService.findByLowerCategory(postFindByLowerCategoryDTO).get(0)
+                postService.findByLowerCategory(lowerCategoryNo).get(0)
                         .getLowerCategoryVO().getLowerCategoryNo());
     }
 
@@ -143,9 +137,7 @@ public class PostServiceTest {
     public void deleteTest() {
         Long postNo = postRepository.findAll().get(0).getPostNo();
 
-        PostDeleteDTO postDeleteDTO = new PostDeleteDTO(postNo);
-
-        postService.delete(postDeleteDTO);
+        postService.delete(postNo);
 
         assertThat(postRepository.findById(postNo)).isEmpty();
     }
@@ -154,20 +146,16 @@ public class PostServiceTest {
     public void addViewsTest() {
         Long postNo = postRepository.findAll().get(0).getPostNo();
 
-        PostAddViewsDTO postAddViewsDTO = new PostAddViewsDTO(postNo);
-
-        assertThat(postService.addViews(postAddViewsDTO)).isEqualTo(1);
-        assertThat(postService.addViews(postAddViewsDTO)).isEqualTo(2);
+        assertThat(postService.addViews(postNo)).isEqualTo(1);
+        assertThat(postService.addViews(postNo)).isEqualTo(2);
     }
 
     @Test
     public void changeOpenYNTest() {
         Long postNo = postRepository.findAll().get(0).getPostNo();
 
-        PostChangeOpenYNDTO postChangeOpenYNDTO = new PostChangeOpenYNDTO(postNo);
-
-        assertThat(postService.changeOpenYN(postChangeOpenYNDTO)).isEqualTo(OpenYN.CLOSE);
-        assertThat(postService.changeOpenYN(postChangeOpenYNDTO)).isEqualTo(OpenYN.OPEN);
+        assertThat(postService.changeOpenYN(postNo)).isEqualTo(OpenYN.CLOSE);
+        assertThat(postService.changeOpenYN(postNo)).isEqualTo(OpenYN.OPEN);
     }
 
     @Test
@@ -175,9 +163,7 @@ public class PostServiceTest {
         Post post = postRepository.findAll().get(0);
         Long postNo = post.getPostNo();
 
-        PostIsLikedDTO postIsLikedDTO = new PostIsLikedDTO(postNo);
-
-        assertThat(postService.isLiked(postIsLikedDTO)).isFalse();
+        assertThat(postService.isLiked(postNo)).isFalse();
 
         postLikedRepository.save(
                 PostLiked.builder()
@@ -185,6 +171,6 @@ public class PostServiceTest {
                         .user(userRepository.findAll().get(0))
                         .build());
 
-        assertThat(postService.isLiked(postIsLikedDTO)).isTrue();
+        assertThat(postService.isLiked(postNo)).isTrue();
     }
 }
