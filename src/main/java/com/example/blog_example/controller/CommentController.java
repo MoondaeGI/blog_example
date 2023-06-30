@@ -8,11 +8,13 @@ import com.example.blog_example.service.comment.CommentLikedService;
 import com.example.blog_example.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
+@Validated
 @RequiredArgsConstructor
 @RequestMapping("/comment")
 @Controller
@@ -41,28 +43,36 @@ public class CommentController {
     }
 
     @PostMapping("/save")
-    public Long commentSave(@RequestBody @Valid CommentSaveDTO commentSaveDTO) {
+    public Long save(@RequestBody CommentSaveDTO commentSaveDTO) {
         return commentService.save(commentSaveDTO);
     }
 
-    @PostMapping("/liked/save")
-    public Long commentLikedSave(@RequestBody @Valid CommentLikedSaveDTO commentLikedSaveDTO) {
-        return commentLikedService.save(commentLikedSaveDTO);
+    @GetMapping("/state/liked")
+    public Boolean changeLiked(
+            @RequestParam @PositiveOrZero Long commentNo, @RequestParam @PositiveOrZero Long userNo) {
+        if (commentService.isLiked(commentNo)) {
+            commentLikedService.delete(commentNo);
+
+            return false;
+        }
+
+        CommentLikedSaveDTO commentLikedSaveDTO = CommentLikedSaveDTO.builder()
+                .commentNo(commentNo)
+                .userNo(userNo)
+                .build();
+        commentLikedService.save(commentLikedSaveDTO);
+
+        return true;
     }
 
     @PutMapping("/update")
-    public Long commentUpdate(@RequestBody @Valid CommentUpdateDTO commentUpdateDTO) {
+    public Long update(@RequestBody CommentUpdateDTO commentUpdateDTO) {
         return commentService.update(commentUpdateDTO);
     }
 
     @DeleteMapping("/delete")
-    public void commentDelete(@RequestParam(name = "no") Long commentNo) {
+    public void delete(@RequestParam(name = "no") Long commentNo) {
         commentService.delete(commentNo);
-    }
-
-    @DeleteMapping("/liked/delete")
-    public void commentLikedDelete(@RequestParam(name = "no") Long commentNo) {
-        commentLikedService.delete(commentNo);
     }
 
     @GetMapping("/liked/count")
@@ -70,7 +80,7 @@ public class CommentController {
         return commentLikedService.countByComment(commentNo);
     }
 
-    @GetMapping("/info/liked")
+    @GetMapping("/liked")
     public Boolean isLiked(@RequestParam(name = "no") Long commentNo) {
         return commentService.isLiked(commentNo);
     }

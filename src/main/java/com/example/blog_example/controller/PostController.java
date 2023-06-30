@@ -94,7 +94,7 @@ public class PostController {
         postService.delete(postNo);
     }
 
-    @GetMapping("/state/change/liked")
+    @GetMapping("/state/liked")
     public Boolean changeLiked(
             @RequestParam @PositiveOrZero Long postNo, @RequestParam @PositiveOrZero Long userNo) {
         if (postService.isLiked(postNo)) {
@@ -112,13 +112,18 @@ public class PostController {
         return true;
     }
 
-    @GetMapping("/state/change/open")
+    @GetMapping("/state/open")
     public String changeOpenYN(@RequestParam(name = "no") @PositiveOrZero Long postNo) {
         return postService.changeOpenYN(postNo).toString();
     }
 
-    @GetMapping("/state/liked")
+    @GetMapping("/liked")
     public Boolean isLiked(@RequestParam(name = "no") @PositiveOrZero Long postNo) {
         return postService.isLiked(postNo);
+    }
+
+    @GetMapping("/liked/count")
+    public Integer countLiked(@RequestParam(name = "no") @PositiveOrZero Long postNo) {
+        return postLikedService.countByPost(postNo);
     }
 }
