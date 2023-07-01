@@ -19,7 +19,7 @@ public class BlogVisitCountDailyDTO {
     @PositiveOrZero
     private Long userNo;
 
-    @ApiModelProperty(name = "date", value = "날짜", example = "2000-01-01T00:00:00")
+    @ApiModelProperty(name = "date", value = "날짜", example = "2000-01-01", required = true)
     @PastOrPresent
     private LocalDate date;
 }
