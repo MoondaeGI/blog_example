@@ -1,6 +1,8 @@
 package com.example.blog_example.model.vo.user;
 
 import com.example.blog_example.model.domain.user.user.User;
+import com.example.blog_example.util.enums.Role;
+import com.example.blog_example.util.valid.Enum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +28,10 @@ public class UserVO {
     @NotBlank @Max(20)
     private String blogName;
 
+    @ApiModelProperty(name = "role", value = "접근 권한", example = "USER", required = true)
+    @Enum(enumClass = Role.class, ignoreCase = true)
+    private Role role;
+
     @ApiModelProperty(name = "regDt", value = "등록 날짜", example = "2020-01-01T00:00:00", required = true)
     @PastOrPresent
     private LocalDateTime regDt;
@@ -38,6 +44,7 @@ public class UserVO {
         this.userNo = user.getUserNo();
         this.name = user.getName();
         this.blogName = user.getBlogName();
+        this.role = user.getRole();
         this.regDt = user.getRegDt();
         this.modDt = user.getModDt();
     }

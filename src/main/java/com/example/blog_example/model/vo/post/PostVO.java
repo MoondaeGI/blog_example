@@ -5,10 +5,12 @@ import com.example.blog_example.model.vo.category.LowerCategoryVO;
 import com.example.blog_example.model.vo.category.UpperCategoryVO;
 import com.example.blog_example.model.vo.user.UserVO;
 import com.example.blog_example.util.enums.OpenYN;
+import com.example.blog_example.util.valid.Enum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
@@ -20,15 +22,15 @@ public class PostVO {
     private Long postNo;
 
     @ApiModelProperty(name = "userVO", value = "유저 VO", required = true)
-    @NotNull
+    @Valid
     private UserVO userVO;
 
     @ApiModelProperty(name = "upperCategoryVO", value = "상위 카테고리 VO", required = true)
-    @NotNull
+    @Valid
     private UpperCategoryVO upperCategoryVO;
 
     @ApiModelProperty(name = "lowerCategoryVO", value = "하위 카테고리 VO", required = true)
-    @NotNull
+    @Valid
     private LowerCategoryVO lowerCategoryVO;
 
     @ApiModelProperty(name = "title", value = "제목", example = "example", required = true)
@@ -40,7 +42,7 @@ public class PostVO {
     private String content;
 
     @ApiModelProperty(name = "openYN", value = "공개 여부", example = "OPEN", required = true)
-    @NotNull
+    @Enum(enumClass = OpenYN.class, ignoreCase = true)
     private OpenYN openYN;
 
     @ApiModelProperty(name = "views", value = "조회수", example = "1", required = true)

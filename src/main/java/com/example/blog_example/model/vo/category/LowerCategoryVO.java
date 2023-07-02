@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
@@ -22,7 +23,7 @@ public class LowerCategoryVO {
     private String name;
 
     @ApiModelProperty(name = "upperCategoryVO", value = "상위 카테고리", required = true)
-    @NotNull
+    @Valid
     private UpperCategoryVO upperCategoryVO;
 
     @ApiModelProperty(name = "regDt", value = "등록 날짜", example = "2020-01-01T00:00:00", required = true)

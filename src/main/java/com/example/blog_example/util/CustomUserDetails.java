@@ -13,10 +13,11 @@ import java.util.Collection;
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
     private final User user;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Role role = user.getRole();
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.toString());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getValue());
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(authority);

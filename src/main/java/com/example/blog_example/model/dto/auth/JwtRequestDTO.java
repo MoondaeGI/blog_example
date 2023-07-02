@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 
 @Schema(description = "로그인 요청 DTO")
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class JwtRequestDTO {
     @Email
     private String email;
 
-    @ApiModelProperty(name = "password", value = "비밀번호", example = "1234", required = true)
-    @Size(min = 4, max = 20)
+    @ApiModelProperty(name = "password", value = "비밀번호", example = "example1234@", required = true)
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,20}$")
     private String password;
 }

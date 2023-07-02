@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
@@ -23,11 +24,11 @@ public class CommentVO {
     private String content;
 
     @ApiModelProperty(name = "userVO", value = "유저 VO", required = true)
-    @NotNull
+    @Valid
     private UserVO userVO;
 
     @ApiModelProperty(name = "postVO", value = "게시글 VO", required = true)
-    @NotNull
+    @Valid
     private PostVO postVO;
 
     @ApiModelProperty(name = "regDt", value = "등록 날짜", example = "2020-01-01T00:00:00", required = true)
