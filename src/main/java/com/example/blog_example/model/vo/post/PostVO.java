@@ -5,7 +5,7 @@ import com.example.blog_example.model.vo.category.LowerCategoryVO;
 import com.example.blog_example.model.vo.category.UpperCategoryVO;
 import com.example.blog_example.model.vo.user.UserVO;
 import com.example.blog_example.util.enums.OpenYN;
-import com.example.blog_example.util.valid.Enum;
+import com.example.blog_example.util.annotation.valid.Enum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

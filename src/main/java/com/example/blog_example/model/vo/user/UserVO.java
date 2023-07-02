@@ -2,7 +2,7 @@ package com.example.blog_example.model.vo.user;
 
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.util.enums.Role;
-import com.example.blog_example.util.valid.Enum;
+import com.example.blog_example.util.annotation.valid.Enum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
