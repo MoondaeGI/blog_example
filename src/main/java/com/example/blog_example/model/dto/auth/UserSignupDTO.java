@@ -4,10 +4,12 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 
 @Schema(description = "유저 회원등록 요청 DTO")
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class UserSignupDTO {

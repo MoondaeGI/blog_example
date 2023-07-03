@@ -4,12 +4,14 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 
 @Schema(description = "하위 카테고리 수정 요청 DTO")
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class LowerCategoryUpdateDTO {

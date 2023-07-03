@@ -4,11 +4,13 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
 @Schema(description = "로그인 요청 DTO")
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class JwtRequestDTO {
