@@ -6,11 +6,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/blog")
-@Controller
+@RestController
 public class BlogController {
     private final BlogVisitCountService blogVisitCountService;
 

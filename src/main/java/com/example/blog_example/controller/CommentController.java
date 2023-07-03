@@ -10,7 +10,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +20,7 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/comment")
-@Controller
+@RestController
 public class CommentController {
     private final CommentService commentService;
     private final CommentLikedService commentLikedService;
