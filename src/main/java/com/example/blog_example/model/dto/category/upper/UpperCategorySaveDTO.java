@@ -3,6 +3,7 @@ package com.example.blog_example.model.dto.category.upper;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
 @Schema(description = "상위 카테고리 등록 요청 DTO")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

@@ -86,7 +86,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "상위 카테고리 수정", description = "DTO를 받아 상위 카테고리를 수정하는 API")
-    @PutMapping("/upper/update")
+    @PutMapping("/upper")
     public ResponseEntity<Long> upperCategoryUpdate(@RequestBody UpperCategoryUpdateDTO upperCategoryUpdateDTO) {
         return ResponseEntity.ok(upperCategoryService.update(upperCategoryUpdateDTO));
     }
