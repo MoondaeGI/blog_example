@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,23 +27,23 @@ public class BlogController {
 
     @Operation(summary = "블로그 방문자 수 증가", description = "해당 유저 번호의 블로그의 방문자 수를 증가시키는 API")
     @GetMapping("/count")
-    public Integer addVisitCount(
+    public ResponseEntity<Integer> addVisitCount(
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long userNo) {
-        return blogVisitCountService.addVisitCount(userNo);
+        return ResponseEntity.ok(blogVisitCountService.addVisitCount(userNo));
     }
 
     @Operation(summary = "블로그 누적 방문자 수 출력", description = "해당 유저 번호의 블로그의 누적 방문자 수를 출력하는 API")
     @GetMapping("/count/all")
-    public Integer countAllVisit(
+    public ResponseEntity<Integer> countAllVisit(
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long userNo) {
-        return blogVisitCountService.countAllVisitByUser(userNo);
+        return ResponseEntity.ok(blogVisitCountService.countAllVisitByUser(userNo));
     }
 
     @Operation(summary = "블로그 일일 방문자 수 출력", description = "해당 유저 번호의 블로그의 일일 방문자 수를 출력하는 API")
     @GetMapping("/count/daily")
-    public Integer countDailyVisit(
+    public ResponseEntity<Integer> countDailyVisit(
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam @PositiveOrZero Long userNo) {
         LocalDate date = LocalDate.now();
@@ -52,6 +53,7 @@ public class BlogController {
                 .date(date)
                 .build();
 
-        return blogVisitCountService.countDailyVisit(blogVisitCountDailyDTO);
+        return ResponseEntity.ok(
+                blogVisitCountService.countDailyVisit(blogVisitCountDailyDTO));
     }
 }

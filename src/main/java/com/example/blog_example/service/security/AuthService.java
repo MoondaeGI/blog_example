@@ -42,7 +42,6 @@ public class AuthService {
     public String login(JwtRequestDTO jwtRequestDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(jwtRequestDTO.getEmail(), jwtRequestDTO.getPassword()));
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
