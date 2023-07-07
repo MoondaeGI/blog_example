@@ -42,25 +42,25 @@ public class CategoryController {
     }
 
     @Operation(summary = "상위 카테고리 검색", description = "해당 상위 카테고리 번호를 가진 상위 카테고리를 검색하는 API")
+    @Parameter(name = "upperCategoryNo", description = "상위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
     @GetMapping("/upper")
     public ResponseEntity<UpperCategoryVO> findUpperCategory(
-            @Parameter(name = "upperCategoryNo", description = "상위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long upperCategoryNo) {
         return ResponseEntity.ok(upperCategoryService.find(upperCategoryNo));
     }
 
     @Operation(summary = "하위 카테고리 검색", description = "해당 하위 카테고리 번호를 가진 하위 카테고리를 검색하는 API")
+    @Parameter(name = "lowerCategoryNo", description = "하위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
     @GetMapping("/lower")
     public ResponseEntity<LowerCategoryVO> findLowerCategory(
-            @Parameter(name = "lowerCategoryNo", description = "하위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long lowerCategoryNo) {
         return ResponseEntity.ok(lowerCategoryService.find(lowerCategoryNo));
     }
 
     @Operation(summary = "상위 카테고리로 하위 카테고리 검색", description = "해당 상위 카테고리 번호를 가진 하위 카테고리를 검색하는 API")
+    @Parameter(name = "upperCategoryNo", description = "상위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
     @GetMapping("/lower/list/upper")
     public ResponseEntity<List<LowerCategoryVO>> findLowerCategoryByUpper(
-            @Parameter(name = "upperCategoryNo", description = "상위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long upperCategoryNo) {
         return ResponseEntity.ok(lowerCategoryService.findByUpperCategory(upperCategoryNo));
     }
@@ -98,9 +98,9 @@ public class CategoryController {
     }
 
     @Operation(summary = "상위 카테고리 삭제", description = "해당 상위 카테고리 번호를 가진 상위 카테고리를 삭제하는 API")
+    @Parameter(name = "upperCategoryNo", description = "상위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
     @DeleteMapping("/upper")
     public ResponseEntity<Void> deleteUpperCategory(
-            @Parameter(name = "upperCategoryNo", description = "상위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long upperCategoryNo) {
         upperCategoryService.delete(upperCategoryNo);
 
@@ -108,9 +108,9 @@ public class CategoryController {
     }
 
     @Operation(summary = "하위 카테고리 삭제", description = "해당 하위 카테고리 번호를 가진 하위 카테고리를 삭제하는 API")
+    @Parameter(name = "lowerCategoryNo", description = "하위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
     @DeleteMapping("/lower")
     public ResponseEntity<Void> deleteLowerCategory(
-            @Parameter(name = "lowerCategoryNo", description = "하위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long lowerCategoryNo) {
         lowerCategoryService.delete(lowerCategoryNo);
 

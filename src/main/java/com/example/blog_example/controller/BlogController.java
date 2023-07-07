@@ -26,25 +26,25 @@ public class BlogController {
     private final BlogVisitCountService blogVisitCountService;
 
     @Operation(summary = "블로그 방문자 수 증가", description = "해당 유저 번호의 블로그의 방문자 수를 증가시키는 API")
+    @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
     @GetMapping("/count")
     public ResponseEntity<Integer> addVisitCount(
-            @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long userNo) {
         return ResponseEntity.ok(blogVisitCountService.addVisitCount(userNo));
     }
 
     @Operation(summary = "블로그 누적 방문자 수 출력", description = "해당 유저 번호의 블로그의 누적 방문자 수를 출력하는 API")
+    @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
     @GetMapping("/count/all")
     public ResponseEntity<Integer> countAllVisit(
-            @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long userNo) {
         return ResponseEntity.ok(blogVisitCountService.countAllVisitByUser(userNo));
     }
 
     @Operation(summary = "블로그 일일 방문자 수 출력", description = "해당 유저 번호의 블로그의 일일 방문자 수를 출력하는 API")
+    @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
     @GetMapping("/count/daily")
     public ResponseEntity<Integer> countDailyVisit(
-            @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam @PositiveOrZero Long userNo) {
         LocalDate date = LocalDate.now();
 
@@ -53,7 +53,6 @@ public class BlogController {
                 .date(date)
                 .build();
 
-        return ResponseEntity.ok(
-                blogVisitCountService.countDailyVisit(blogVisitCountDailyDTO));
+        return ResponseEntity.ok(blogVisitCountService.countDailyVisit(blogVisitCountDailyDTO));
     }
 }
