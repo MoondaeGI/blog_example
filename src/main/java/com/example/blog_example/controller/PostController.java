@@ -5,7 +5,7 @@ import com.example.blog_example.model.dto.post.file.FileUpdateDTO;
 import com.example.blog_example.model.dto.post.liked.PostLikedSaveDTO;
 import com.example.blog_example.model.dto.post.post.PostSaveDTO;
 import com.example.blog_example.model.dto.post.post.PostUpdateDTO;
-import com.example.blog_example.model.vo.post.PostDetailVO;
+import com.example.blog_example.model.vo.post.FileVO;
 import com.example.blog_example.model.vo.post.PostVO;
 import com.example.blog_example.service.post.FileService;
 import com.example.blog_example.service.post.PostLikedService;
@@ -41,13 +41,20 @@ public class PostController {
 
     @Operation(summary = "게시글 검색", description = "해당 게시글 번호를 가진 게시글을 검색하는 API")
     @GetMapping
-    public ResponseEntity<PostDetailVO> find(
+    public ResponseEntity<PostVO> find(
             @Parameter(name = "postNo", description = "게시글 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long postNo) {
         postService.addViews(postNo);
 
-        return ResponseEntity.ok(
-                PostDetailVO.of(postService.find(postNo), fileService.findByPost(postNo)));
+        return ResponseEntity.ok(postService.find(postNo));
+    }
+
+    @Operation(summary = "파일 리스트 검색", description = "해당 게시글 번호를 가진 파일 리스트를 검색하는 API")
+    @GetMapping("/file/list/post")
+    public ResponseEntity<List<FileVO>> findFileList(
+            @Parameter(name = "postNo", description = "게시글 번호", example = "1", in = ParameterIn.QUERY, required = true)
+            @RequestParam(name = "no") @PositiveOrZero Long postNo) {
+        return fileService.isExist(postNo) ? ResponseEntity.ok(fileService.findByPost(postNo)) : null;
     }
 
     @Operation(summary = "유저로 게시글 검색", description = "해당 유저 번호를 가진 모든 게시글을 검색하는 API")
@@ -74,9 +81,9 @@ public class PostController {
         return ResponseEntity.ok(postService.findByLowerCategory(lowerCategoryNo));
     }
 
-    @Operation(summary = "유저가 좋아요를 누른 게시글 검색", description = "해당 유저가 좋아요를 누른 모든 게시글을 검색하는 API")
+    @Operation(summary = "유저가 좋아요를 누른 모든 게시글 검색", description = "해당 유저가 좋아요를 누른 모든 게시글을 검색하는 API")
     @GetMapping("/liked/list/user")
-    public ResponseEntity<List<PostVO>> findPostLiked(
+    public ResponseEntity<List<PostVO>> findPostLikedList(
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long userNo) {
         return ResponseEntity.ok(postLikedService.findPostByUser(userNo));

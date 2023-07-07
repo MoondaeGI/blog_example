@@ -4,8 +4,11 @@ import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.lower.LowerCategoryRepository;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategoryRepository;
+import com.example.blog_example.model.dto.category.lower.LowerCategorySaveDTO;
+import com.example.blog_example.model.dto.category.lower.LowerCategoryUpdateDTO;
 import com.example.blog_example.model.dto.category.upper.UpperCategorySaveDTO;
 import com.example.blog_example.model.dto.category.upper.UpperCategoryUpdateDTO;
+import com.example.blog_example.model.vo.category.LowerCategoryVO;
 import com.example.blog_example.model.vo.category.UpperCategoryVO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,21 +63,54 @@ public class CategoryControllerTest {
                         new ParameterizedTypeReference<List<UpperCategoryVO>>() {});
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody().size())
-                .isEqualTo(upperCategoryRepository.findAll().size());
+        assertThat(responseEntity.getBody().size()).isEqualTo(upperCategoryRepository.findAll().size());
+    }
+
+    @Test
+    public void lowerCategoryFindAllTest() {
+        ResponseEntity<List<LowerCategoryVO>> responseEntity =
+                testRestTemplate.exchange(URL + "/lower/list", HttpMethod.GET, null,
+                        new ParameterizedTypeReference<List<LowerCategoryVO>>() {});
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().size()).isEqualTo(lowerCategoryRepository.findAll().size());
     }
 
     @Test
     public void upperCategoryFindTest() {
-        Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
+        UpperCategory upperCategory = upperCategoryRepository.findAll().get(0);
 
         ResponseEntity<UpperCategoryVO> responseEntity =
-                testRestTemplate.getForEntity(URL + "/upper?no=" + upperCategoryNo, UpperCategoryVO.class);
-
-        UpperCategory upperCategory = upperCategoryRepository.findAll().get(0);
+                testRestTemplate.getForEntity(
+                        URL + "/upper?no=" + upperCategory.getUpperCategoryNo(), UpperCategoryVO.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().getName()).isEqualTo(upperCategory.getName());
+    }
+
+    @Test
+    public void lowerCategoryFindTest() {
+        LowerCategory lowerCategory = lowerCategoryRepository.findAll().get(0);
+
+        ResponseEntity<LowerCategoryVO> responseEntity =
+                testRestTemplate.getForEntity(
+                        URL + "/lower?no=" + lowerCategory.getLowerCategoryNo(), LowerCategoryVO.class);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().getName()).isEqualTo(lowerCategory.getName());
+    }
+
+    @Test
+    public void lowerCategoryFindByUpperTest() {
+        Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
+
+        ResponseEntity<List<LowerCategoryVO>> responseEntity =
+                testRestTemplate.exchange(
+                        URL + "/lower/list/upper?no=" + upperCategoryNo, HttpMethod.GET, null,
+                        new ParameterizedTypeReference<List<LowerCategoryVO>>() {});
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().size()).isEqualTo(1);
     }
 
     @Test
@@ -86,10 +122,26 @@ public class CategoryControllerTest {
         ResponseEntity<Long> responseEntity =
                 testRestTemplate.postForEntity(URL + "/upper", upperCategorySaveDTO, Long.class);
 
-        UpperCategory upperCategory = upperCategoryRepository.findAll().get(1);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody())
+                .isEqualTo(upperCategoryRepository.findAll().get(1).getUpperCategoryNo());
+    }
+
+    @Test
+    public void lowerCategorySaveTest() {
+        Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
+
+        LowerCategorySaveDTO lowerCategorySaveDTO = LowerCategorySaveDTO.builder()
+                .upperCategoryNo(upperCategoryNo)
+                .name("test1")
+                .build();
+
+        ResponseEntity<Long> responseEntity =
+                testRestTemplate.postForEntity(URL + "/lower", lowerCategorySaveDTO, Long.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isEqualTo(upperCategory.getUpperCategoryNo());
+        assertThat(responseEntity.getBody())
+                .isEqualTo(lowerCategoryRepository.findAll().get(1).getLowerCategoryNo());
     }
 
     @Test
@@ -111,13 +163,47 @@ public class CategoryControllerTest {
     }
 
     @Test
+    public void lowerCategoryUpdateTest() {
+        String name = "test1";
+        LowerCategory lowerCategory = lowerCategoryRepository.findAll().get(0);
+        Long lowerCategoryNo = lowerCategory.getLowerCategoryNo();
+        Long upperCategoryNo = lowerCategory.getUpperCategory().getUpperCategoryNo();
+
+        LowerCategoryUpdateDTO lowerCategoryUpdateDTO = LowerCategoryUpdateDTO.builder()
+                .lowerCategoryNo(lowerCategoryNo)
+                .upperCategoryNo(upperCategoryNo)
+                .name(name)
+                .build();
+        HttpEntity<LowerCategoryUpdateDTO> requestEntity = new HttpEntity<>(lowerCategoryUpdateDTO);
+
+        ResponseEntity<Long> responseEntity = testRestTemplate
+                .exchange(URL + "/lower", HttpMethod.PUT, requestEntity, Long.class);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(lowerCategoryRepository.findAll().get(0).getName()).isEqualTo(name);
+    }
+
+    @Test
     public void upperCategoryDeleteTest() {
         Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
 
         ResponseEntity<Void> responseEntity = testRestTemplate
-                .exchange(URL + "/upper?no=" + upperCategoryNo, HttpMethod.DELETE, new HttpEntity<>(upperCategoryNo), Void.class);
+                .exchange(URL + "/upper?no=" + upperCategoryNo, HttpMethod.DELETE,
+                        new HttpEntity<>(upperCategoryNo), Void.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(upperCategoryRepository.findById(upperCategoryNo)).isEmpty();
+    }
+
+    @Test
+    public void lowerCategoryDeleteTest() {
+        Long lowerCategoryNo = lowerCategoryRepository.findAll().get(0).getLowerCategoryNo();
+
+        ResponseEntity<Void> responseEntity = testRestTemplate
+                .exchange(URL + "/lower?no=" + lowerCategoryNo, HttpMethod.DELETE,
+                        new HttpEntity<>(lowerCategoryNo), Void.class);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(lowerCategoryRepository.findById(lowerCategoryNo)).isEmpty();
     }
 }

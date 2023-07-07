@@ -105,4 +105,12 @@ public class FileService {
 
         fileRepository.deleteByPost(post);
     }
+
+    @Transactional
+    public Boolean isExist(Long postNo) {
+        Post post = postRepository.findById(postNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        return fileRepository.existsByPost(post);
+    }
 }

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,17 +24,13 @@ public class AuthController {
 
     @Operation(summary = "회원 등록", description = "DTO를 받아 유저를 생성하는 API")
     @PostMapping("/signup")
-    public String signup(@RequestBody UserSignupDTO userSignupDTO) {
-        return authService.signup(userSignupDTO);
+    public ResponseEntity<String> signup(@RequestBody UserSignupDTO userSignupDTO) {
+        return ResponseEntity.ok(authService.signup(userSignupDTO));
     }
 
     @Operation(summary = "로그인", description = "DTO를 받아 유저의 로그인을 실행하는 API")
     @PostMapping(value = "login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String login(@RequestBody JwtRequestDTO jwtRequestDTO) {
-        try {
-            return authService.login(jwtRequestDTO);
-        } catch (Exception e){
-            return e.getMessage();
-        }
+    public ResponseEntity<String> login(@RequestBody JwtRequestDTO jwtRequestDTO) {
+        return ResponseEntity.ok(authService.login(jwtRequestDTO));
     }
 }
