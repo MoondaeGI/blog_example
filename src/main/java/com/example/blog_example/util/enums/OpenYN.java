@@ -3,8 +3,8 @@ package com.example.blog_example.util.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @RequiredArgsConstructor
+@Getter
 public enum OpenYN {
     OPEN("공개"),
     CLOSE("비공개");

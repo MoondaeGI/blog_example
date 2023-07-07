@@ -4,6 +4,7 @@ import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.util.enums.Role;
 import com.example.blog_example.util.annotation.valid.Enum;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
+@Schema(description = "유저 VO")
 @NoArgsConstructor
 @Getter
 public class UserVO {

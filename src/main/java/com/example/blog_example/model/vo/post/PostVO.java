@@ -7,6 +7,7 @@ import com.example.blog_example.model.vo.user.UserVO;
 import com.example.blog_example.util.enums.OpenYN;
 import com.example.blog_example.util.annotation.valid.Enum;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
+@Schema(description = "게시글 VO")
 @NoArgsConstructor
 @Getter
 public class PostVO {
