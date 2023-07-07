@@ -11,6 +11,7 @@ import com.example.blog_example.service.post.FileService;
 import com.example.blog_example.service.post.PostLikedService;
 import com.example.blog_example.service.post.PostService;
 import com.example.blog_example.service.user.UserService;
+import com.example.blog_example.util.enums.LikedState;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -140,7 +141,7 @@ public class PostController {
 
     @Operation(summary = "게시글 좋아요 변경", description = "해당 게시글 번호의 게시글의 좋아요 여부를 확인 후 변경하는 API")
     @GetMapping("/state/liked")
-    public ResponseEntity<Boolean> changeLiked(
+    public ResponseEntity<String> changeLiked(
             @Parameter(name = "postNo", description = "게시글 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam("post-no") @PositiveOrZero Long postNo,
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
@@ -158,7 +159,9 @@ public class PostController {
             postLikedService.save(postLikedSaveDTO);
         }
 
-        return ResponseEntity.ok(postService.isLiked(postNo));
+        LikedState result = postService.isLiked(postNo) ? LikedState.LIKED : LikedState.CANSEL;
+
+        return ResponseEntity.ok(result.getState());
     }
 
     @Operation(summary = "게시글 비공개 변경", description = "해당 게시글 번호의 게시글의 비공개 여부를 확인 후 변경하는 API")

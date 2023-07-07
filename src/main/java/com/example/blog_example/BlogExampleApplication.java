@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableJpaAuditing
 @SpringBootApplication
 public class BlogExampleApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(BlogExampleApplication.class, args);
 		System.out.println("blog example");

@@ -7,6 +7,7 @@ import com.example.blog_example.model.vo.post.CommentVO;
 import com.example.blog_example.service.comment.CommentLikedService;
 import com.example.blog_example.service.comment.CommentService;
 import com.example.blog_example.service.user.UserService;
+import com.example.blog_example.util.enums.LikedState;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -84,7 +85,7 @@ public class CommentController {
 
     @Operation(summary = "댓글 좋아요 변경", description = "해당 댓글 번호를 가진 댓글의 좋아요를 확인 후 변경하는 API")
     @GetMapping("/state/liked")
-    public ResponseEntity<Boolean> changeLiked(
+    public ResponseEntity<String> changeLiked(
             @Parameter(name = "commentNo", description = "댓글 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "comment-no") @PositiveOrZero Long commentNo,
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
@@ -102,7 +103,9 @@ public class CommentController {
             commentLikedService.save(commentLikedSaveDTO);
         }
 
-        return ResponseEntity.ok(commentService.isLiked(commentNo));
+        LikedState result = commentService.isLiked(commentNo) ? LikedState.LIKED : LikedState.CANSEL;
+
+        return ResponseEntity.ok(result.getState());
     }
 
     @Operation(summary = "댓글 좋아요 확인", description = "해당 댓글 번호를 가진 댓글의 좋아요 여부를 확인하는 API")
