@@ -6,6 +6,7 @@ import com.example.blog_example.model.dto.comment.liked.CommentLikedSaveDTO;
 import com.example.blog_example.model.vo.post.CommentVO;
 import com.example.blog_example.service.comment.CommentLikedService;
 import com.example.blog_example.service.comment.CommentService;
+import com.example.blog_example.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
+import java.util.Objects;
 
 @Tag(name = "comment", description = "댓글 API")
 @Validated
@@ -26,6 +28,7 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
     private final CommentLikedService commentLikedService;
+    private final UserService userService;
 
     @Operation(summary = "모든 댓글 검색", description = "데이터 베이스 내부의 모든 댓글을 검색하는 API")
     @GetMapping("/list")
@@ -86,6 +89,8 @@ public class CommentController {
             @RequestParam(name = "comment-no") @PositiveOrZero Long commentNo,
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "user-no") @PositiveOrZero Long userNo) {
+        if (Objects.equals(userService.findByComment(commentNo).getUserNo(), userNo)) throw new IllegalArgumentException();
+
         if (commentService.isLiked(commentNo)) {
             commentLikedService.delete(commentNo);
         } else {

@@ -4,6 +4,7 @@ import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.lower.LowerCategoryRepository;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategoryRepository;
+import com.example.blog_example.model.domain.post.liked.PostLiked;
 import com.example.blog_example.model.domain.post.liked.PostLikedRepository;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.post.PostRepository;
@@ -92,6 +93,57 @@ public class PostControllerTest {
 
     @Test
     public void findTest() {
+        Post post = postRepository.findAll().get(0);
 
+        ResponseEntity<PostVO> responseEntity = testRestTemplate
+                .getForEntity(URL + "?no=" + post.getPostNo(), PostVO.class);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().getTitle()).isEqualTo(post.getTitle());
+    }
+
+    @Test
+    public void findByUserTest() {
+        User user = userRepository.findAll().get(0);
+
+        ResponseEntity<List<PostVO>> responseEntity = testRestTemplate
+                .exchange(URL + "/list/user?no=" + user.getUserNo(), HttpMethod.GET, null,
+                        new ParameterizedTypeReference<List<PostVO>>() {});
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().size()).isEqualTo(postRepository.findByUser(user).size());
+    }
+
+    @Test
+    public void findByUpperCategoryTest() {
+        UpperCategory upperCategory = upperCategoryRepository.findAll().get(0);
+
+        ResponseEntity<List<PostVO>> responseEntity = testRestTemplate
+                .exchange(URL + "/list/upper-category?no=" + upperCategory.getUpperCategoryNo(),
+                        HttpMethod.GET, null, new ParameterizedTypeReference<List<PostVO>>() {});
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().size()).isEqualTo(postRepository.findByUpperCategory(upperCategory).size());
+    }
+
+    @Test
+    public void findByLowerCategoryTest() {
+        LowerCategory lowerCategory = lowerCategoryRepository.findAll().get(0);
+
+        ResponseEntity<List<PostVO>> responseEntity = testRestTemplate
+                .exchange(URL + "/list/lower-category?no=" + lowerCategory.getLowerCategoryNo(),
+                        HttpMethod.GET, null, new ParameterizedTypeReference<List<PostVO>>() {});
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().size()).isEqualTo(postRepository.findByLowerCategory(lowerCategory).size());
+    }
+
+    @Test
+    public void findPostLikedListTest() {
+        postLikedRepository.save(
+                PostLiked.builder()
+                        .post(postRepository.findAll().get(0))
+                        .user(userRepository.findAll().get(0))
+                        .build());
     }
 }

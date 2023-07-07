@@ -10,6 +10,7 @@ import com.example.blog_example.model.vo.post.PostVO;
 import com.example.blog_example.service.post.FileService;
 import com.example.blog_example.service.post.PostLikedService;
 import com.example.blog_example.service.post.PostService;
+import com.example.blog_example.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
+import java.util.Objects;
 
 @Tag(name = "post", description = "게시글 API")
 @Validated
@@ -32,6 +34,7 @@ public class PostController {
     private final PostService postService;
     private final PostLikedService postLikedService;
     private final FileService fileService;
+    private final UserService userService;
 
     @Operation(summary = "모든 게시글 검색", description = "데이터 베이스 내부의 모든 게시글을 검색하는 API")
     @GetMapping("/list")
@@ -58,7 +61,7 @@ public class PostController {
     }
 
     @Operation(summary = "유저로 게시글 검색", description = "해당 유저 번호를 가진 모든 게시글을 검색하는 API")
-    @GetMapping("/user")
+    @GetMapping("/list/user")
     public ResponseEntity<List<PostVO>> findByUser(
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long userNo) {
@@ -66,7 +69,7 @@ public class PostController {
     }
 
     @Operation(summary = "상위 카테고리로 게시글 검색", description = "해당 상위 카테고리 번호를 가진 모든 게시글을 검색하는 API")
-    @GetMapping("/upper-category")
+    @GetMapping("/list/upper-category")
     public ResponseEntity<List<PostVO>> findByUpperCategory(
             @Parameter(name = "upperCategoryNo", description = "상위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long upperCategoryNo) {
@@ -74,7 +77,7 @@ public class PostController {
     }
 
     @Operation(summary = "하위 카테고리로 게시글 검색", description = "해당 하위 카테고리 번호를 가진 모든 게시글을 검색하는 API")
-    @GetMapping("/lower-category")
+    @GetMapping("/list/lower-category")
     public ResponseEntity<List<PostVO>> findByLowerCategory(
             @Parameter(name = "lowerCategoryNo", description = "하위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "no") @PositiveOrZero Long lowerCategoryNo) {
@@ -142,6 +145,8 @@ public class PostController {
             @RequestParam("post-no") @PositiveOrZero Long postNo,
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam("user-no") @PositiveOrZero Long userNo) {
+        if (Objects.equals(userService.findByPost(postNo).getUserNo(), userNo)) throw new IllegalArgumentException();
+
         if (postService.isLiked(postNo)) {
             postLikedService.delete(postNo);
         } else {

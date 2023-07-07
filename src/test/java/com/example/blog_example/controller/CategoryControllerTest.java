@@ -57,7 +57,7 @@ public class CategoryControllerTest {
     public void test() { System.out.println("test"); }
 
     @Test
-    public void upperCategoryFindAllTest() {
+    public void findAllUpperCategoryTest() {
         ResponseEntity<List<UpperCategoryVO>> responseEntity =
                 testRestTemplate.exchange(URL + "/upper/list", HttpMethod.GET, null,
                         new ParameterizedTypeReference<List<UpperCategoryVO>>() {});
@@ -67,7 +67,7 @@ public class CategoryControllerTest {
     }
 
     @Test
-    public void lowerCategoryFindAllTest() {
+    public void findAllLowerCategoryTest() {
         ResponseEntity<List<LowerCategoryVO>> responseEntity =
                 testRestTemplate.exchange(URL + "/lower/list", HttpMethod.GET, null,
                         new ParameterizedTypeReference<List<LowerCategoryVO>>() {});
@@ -77,7 +77,7 @@ public class CategoryControllerTest {
     }
 
     @Test
-    public void upperCategoryFindTest() {
+    public void findUpperCategoryTest() {
         UpperCategory upperCategory = upperCategoryRepository.findAll().get(0);
 
         ResponseEntity<UpperCategoryVO> responseEntity =
@@ -89,7 +89,7 @@ public class CategoryControllerTest {
     }
 
     @Test
-    public void lowerCategoryFindTest() {
+    public void findLowerCategoryTest() {
         LowerCategory lowerCategory = lowerCategoryRepository.findAll().get(0);
 
         ResponseEntity<LowerCategoryVO> responseEntity =
@@ -101,7 +101,7 @@ public class CategoryControllerTest {
     }
 
     @Test
-    public void lowerCategoryFindByUpperTest() {
+    public void findLowerCategoryByUpperTest() {
         Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
 
         ResponseEntity<List<LowerCategoryVO>> responseEntity =
@@ -114,7 +114,7 @@ public class CategoryControllerTest {
     }
 
     @Test
-    public void upperCategorySaveTest() {
+    public void saveUpperCategoryTest() {
         UpperCategorySaveDTO upperCategorySaveDTO = UpperCategorySaveDTO.builder()
                 .name("test")
                 .build();
@@ -128,7 +128,7 @@ public class CategoryControllerTest {
     }
 
     @Test
-    public void lowerCategorySaveTest() {
+    public void saveLowerCategoryTest() {
         Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
 
         LowerCategorySaveDTO lowerCategorySaveDTO = LowerCategorySaveDTO.builder()
@@ -145,7 +145,7 @@ public class CategoryControllerTest {
     }
 
     @Test
-    public void upperCategoryUpdateTest() {
+    public void updateUpperCategoryTest() {
         String name = "test1";
         Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
 
@@ -163,7 +163,7 @@ public class CategoryControllerTest {
     }
 
     @Test
-    public void lowerCategoryUpdateTest() {
+    public void updateLowerCategoryTest() {
         String name = "test1";
         LowerCategory lowerCategory = lowerCategoryRepository.findAll().get(0);
         Long lowerCategoryNo = lowerCategory.getLowerCategoryNo();
@@ -184,7 +184,7 @@ public class CategoryControllerTest {
     }
 
     @Test
-    public void upperCategoryDeleteTest() {
+    public void deleteUpperCategoryTest() {
         Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
 
         ResponseEntity<Void> responseEntity = testRestTemplate
@@ -196,7 +196,7 @@ public class CategoryControllerTest {
     }
 
     @Test
-    public void lowerCategoryDeleteTest() {
+    public void deleteLowerCategoryTest() {
         Long lowerCategoryNo = lowerCategoryRepository.findAll().get(0).getLowerCategoryNo();
 
         ResponseEntity<Void> responseEntity = testRestTemplate
