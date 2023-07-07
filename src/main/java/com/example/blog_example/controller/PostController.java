@@ -145,7 +145,8 @@ public class PostController {
             @RequestParam("post-no") @PositiveOrZero Long postNo,
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam("user-no") @PositiveOrZero Long userNo) {
-        if (Objects.equals(userService.findByPost(postNo).getUserNo(), userNo)) throw new IllegalArgumentException();
+        if (Objects.equals(userService.findByPost(postNo).getUserNo(), userNo))
+            throw new IllegalArgumentException("좋아요 하려는 유저가 게시글을 쓴 유저와 같습니다.");
 
         if (postService.isLiked(postNo)) {
             postLikedService.delete(postNo);

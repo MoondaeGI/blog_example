@@ -89,7 +89,8 @@ public class CommentController {
             @RequestParam(name = "comment-no") @PositiveOrZero Long commentNo,
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
             @RequestParam(name = "user-no") @PositiveOrZero Long userNo) {
-        if (Objects.equals(userService.findByComment(commentNo).getUserNo(), userNo)) throw new IllegalArgumentException();
+        if (Objects.equals(userService.findByComment(commentNo).getUserNo(), userNo))
+            throw new IllegalArgumentException("좋아요 하려는 유저가 댓글을 쓴 유저와 같습니다.");
 
         if (commentService.isLiked(commentNo)) {
             commentLikedService.delete(commentNo);
