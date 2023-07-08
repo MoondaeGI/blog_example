@@ -4,6 +4,7 @@ import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.lower.LowerCategoryRepository;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategoryRepository;
+import com.example.blog_example.model.domain.post.liked.PostLiked;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.post.PostRepository;
 import com.example.blog_example.model.domain.post.liked.PostLikedRepository;
@@ -11,12 +12,15 @@ import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.post.post.*;
 import com.example.blog_example.model.vo.post.PostVO;
+import com.example.blog_example.util.enums.LikedState;
 import com.example.blog_example.util.enums.OpenYN;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.ObjectDeletedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -37,8 +41,11 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostVO find(Long postNo) {
-        return PostVO.from(postRepository.findById(postNo)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다.")));
+        Post post = postRepository.findById(postNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        post.addViews();
+
+        return PostVO.from(post);
     }
 
     @Transactional(readOnly = true)
@@ -68,6 +75,16 @@ public class PostService {
                         .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
         return postRepository.findByLowerCategory(lowerCategory).stream()
+                .map(PostVO::from)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostVO> findPostLikedList(Long userNo) {
+        User user = userRepository.findById(userNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+        return postLikedRepository.findPostByUser(user).stream()
                 .map(PostVO::from)
                 .collect(Collectors.toList());
     }
@@ -123,11 +140,26 @@ public class PostService {
     }
 
     @Transactional
-    public Integer addViews(Long postNo) {
+    public LikedState changeLiked(Long postNo, Long userNo) {
         Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        if (Objects.equals(post.getUser().getUserNo(), userNo))
+            throw new IllegalArgumentException("좋아요 하려는 유저가 게시글을 쓴 유저와 같습니다.");
 
-        return post.addViews();
+        if (postLikedRepository.existsByPost(post)) {
+            postLikedRepository.deleteByPost(post);
+        } else {
+            User user = userRepository.findById(userNo)
+                            .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+            postLikedRepository.save(
+                    PostLiked.builder()
+                            .post(post)
+                            .user(user)
+                            .build());
+        }
+
+        return postLikedRepository.existsByPost(post) ? LikedState.LIKED : LikedState.CANSEL;
     }
 
     @Transactional
@@ -143,6 +175,14 @@ public class PostService {
         Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
-        return postLikedRepository.findByPost(post) != null;
+        return postLikedRepository.existsByPost(post);
+    }
+
+    @Transactional(readOnly = true)
+    public Integer countByPost(Long postNo) {
+        Post post = postRepository.findById(postNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        return postLikedRepository.countByPost(post).intValue();
     }
 }

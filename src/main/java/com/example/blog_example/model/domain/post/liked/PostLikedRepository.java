@@ -11,6 +11,7 @@ public interface PostLikedRepository extends JpaRepository<PostLiked, Long> {
     PostLiked findByPost(Post post);
     Long countByPost(Post post);
     void deleteByPost(Post post);
+    Boolean existsByPost(Post post);
     @Query("SELECT post " +
             "FROM Post post " +
             "WHERE post IN (SELECT postLiked.post " +

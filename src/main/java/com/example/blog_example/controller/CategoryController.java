@@ -68,15 +68,7 @@ public class CategoryController {
     @Operation(summary = "상위 카테고리 등록", description = "DTO를 받아 상위 카테고리를 등록하는 API")
     @PostMapping("/upper")
     public ResponseEntity<Long> saveUpperCategory(@RequestBody UpperCategorySaveDTO upperCategorySaveDTO) {
-        Long upperCategoryNo = upperCategoryService.save(upperCategorySaveDTO);
-
-        LowerCategorySaveDTO lowerCategorySaveDTO = LowerCategorySaveDTO.builder()
-                .name("전체")
-                .upperCategoryNo(upperCategoryNo)
-                .build();
-        lowerCategoryService.save(lowerCategorySaveDTO);
-
-        return ResponseEntity.ok(upperCategoryNo);
+        return ResponseEntity.ok(upperCategoryService.save(upperCategorySaveDTO));
     }
 
     @Operation(summary = "하위 카테고리 등록", description = "DTO를 받아 하위 카테고리를 등록하는 API")

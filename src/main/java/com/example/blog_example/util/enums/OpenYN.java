@@ -9,5 +9,5 @@ public enum OpenYN {
     OPEN("공개"),
     CLOSE("비공개");
 
-    private final String name;
+    private final String state;
 }

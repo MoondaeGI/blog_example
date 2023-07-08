@@ -143,14 +143,6 @@ public class PostServiceTest {
     }
 
     @Test
-    public void addViewsTest() {
-        Long postNo = postRepository.findAll().get(0).getPostNo();
-
-        assertThat(postService.addViews(postNo)).isEqualTo(1);
-        assertThat(postService.addViews(postNo)).isEqualTo(2);
-    }
-
-    @Test
     public void changeOpenYNTest() {
         Long postNo = postRepository.findAll().get(0).getPostNo();
 

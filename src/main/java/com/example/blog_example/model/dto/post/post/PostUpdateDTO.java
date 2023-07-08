@@ -3,11 +3,13 @@ package com.example.blog_example.model.dto.post.post;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.*;
 
 @Schema(description = "게시글 수정 요청 DTO")
+@Builder
 @AllArgsConstructor
 @Getter
 public class PostUpdateDTO {
@@ -28,6 +30,6 @@ public class PostUpdateDTO {
     private String title;
 
     @ApiModelProperty(name = "content", value = "내용", example = "example", required = true)
-    @NotNull
+    @NotBlank
     private String content;
 }

@@ -10,9 +10,11 @@ import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.post.PostRepository;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
+import com.example.blog_example.model.dto.post.post.PostSaveDTO;
 import com.example.blog_example.model.vo.post.PostVO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,10 +142,47 @@ public class PostControllerTest {
 
     @Test
     public void findPostLikedListTest() {
+        User user = userRepository.save(
+                User.builder()
+                        .name("test1")
+                        .blogName("test1")
+                        .email("test1234@test.com")
+                        .password("test1234@")
+                        .build());
+
         postLikedRepository.save(
                 PostLiked.builder()
                         .post(postRepository.findAll().get(0))
-                        .user(userRepository.findAll().get(0))
+                        .user(user)
                         .build());
+
+        ResponseEntity<List<PostVO>> responseEntity = testRestTemplate
+                .exchange(URL + "/liked/list/user?no=" + user.getUserNo(), HttpMethod.GET, null,
+                        new ParameterizedTypeReference<List<PostVO>>() {});
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().size()).isEqualTo(postLikedRepository.findAll().size());
+    }
+
+    @DisplayName("업로드할 파일이 없는 게시글 생성 테스트")
+    @Test
+    public void saveTest1() {
+        String title = "test1";
+        Long userNo = userRepository.findAll().get(0).getUserNo();
+        Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
+        Long lowerCategoryNo = lowerCategoryRepository.findAll().get(0).getLowerCategoryNo();
+
+        PostSaveDTO postSaveDTO = PostSaveDTO.builder()
+                .userNo(userNo)
+                .upperCategoryNo(upperCategoryNo)
+                .lowerCategoryNo(lowerCategoryNo)
+                .title(title)
+                .content("test1")
+                .build();
+
+        ResponseEntity<Long> responseEntity = testRestTemplate.postForEntity(URL, postSaveDTO, Long.class);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isEqualTo(postRepository.findAll().get(1).getPostNo());
     }
 }

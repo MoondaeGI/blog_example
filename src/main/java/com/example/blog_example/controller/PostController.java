@@ -2,16 +2,12 @@ package com.example.blog_example.controller;
 
 import com.example.blog_example.model.dto.post.file.FileSaveDTO;
 import com.example.blog_example.model.dto.post.file.FileUpdateDTO;
-import com.example.blog_example.model.dto.post.liked.PostLikedSaveDTO;
 import com.example.blog_example.model.dto.post.post.PostSaveDTO;
 import com.example.blog_example.model.dto.post.post.PostUpdateDTO;
 import com.example.blog_example.model.vo.post.FileVO;
 import com.example.blog_example.model.vo.post.PostVO;
 import com.example.blog_example.service.post.FileService;
-import com.example.blog_example.service.post.PostLikedService;
 import com.example.blog_example.service.post.PostService;
-import com.example.blog_example.service.user.UserService;
-import com.example.blog_example.util.enums.LikedState;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -25,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
-import java.util.Objects;
 
 @Tag(name = "post", description = "게시글 API")
 @Validated
@@ -34,9 +29,7 @@ import java.util.Objects;
 @RestController
 public class PostController {
     private final PostService postService;
-    private final PostLikedService postLikedService;
     private final FileService fileService;
-    private final UserService userService;
 
     @Operation(summary = "모든 게시글 검색", description = "데이터 베이스 내부의 모든 게시글을 검색하는 API")
     @GetMapping("/list")
@@ -49,8 +42,6 @@ public class PostController {
     @GetMapping
     public ResponseEntity<PostVO> find(
             @RequestParam(name = "no") @PositiveOrZero Long postNo) {
-        postService.addViews(postNo);
-
         return ResponseEntity.ok(postService.find(postNo));
     }
 
@@ -91,7 +82,7 @@ public class PostController {
     @GetMapping("/liked/list/user")
     public ResponseEntity<List<PostVO>> findPostLikedList(
             @RequestParam(name = "no") @PositiveOrZero Long userNo) {
-        return ResponseEntity.ok(postLikedService.findPostByUser(userNo));
+        return ResponseEntity.ok(postService.findPostLikedList(userNo));
     }
 
     @Operation(summary = "게시글 등록", description = "DTO, MultipartFile을 받아 게시글을 등록하는 API")
@@ -102,7 +93,7 @@ public class PostController {
             @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
         Long postNo = postService.save(postSaveDTO);
 
-        if (!multipartFiles.isEmpty()) {
+        if (multipartFiles != null) {
             FileSaveDTO fileSaveDTO = FileSaveDTO.builder()
                     .multipartFiles(multipartFiles)
                     .postNo(postNo)
@@ -149,22 +140,7 @@ public class PostController {
     public ResponseEntity<String> changeLiked(
             @RequestParam("post-no") @PositiveOrZero Long postNo,
             @RequestParam("user-no") @PositiveOrZero Long userNo) {
-        if (Objects.equals(userService.findByPost(postNo).getUserNo(), userNo))
-            throw new IllegalArgumentException("좋아요 하려는 유저가 게시글을 쓴 유저와 같습니다.");
-
-        if (postService.isLiked(postNo)) {
-            postLikedService.delete(postNo);
-        } else {
-            PostLikedSaveDTO postLikedSaveDTO = PostLikedSaveDTO.builder()
-                    .postNo(postNo)
-                    .userNo(userNo)
-                    .build();
-            postLikedService.save(postLikedSaveDTO);
-        }
-
-        LikedState result = postService.isLiked(postNo) ? LikedState.LIKED : LikedState.CANSEL;
-
-        return ResponseEntity.ok(result.getState());
+        return ResponseEntity.ok(postService.changeLiked(postNo, userNo).toString());
     }
 
     @Operation(summary = "게시글 비공개 변경", description = "해당 게시글 번호의 게시글의 비공개 여부를 확인 후 변경하는 API")
@@ -188,6 +164,6 @@ public class PostController {
     @GetMapping("/liked/count")
     public ResponseEntity<Integer> countLiked(
             @RequestParam(name = "no") @PositiveOrZero Long postNo) {
-        return ResponseEntity.ok(postLikedService.countByPost(postNo));
+        return ResponseEntity.ok(postService.countByPost(postNo));
     }
 }

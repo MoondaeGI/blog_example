@@ -1,5 +1,7 @@
 package com.example.blog_example.service.category;
 
+import com.example.blog_example.model.domain.category.lower.LowerCategory;
+import com.example.blog_example.model.domain.category.lower.LowerCategoryRepository;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategoryRepository;
 import com.example.blog_example.model.dto.category.upper.UpperCategorySaveDTO;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class UpperCategoryService {
     private final UpperCategoryRepository upperCategoryRepository;
+    private final LowerCategoryRepository lowerCategoryRepository;
 
     @Transactional(readOnly = true)
     public List<UpperCategoryVO> findAll() {
@@ -32,11 +35,18 @@ public class UpperCategoryService {
 
     @Transactional
     public Long save(UpperCategorySaveDTO upperCategorySaveDTO) {
-        return upperCategoryRepository.save(
+        UpperCategory upperCategory = upperCategoryRepository.save(
                 UpperCategory.builder()
                         .name(upperCategorySaveDTO.getName())
-                        .build())
-                .getUpperCategoryNo();
+                        .build());
+
+        lowerCategoryRepository.save(
+                LowerCategory.builder()
+                        .name("전체")
+                        .upperCategory(upperCategory)
+                        .build());
+
+        return upperCategory.getUpperCategoryNo();
     }
 
     @Transactional
