@@ -128,7 +128,7 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public Integer countByComment(Long commentNo) {
+    public Integer countLiked(Long commentNo) {
         Comment comment = commentRepository.findById(commentNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
 

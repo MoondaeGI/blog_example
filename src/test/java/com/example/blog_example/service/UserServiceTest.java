@@ -75,12 +75,4 @@ public class UserServiceTest {
 
         assertThat(userService.find(user.getUserNo()).getName()).isEqualTo(user.getName());
     }
-
-    @Test
-    public void findByPostTest() {
-        Post post = postRepository.findAll().get(0);
-
-        assertThat(userService.findByPost(post.getPostNo()).getUserNo())
-                .isEqualTo(userRepository.findAll().get(0).getUserNo());
-    }
 }

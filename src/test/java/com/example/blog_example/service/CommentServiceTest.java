@@ -15,8 +15,10 @@ import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.comment.CommentSaveDTO;
 import com.example.blog_example.model.dto.comment.CommentUpdateDTO;
 import com.example.blog_example.service.comment.CommentService;
+import com.example.blog_example.util.enums.LikedState;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,6 +153,44 @@ public class CommentServiceTest {
         assertThat(commentRepository.findById(commentNo)).isEmpty();
     }
 
+    @DisplayName("좋아요 표시가 되었을때 취소 동작 확인")
+    @Test
+    public void changeLikedTest1() {
+        Comment comment = commentRepository.findAll().get(0);
+        User user = userRepository.save(
+                User.builder()
+                        .name("test1")
+                        .blogName("test1")
+                        .email("test12345@test.com")
+                        .password("dsfsfef@312321")
+                        .build());
+
+        commentLikedRepository.save(
+                CommentLiked.builder()
+                        .comment(comment)
+                        .user(user)
+                        .build());
+
+        assertThat(commentService.changeLiked(comment.getCommentNo(), user.getUserNo()))
+                .isEqualTo(LikedState.CANSEL);
+    }
+
+    @DisplayName("좋아요 표시가 안되어 있을때 추가 동작 확인")
+    @Test
+    public void changeLikedTest2() {
+        Long commentNo = commentRepository.findAll().get(0).getCommentNo();
+        Long userNo = userRepository.save(
+                User.builder()
+                        .name("test1")
+                        .blogName("test1")
+                        .email("test12345@test.com")
+                        .password("dsfsfef@312321")
+                        .build())
+                .getUserNo();
+
+        assertThat(commentService.changeLiked(commentNo, userNo)).isEqualTo(LikedState.LIKED);
+    }
+
     @Test
     public void isLikedTest() {
         Comment comment = commentRepository.findAll().get(0);
@@ -166,5 +206,27 @@ public class CommentServiceTest {
                         .build());
 
         assertThat(commentService.isLiked(commentNo)).isTrue();
+    }
+
+    @Test
+    public void countLikedTest() {
+        Comment comment = commentRepository.findAll().get(0);
+        User user = userRepository.save(
+                User.builder()
+                        .name("test1")
+                        .blogName("test1")
+                        .email("test12345@test.com")
+                        .password("dsfsfef@312321")
+                        .build());
+
+        assertThat(commentService.countLiked(comment.getCommentNo())).isEqualTo(0);
+
+        commentLikedRepository.save(
+                CommentLiked.builder()
+                        .comment(comment)
+                        .user(user)
+                        .build());
+
+        assertThat(commentService.countLiked(comment.getCommentNo())).isEqualTo(1);
     }
 }

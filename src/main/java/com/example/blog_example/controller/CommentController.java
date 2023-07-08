@@ -102,6 +102,6 @@ public class CommentController {
     @GetMapping("/liked/count")
     public ResponseEntity<Integer> countLiked(
             @RequestParam(name = "no") @PositiveOrZero Long commentNo) {
-        return ResponseEntity.ok(commentService.countByComment(commentNo));
+        return ResponseEntity.ok(commentService.countLiked(commentNo));
     }
 }
