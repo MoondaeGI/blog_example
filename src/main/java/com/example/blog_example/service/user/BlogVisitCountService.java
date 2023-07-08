@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -34,15 +35,19 @@ public class BlogVisitCountService {
     }
 
     @Transactional
-    public Integer addVisitCount(Long blogVisitCountNo) {
-        BlogVisitCount blogVisitCount = blogVisitCountRepository.findById(blogVisitCountNo)
-                .orElseThrow(() -> new IllegalArgumentException("해당 블로그가 없습니다."));
+    public Integer addVisitCount(Long visitorNo, Long bloggerNo) {
+        User visitor = userRepository.findById(visitorNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 
-        return blogVisitCount.addVisitCount();
+        User blogger = userRepository.findById(bloggerNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        BlogVisitCount blogVisitCount = blogVisitCountRepository.findByUserAndDate(blogger, LocalDate.now());
+
+        return (Objects.equals(visitor, blogger)) ? blogVisitCount.getVisitCount() : blogVisitCount.addVisitCount();
     }
 
     @Transactional(readOnly = true)
-    public Integer countAllVisitByUser(Long userNo) {
+    public Integer countAllVisit(Long userNo) {
         User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 블로그가 없습니다."));
 

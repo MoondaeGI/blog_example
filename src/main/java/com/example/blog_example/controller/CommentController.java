@@ -1,13 +1,9 @@
 package com.example.blog_example.controller;
 
-import com.example.blog_example.model.dto.comment.comment.CommentSaveDTO;
-import com.example.blog_example.model.dto.comment.comment.CommentUpdateDTO;
-import com.example.blog_example.model.dto.comment.liked.CommentLikedSaveDTO;
+import com.example.blog_example.model.dto.comment.CommentSaveDTO;
+import com.example.blog_example.model.dto.comment.CommentUpdateDTO;
 import com.example.blog_example.model.vo.post.CommentVO;
-import com.example.blog_example.service.comment.CommentLikedService;
 import com.example.blog_example.service.comment.CommentService;
-import com.example.blog_example.service.user.UserService;
-import com.example.blog_example.util.enums.LikedState;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -20,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
-import java.util.Objects;
 
 @Tag(name = "comment", description = "댓글 API")
 @Validated
@@ -29,8 +24,6 @@ import java.util.Objects;
 @RestController
 public class CommentController {
     private final CommentService commentService;
-    private final CommentLikedService commentLikedService;
-    private final UserService userService;
 
     @Operation(summary = "모든 댓글 검색", description = "데이터 베이스 내부의 모든 댓글을 검색하는 API")
     @GetMapping("/list")
@@ -93,22 +86,7 @@ public class CommentController {
     public ResponseEntity<String> changeLiked(
             @RequestParam(name = "comment-no") @PositiveOrZero Long commentNo,
             @RequestParam(name = "user-no") @PositiveOrZero Long userNo) {
-        if (Objects.equals(userService.findByComment(commentNo).getUserNo(), userNo))
-            throw new IllegalArgumentException("좋아요 하려는 유저가 댓글을 쓴 유저와 같습니다.");
-
-        if (commentService.isLiked(commentNo)) {
-            commentLikedService.delete(commentNo);
-        } else {
-            CommentLikedSaveDTO commentLikedSaveDTO = CommentLikedSaveDTO.builder()
-                    .commentNo(commentNo)
-                    .userNo(userNo)
-                    .build();
-            commentLikedService.save(commentLikedSaveDTO);
-        }
-
-        LikedState result = commentService.isLiked(commentNo) ? LikedState.LIKED : LikedState.CANSEL;
-
-        return ResponseEntity.ok(result.getState());
+        return ResponseEntity.ok(commentService.changeLiked(commentNo, userNo).getState());
     }
 
     @Operation(summary = "댓글 좋아요 확인", description = "해당 댓글 번호를 가진 댓글의 좋아요 여부를 확인하는 API")
@@ -124,6 +102,6 @@ public class CommentController {
     @GetMapping("/liked/count")
     public ResponseEntity<Integer> countLiked(
             @RequestParam(name = "no") @PositiveOrZero Long commentNo) {
-        return ResponseEntity.ok(commentLikedService.countByComment(commentNo));
+        return ResponseEntity.ok(commentService.countByComment(commentNo));
     }
 }

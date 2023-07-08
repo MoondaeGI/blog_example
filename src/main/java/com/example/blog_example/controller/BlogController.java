@@ -4,6 +4,7 @@ import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountDa
 import com.example.blog_example.service.user.BlogVisitCountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +27,15 @@ public class BlogController {
     private final BlogVisitCountService blogVisitCountService;
 
     @Operation(summary = "블로그 방문자 수 증가", description = "해당 유저 번호의 블로그의 방문자 수를 증가시키는 API")
-    @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
+    @Parameters({
+            @Parameter(name = "visitorNo", description = "방문자 번호", example = "1", in = ParameterIn.QUERY, required = true),
+            @Parameter(name = "bloggerNo", description = "블로거 번호", example = "1", in = ParameterIn.QUERY, required = true)
+    })
     @GetMapping("/count")
     public ResponseEntity<Integer> addVisitCount(
-            @RequestParam(name = "no") @PositiveOrZero Long userNo) {
-        return ResponseEntity.ok(blogVisitCountService.addVisitCount(userNo));
+            @RequestParam(name = "visitor-no") @PositiveOrZero Long visitorNo,
+            @RequestParam(name = "blogger-no") @PositiveOrZero Long bloggerNo){
+        return ResponseEntity.ok(blogVisitCountService.addVisitCount(visitorNo, bloggerNo));
     }
 
     @Operation(summary = "블로그 누적 방문자 수 출력", description = "해당 유저 번호의 블로그의 누적 방문자 수를 출력하는 API")
@@ -38,7 +43,7 @@ public class BlogController {
     @GetMapping("/count/all")
     public ResponseEntity<Integer> countAllVisit(
             @RequestParam(name = "no") @PositiveOrZero Long userNo) {
-        return ResponseEntity.ok(blogVisitCountService.countAllVisitByUser(userNo));
+        return ResponseEntity.ok(blogVisitCountService.countAllVisit(userNo));
     }
 
     @Operation(summary = "블로그 일일 방문자 수 출력", description = "해당 유저 번호의 블로그의 일일 방문자 수를 출력하는 API")

@@ -8,6 +8,7 @@ import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountDa
 import com.example.blog_example.service.user.BlogVisitCountService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class BlogVisitCountServiceTest {
         blogVisitCountRepository.save(
                 BlogVisitCount.builder()
                         .user(user)
-                        .date(LocalDate.of(2023, 1, 1))
+                        .date(LocalDate.of(2023, 7, 8))
                         .build());
     }
 
@@ -51,42 +52,49 @@ public class BlogVisitCountServiceTest {
     @Test
     public void test() { System.out.println("test"); }
 
+    @DisplayName("방문자와 블로거가 다른 경우의 동작 확인")
     @Test
-    public void addVisitCountTest() {
-        Long blogVisitCountNo = blogVisitCountRepository.findAll().get(0).getBlogVisitCountNo();
-
-        assertThat(blogVisitCountService.addVisitCount(blogVisitCountNo)).isEqualTo(1);
-        assertThat(blogVisitCountService.addVisitCount(blogVisitCountNo)).isEqualTo(2);
-    }
-
-    @Test
-    public void countAllVisitByUserTest1() {
-        Long blogVisitCountNo = blogVisitCountRepository.findAll().get(0).getBlogVisitCountNo();
-        Long userNo = userRepository.findAll().get(0).getUserNo();
-
-        assertThat(blogVisitCountService.countAllVisitByUser(userNo)).isEqualTo(0);
-
-        blogVisitCountService.addVisitCount(blogVisitCountNo);
-
-        assertThat(blogVisitCountService.countAllVisitByUser(userNo)).isEqualTo(1);
-    }
-
-    @Test
-    public void countAllVisitByUserTest2() {
-        User user = userRepository.findAll().get(0);
-        Long userNo = user.getUserNo();
-
-        assertThat(blogVisitCountService.countAllVisitByUser(userNo)).isEqualTo(0);
-
-        Long blogVisitCountNo = blogVisitCountRepository.save(
-                BlogVisitCount.builder()
-                        .user(user)
-                        .date(LocalDate.of(2022, 1, 1))
+    public void addVisitCountTest1() {
+        Long visitorNo = userRepository.save(
+                User.builder()
+                        .blogName("test1")
+                        .name("test1")
+                        .email("test1234@gmail.com")
+                        .password("jklskjf@")
                         .build())
-                .getBlogVisitCountNo();
-        blogVisitCountService.addVisitCount(blogVisitCountNo);
+                .getUserNo();
+        Long bloggerNo = blogVisitCountRepository.findAll().get(0).getUser().getUserNo();
 
-        assertThat(blogVisitCountService.countAllVisitByUser(userNo)).isEqualTo(1);
+        assertThat(blogVisitCountService.addVisitCount(visitorNo, bloggerNo)).isEqualTo(1);
+        assertThat(blogVisitCountService.addVisitCount(visitorNo, bloggerNo)).isEqualTo(2);
+    }
+
+    @DisplayName("방문자와 블로거가 같은 경우의 동작 확인")
+    @Test
+    public void addVisitCountTest2() {
+        Long bloggerNo = blogVisitCountRepository.findAll().get(0).getUser().getUserNo();
+
+        assertThat(blogVisitCountService.addVisitCount(bloggerNo, bloggerNo)).isNotEqualTo(1);
+        assertThat(blogVisitCountService.addVisitCount(bloggerNo, bloggerNo)).isNotEqualTo(2);
+    }
+
+    @Test
+    public void countAllVisitByUserTest() {
+        Long visitorNo = userRepository.save(
+                        User.builder()
+                                .blogName("test1")
+                                .name("test1")
+                                .email("test1234@gmail.com")
+                                .password("jklskjf@")
+                                .build())
+                .getUserNo();
+        Long bloggerNo = blogVisitCountRepository.findAll().get(0).getUser().getUserNo();
+
+        assertThat(blogVisitCountService.countAllVisit(bloggerNo)).isEqualTo(0);
+
+        blogVisitCountService.addVisitCount(visitorNo, bloggerNo);
+
+        assertThat(blogVisitCountService.countAllVisit(bloggerNo)).isEqualTo(1);
     }
 
     @Test
