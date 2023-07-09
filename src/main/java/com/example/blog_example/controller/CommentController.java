@@ -41,7 +41,7 @@ public class CommentController {
 
     @Operation(summary = "게시글로 댓글 검색", description = "해당 게시글 번호를 가진 모든 댓글을 검색하는 API")
     @Parameter(name = "postNo", description = "게시글 번호", example = "1", in = ParameterIn.QUERY, required = true)
-    @GetMapping("/post")
+    @GetMapping("/list/post")
     public ResponseEntity<List<CommentVO>> findByPost(
             @RequestParam(name = "no") @PositiveOrZero Long postNo) {
         return ResponseEntity.ok(commentService.findByPost(postNo));
@@ -49,7 +49,7 @@ public class CommentController {
 
     @Operation(summary = "유저로 댓글 검색", description = "해당 유저 번호를 가진 모든 댓글을 검색하는 API")
     @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
-    @GetMapping("/user")
+    @GetMapping("/list/user")
     public ResponseEntity<List<CommentVO>> findByUser(
             @RequestParam(name = "no") @PositiveOrZero Long userNo) {
         return ResponseEntity.ok(commentService.findByUser(userNo));
@@ -86,15 +86,19 @@ public class CommentController {
     public ResponseEntity<String> changeLiked(
             @RequestParam(name = "comment-no") @PositiveOrZero Long commentNo,
             @RequestParam(name = "user-no") @PositiveOrZero Long userNo) {
-        return ResponseEntity.ok(commentService.changeLiked(commentNo, userNo).getState());
+        return ResponseEntity.ok(commentService.changeLiked(commentNo, userNo).toString());
     }
 
     @Operation(summary = "댓글 좋아요 확인", description = "해당 댓글 번호를 가진 댓글의 좋아요 여부를 확인하는 API")
-    @Parameter(name = "commentNo", description = "댓글 번호", example = "1", in = ParameterIn.QUERY, required = true)
+    @Parameters({
+            @Parameter(name = "commentNo", description = "댓글 번호", example = "1", in = ParameterIn.QUERY, required = true),
+            @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
+    })
     @GetMapping("/liked")
     public ResponseEntity<Boolean> isLiked(
-            @RequestParam(name = "no") @PositiveOrZero Long commentNo) {
-        return ResponseEntity.ok(commentService.isLiked(commentNo));
+            @RequestParam(name = "comment-no") @PositiveOrZero Long commentNo,
+            @RequestParam(name = "user-no") @PositiveOrZero Long userNo) {
+        return ResponseEntity.ok(commentService.isLiked(commentNo, userNo));
     }
 
     @Operation(summary = "댓글 좋아요 갯수 출력", description = "해당 댓글 번호를 가진 댓글의 좋아요 갯수를 출력하는 API")
