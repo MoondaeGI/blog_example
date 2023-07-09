@@ -152,11 +152,15 @@ public class PostController {
     }
 
     @Operation(summary = "게시글 좋아요 확인", description = "해당 게시글 번호의 게시글의 좋아요 여부를 확인하는 API")
-    @Parameter(name = "postNo", description = "게시글 번호", example = "1", in = ParameterIn.QUERY, required = true)
+    @Parameters({
+            @Parameter(name = "postNo", description = "게시글 번호", example = "1", in = ParameterIn.QUERY, required = true),
+            @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
+    })
     @GetMapping("/liked")
     public ResponseEntity<Boolean> isLiked(
-            @RequestParam(name = "no") @PositiveOrZero Long postNo) {
-        return ResponseEntity.ok(postService.isLiked(postNo));
+            @RequestParam(name = "post-no") @PositiveOrZero Long postNo,
+            @RequestParam(name = "user-no") @PositiveOrZero Long userNo) {
+        return ResponseEntity.ok(postService.isLiked(postNo, userNo));
     }
 
     @Operation(summary = "게시글 좋아요 갯수 출력", description = "해당 게시글 번호의 게시글이 받은 좋아요의 수를 출력하는 API")
@@ -164,6 +168,6 @@ public class PostController {
     @GetMapping("/liked/count")
     public ResponseEntity<Integer> countLiked(
             @RequestParam(name = "no") @PositiveOrZero Long postNo) {
-        return ResponseEntity.ok(postService.countByPost(postNo));
+        return ResponseEntity.ok(postService.countLiked(postNo));
     }
 }

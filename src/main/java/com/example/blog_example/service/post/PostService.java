@@ -146,12 +146,13 @@ public class PostService {
         if (Objects.equals(post.getUser().getUserNo(), userNo))
             throw new IllegalArgumentException("좋아요 하려는 유저가 게시글을 쓴 유저와 같습니다.");
 
-        if (postLikedRepository.existsByPost(post)) {
+        User user = userRepository.findById(userNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+
+        if (postLikedRepository.existsByPostAndUser(post, user)) {
             postLikedRepository.deleteByPost(post);
         } else {
-            User user = userRepository.findById(userNo)
-                            .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
-
             postLikedRepository.save(
                     PostLiked.builder()
                             .post(post)
@@ -159,7 +160,7 @@ public class PostService {
                             .build());
         }
 
-        return postLikedRepository.existsByPost(post) ? LikedState.LIKED : LikedState.CANCEL;
+        return postLikedRepository.existsByPostAndUser(post, user) ? LikedState.LIKED : LikedState.CANCEL;
     }
 
     @Transactional
@@ -171,11 +172,14 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean isLiked(Long postNo) {
+    public Boolean isLiked(Long postNo, Long userNo) {
         Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
-        return postLikedRepository.existsByPost(post);
+        User user = userRepository.findById(userNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+        return postLikedRepository.existsByPostAndUser(post, user);
     }
 
     @Transactional(readOnly = true)

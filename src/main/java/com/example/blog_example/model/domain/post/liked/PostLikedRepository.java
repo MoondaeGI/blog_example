@@ -8,10 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PostLikedRepository extends JpaRepository<PostLiked, Long> {
-    PostLiked findByPost(Post post);
     Long countByPost(Post post);
     void deleteByPost(Post post);
-    Boolean existsByPost(Post post);
+    Boolean existsByPostAndUser(Post post, User user);
     @Query("SELECT post " +
             "FROM Post post " +
             "WHERE post IN (SELECT postLiked.post " +

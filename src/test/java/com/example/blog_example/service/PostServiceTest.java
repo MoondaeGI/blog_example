@@ -155,14 +155,22 @@ public class PostServiceTest {
         Post post = postRepository.findAll().get(0);
         Long postNo = post.getPostNo();
 
-        assertThat(postService.isLiked(postNo)).isFalse();
+        User user = userRepository.save(
+                User.builder()
+                        .name("test1")
+                        .blogName("test1")
+                        .email("test123242@test.com")
+                        .password("seklsfdis@12")
+                        .build());
+
+        assertThat(postService.isLiked(postNo, user.getUserNo())).isFalse();
 
         postLikedRepository.save(
                 PostLiked.builder()
                         .post(post)
-                        .user(userRepository.findAll().get(0))
+                        .user(user)
                         .build());
 
-        assertThat(postService.isLiked(postNo)).isTrue();
+        assertThat(postService.isLiked(postNo, user.getUserNo())).isTrue();
     }
 }
