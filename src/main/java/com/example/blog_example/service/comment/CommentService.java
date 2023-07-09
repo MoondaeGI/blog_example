@@ -103,12 +103,12 @@ public class CommentService {
         if (Objects.equals(comment.getUser().getUserNo(), userNo))
             throw new IllegalArgumentException("좋아요 하려는 유저가 댓글을 쓴 유저와 같습니다.");
 
-        if (commentLikedRepository.existsByComment(comment)) {
+        User user = userRepository.findById(userNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+        if (commentLikedRepository.existsByCommentAndUser(comment, user)) {
             commentLikedRepository.deleteByComment(comment);
         } else {
-            User user = userRepository.findById(userNo)
-                            .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
-
             commentLikedRepository.save(
                     CommentLiked.builder()
                             .comment(comment)
@@ -116,15 +116,18 @@ public class CommentService {
                             .build());
         }
 
-        return commentLikedRepository.existsByComment(comment) ? LikedState.LIKED : LikedState.CANSEL;
+        return commentLikedRepository.existsByCommentAndUser(comment, user) ? LikedState.LIKED : LikedState.CANCEL;
     }
 
     @Transactional(readOnly = true)
-    public Boolean isLiked(Long commentNo) {
+    public Boolean isLiked(Long commentNo, Long userNo) {
         Comment comment = commentRepository.findById(commentNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다."));
 
-        return commentLikedRepository.existsByComment(comment);
+        User user = userRepository.findById(userNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+        return commentLikedRepository.existsByCommentAndUser(comment, user);
     }
 
     @Transactional(readOnly = true)

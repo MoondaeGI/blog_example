@@ -172,7 +172,7 @@ public class CommentServiceTest {
                         .build());
 
         assertThat(commentService.changeLiked(comment.getCommentNo(), user.getUserNo()))
-                .isEqualTo(LikedState.CANSEL);
+                .isEqualTo(LikedState.CANCEL);
     }
 
     @DisplayName("좋아요 표시가 안되어 있을때 추가 동작 확인")
@@ -197,7 +197,7 @@ public class CommentServiceTest {
         Long commentNo = comment.getCommentNo();
         User user = userRepository.findAll().get(0);
 
-        assertThat(commentService.isLiked(commentNo)).isFalse();
+        assertThat(commentService.isLiked(commentNo, user.getUserNo())).isFalse();
 
         commentLikedRepository.save(
                 CommentLiked.builder()
@@ -205,7 +205,7 @@ public class CommentServiceTest {
                         .user(user)
                         .build());
 
-        assertThat(commentService.isLiked(commentNo)).isTrue();
+        assertThat(commentService.isLiked(commentNo, user.getUserNo())).isTrue();
     }
 
     @Test

@@ -159,7 +159,7 @@ public class PostService {
                             .build());
         }
 
-        return postLikedRepository.existsByPost(post) ? LikedState.LIKED : LikedState.CANSEL;
+        return postLikedRepository.existsByPost(post) ? LikedState.LIKED : LikedState.CANCEL;
     }
 
     @Transactional
@@ -179,7 +179,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public Integer countByPost(Long postNo) {
+    public Integer countLiked(Long postNo) {
         Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
