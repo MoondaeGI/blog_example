@@ -30,7 +30,7 @@ public class CategoryController {
     private final UpperCategoryService upperCategoryService;
     private final LowerCategoryService lowerCategoryService;
 
-    @Operation(summary = "모든 상위 카테고리 검색", description = "데이터 베이스 내부의 모든 상위 카테고리를 검색하는 API")
+    @Operation(summary = "유저가 가진 모든 상위 카테고리 검색", description = "해당 유저 번호를 가진 모든 상위 카테고리를 검색하는 API")
     @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
     @GetMapping("/upper/list/user")
     public ResponseEntity<List<UpperCategoryVO>> findAllUpperCategory(

@@ -2,6 +2,7 @@ package com.example.blog_example.controller;
 
 import com.example.blog_example.model.dto.comment.CommentSaveDTO;
 import com.example.blog_example.model.dto.comment.CommentUpdateDTO;
+import com.example.blog_example.model.vo.enums.EnumStateVO;
 import com.example.blog_example.model.vo.post.CommentVO;
 import com.example.blog_example.service.comment.CommentService;
 import com.example.blog_example.util.enums.LikedState;
@@ -61,7 +62,8 @@ public class CommentController {
     @Operation(summary = "댓글 등록", description = "DTO를 가지고 댓글을 등록하는 API")
     @PostMapping
     public ResponseEntity<Long> save(@RequestBody CommentSaveDTO commentSaveDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(commentSaveDTO));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(commentService.save(commentSaveDTO));
     }
 
     @Operation(summary = "댓글 수정", description = "DTO를 가지고 댓글을 수정하는 API")
@@ -86,13 +88,16 @@ public class CommentController {
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
     })
     @GetMapping("/state/liked")
-    public ResponseEntity<String> changeLiked(
+    public ResponseEntity<EnumStateVO> changeLiked(
             @RequestParam(name = "comment-no") @PositiveOrZero Long commentNo,
             @RequestParam(name = "user-no") @PositiveOrZero Long userNo) {
         LikedState state = commentService.changeLiked(commentNo, userNo);
+        EnumStateVO result = EnumStateVO.builder()
+                .enumState(state)
+                .build();
 
         return Objects.equals(state, LikedState.LIKED) ?
-                ResponseEntity.ok(state.toString()) : ResponseEntity.status(HttpStatus.CREATED).body(state.toString());
+                ResponseEntity.status(HttpStatus.CREATED).body(result) : ResponseEntity.ok(result);
     }
 
     @Operation(summary = "댓글 좋아요 확인", description = "해당 댓글 번호를 가진 댓글의 좋아요 여부를 확인하는 API")

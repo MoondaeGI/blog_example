@@ -14,6 +14,7 @@ import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.comment.CommentSaveDTO;
 import com.example.blog_example.model.dto.comment.CommentUpdateDTO;
+import com.example.blog_example.model.vo.enums.EnumStateVO;
 import com.example.blog_example.model.vo.post.CommentVO;
 import com.example.blog_example.util.enums.LikedState;
 import org.junit.jupiter.api.AfterEach;
@@ -62,6 +63,7 @@ public class CommentControllerTest {
         UpperCategory upperCategory = upperCategoryRepository.save(
                 UpperCategory.builder()
                         .name("test")
+                        .user(user)
                         .build());
 
         LowerCategory lowerCategory = lowerCategoryRepository.save(
@@ -210,10 +212,10 @@ public class CommentControllerTest {
 
         String url = String.format(URL + "/state/liked?comment-no=%d&user-no=%d", comment.getCommentNo(), user.getUserNo());
 
-        ResponseEntity<String> responseEntity = testRestTemplate.getForEntity(url, String.class);
+        ResponseEntity<EnumStateVO> responseEntity = testRestTemplate.getForEntity(url, EnumStateVO.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isEqualTo("CANCEL");
+        assertThat(responseEntity.getBody().getState()).isEqualTo("CANCEL");
     }
 
     @DisplayName("좋아요 표시가 안되어 있을때의 동작 확인")
@@ -230,10 +232,10 @@ public class CommentControllerTest {
 
         String url = String.format(URL + "/state/liked?comment-no=%d&user-no=%d", comment.getCommentNo(), user.getUserNo());
 
-        ResponseEntity<String> responseEntity = testRestTemplate.getForEntity(url, String.class);
+        ResponseEntity<EnumStateVO> responseEntity = testRestTemplate.getForEntity(url, EnumStateVO.class);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isEqualTo("LIKED");
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(responseEntity.getBody().getState()).isEqualTo("LIKED");
     }
 
     @DisplayName("좋아요 표시가 되어 있을때의 동작 확인")

@@ -5,9 +5,15 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum LikedState {
+public enum LikedState implements EnumState {
     LIKED("좋아요"),
     CANCEL("취소됨");
 
-    private final String state;
+    private final String description;
+
+    @Override
+    public String getState() { return name(); }
+
+    @Override
+    public String getDescription() { return description; }
 }

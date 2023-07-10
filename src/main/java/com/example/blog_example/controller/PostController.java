@@ -4,16 +4,20 @@ import com.example.blog_example.model.dto.post.file.FileSaveDTO;
 import com.example.blog_example.model.dto.post.file.FileUpdateDTO;
 import com.example.blog_example.model.dto.post.post.PostSaveDTO;
 import com.example.blog_example.model.dto.post.post.PostUpdateDTO;
+import com.example.blog_example.model.vo.enums.EnumStateVO;
 import com.example.blog_example.model.vo.post.FileVO;
 import com.example.blog_example.model.vo.post.PostVO;
 import com.example.blog_example.service.post.FileService;
 import com.example.blog_example.service.post.PostService;
+import com.example.blog_example.util.enums.LikedState;
+import com.example.blog_example.util.enums.OpenState;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
+import java.util.Objects;
 
 @Tag(name = "post", description = "게시글 API")
 @Validated
@@ -101,7 +106,8 @@ public class PostController {
             fileService.save(fileSaveDTO);
         }
 
-        return ResponseEntity.ok(postNo);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(postNo);
     }
 
     @Operation(summary = "게시글 수정", description = "DTO, MultipartFile을 받아 게시글을 수정하는 API")
@@ -137,18 +143,29 @@ public class PostController {
             @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
     })
     @GetMapping("/state/liked")
-    public ResponseEntity<String> changeLiked(
+    public ResponseEntity<EnumStateVO> changeLiked(
             @RequestParam("post-no") @PositiveOrZero Long postNo,
             @RequestParam("user-no") @PositiveOrZero Long userNo) {
-        return ResponseEntity.ok(postService.changeLiked(postNo, userNo).toString());
+        LikedState state = postService.changeLiked(postNo, userNo);
+        EnumStateVO result = EnumStateVO.builder()
+                .enumState(state)
+                .build();
+
+        return Objects.equals(state, LikedState.LIKED) ?
+                ResponseEntity.status(HttpStatus.CREATED).body(result) : ResponseEntity.ok(result);
     }
 
     @Operation(summary = "게시글 비공개 변경", description = "해당 게시글 번호의 게시글의 비공개 여부를 확인 후 변경하는 API")
     @Parameter(name = "postNo", description = "게시글 번호", example = "1", in = ParameterIn.QUERY, required = true)
     @GetMapping("/state/open")
-    public ResponseEntity<String> changeOpenYN(
+    public ResponseEntity<EnumStateVO> changeOpenYN(
             @RequestParam(name = "post-no") @PositiveOrZero Long postNo) {
-        return ResponseEntity.ok(postService.changeOpenYN(postNo).toString());
+        OpenState state = postService.changeOpenYN(postNo);
+        EnumStateVO result = EnumStateVO.builder()
+                .enumState(state)
+                .build();
+
+        return ResponseEntity.ok(result);
     }
 
     @Operation(summary = "게시글 좋아요 확인", description = "해당 게시글 번호의 게시글의 좋아요 여부를 확인하는 API")

@@ -5,17 +5,17 @@ import com.example.blog_example.model.domain.category.lower.LowerCategoryReposit
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategoryRepository;
 import com.example.blog_example.model.domain.post.liked.PostLiked;
+import com.example.blog_example.model.domain.post.liked.PostLikedRepository;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.post.PostRepository;
-import com.example.blog_example.model.domain.post.liked.PostLikedRepository;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
-import com.example.blog_example.model.dto.post.post.*;
+import com.example.blog_example.model.dto.post.post.PostSaveDTO;
+import com.example.blog_example.model.dto.post.post.PostUpdateDTO;
 import com.example.blog_example.model.vo.post.PostVO;
 import com.example.blog_example.util.enums.LikedState;
-import com.example.blog_example.util.enums.OpenYN;
+import com.example.blog_example.util.enums.OpenState;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.ObjectDeletedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -164,7 +164,7 @@ public class PostService {
     }
 
     @Transactional
-    public OpenYN changeOpenYN(Long postNo) {
+    public OpenState changeOpenYN(Long postNo) {
         Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
