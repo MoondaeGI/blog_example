@@ -4,6 +4,8 @@ import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.lower.LowerCategoryRepository;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategoryRepository;
+import com.example.blog_example.model.domain.user.user.User;
+import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.category.lower.LowerCategorySaveDTO;
 import com.example.blog_example.model.dto.category.lower.LowerCategoryUpdateDTO;
 import com.example.blog_example.model.dto.category.upper.UpperCategorySaveDTO;
@@ -33,12 +35,22 @@ public class CategoryControllerTest {
     @Autowired private TestRestTemplate testRestTemplate;
     @Autowired private UpperCategoryRepository upperCategoryRepository;
     @Autowired private LowerCategoryRepository lowerCategoryRepository;
+    @Autowired private UserRepository userRepository;
 
     @BeforeEach
     public void setup() {
+        User user = userRepository.save(
+                User.builder()
+                        .name("test")
+                        .blogName("test")
+                        .email("test1234@test.com")
+                        .password("testjsldkf@1234")
+                        .build());
+
         UpperCategory upperCategory = upperCategoryRepository.save(
                 UpperCategory.builder()
                         .name("test")
+                        .user(user)
                         .build());
 
         lowerCategoryRepository.save(
@@ -58,8 +70,10 @@ public class CategoryControllerTest {
 
     @Test
     public void findAllUpperCategoryTest() {
+        Long userNo = userRepository.findAll().get(0).getUserNo();
+
         ResponseEntity<List<UpperCategoryVO>> responseEntity =
-                testRestTemplate.exchange(URL + "/upper/list", HttpMethod.GET, null,
+                testRestTemplate.exchange(URL + "/upper/list/user?no=" + userNo, HttpMethod.GET, null,
                         new ParameterizedTypeReference<List<UpperCategoryVO>>() {});
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -117,14 +131,19 @@ public class CategoryControllerTest {
     public void saveUpperCategoryTest() {
         UpperCategorySaveDTO upperCategorySaveDTO = UpperCategorySaveDTO.builder()
                 .name("test")
+                .userNo(userRepository.findAll().get(0).getUserNo())
                 .build();
 
         ResponseEntity<Long> responseEntity =
                 testRestTemplate.postForEntity(URL + "/upper", upperCategorySaveDTO, Long.class);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody())
-                .isEqualTo(upperCategoryRepository.findAll().get(1).getUpperCategoryNo());
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(upperCategoryRepository.findById(responseEntity.getBody())
+                .orElseThrow(IllegalArgumentException::new)).isNotNull();
+
+        UpperCategory upperCategory = upperCategoryRepository.findById(responseEntity.getBody())
+                .orElseThrow(IllegalArgumentException::new);
+        assertThat(lowerCategoryRepository.findByUpperCategory(upperCategory)).isNotNull();
     }
 
     @Test
@@ -139,7 +158,7 @@ public class CategoryControllerTest {
         ResponseEntity<Long> responseEntity =
                 testRestTemplate.postForEntity(URL + "/lower", lowerCategorySaveDTO, Long.class);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody())
                 .isEqualTo(lowerCategoryRepository.findAll().get(1).getLowerCategoryNo());
     }

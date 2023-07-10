@@ -4,6 +4,8 @@ import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.lower.LowerCategoryRepository;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategoryRepository;
+import com.example.blog_example.model.domain.user.user.User;
+import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.category.lower.LowerCategorySaveDTO;
 import com.example.blog_example.model.dto.category.lower.LowerCategoryUpdateDTO;
 import com.example.blog_example.model.dto.category.upper.UpperCategorySaveDTO;
@@ -30,13 +32,23 @@ public class CategoryServiceTest {
     @Autowired private UpperCategoryRepository upperCategoryRepository;
     @Autowired private LowerCategoryService lowerCategoryService;
     @Autowired private LowerCategoryRepository lowerCategoryRepository;
+    @Autowired private UserRepository userRepository;
 
     @BeforeEach
     public void setUp() {
+        User user = userRepository.save(
+                User.builder()
+                        .name("test")
+                        .blogName("test")
+                        .email("test1234@test.com")
+                        .password("tesffs@123")
+                        .build());
+
         UpperCategory upperCategory =
                 upperCategoryRepository.save(
                         UpperCategory.builder()
                                 .name("test")
+                                .user(user)
                                 .build());
 
         lowerCategoryRepository.save(
@@ -58,9 +70,11 @@ public class CategoryServiceTest {
 
     @Test
     public void upperCategoryFindAllTest() {
+        Long userNo = userRepository.findAll().get(0).getUserNo();
+
         Integer size = upperCategoryRepository.findAll().size();
 
-        assertThat(size).isEqualTo(upperCategoryService.findAll().size());
+        assertThat(size).isEqualTo(upperCategoryService.findAll(userNo).size());
     }
 
     @Test
@@ -107,8 +121,12 @@ public class CategoryServiceTest {
 
     @Test
     public void upperCategorySaveTest() {
-        UpperCategorySaveDTO upperCategorySaveDTO = new UpperCategorySaveDTO("test");
+        Long userNo = userRepository.findAll().get(0).getUserNo();
 
+        UpperCategorySaveDTO upperCategorySaveDTO = UpperCategorySaveDTO.builder()
+                .name("test1")
+                .userNo(userNo)
+                .build();
         Long upperCategoryNo = upperCategoryService.save(upperCategorySaveDTO);
 
         assertThat(upperCategoryNo)
@@ -119,8 +137,10 @@ public class CategoryServiceTest {
     public void lowerCategorySaveTest() {
         Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
 
-        LowerCategorySaveDTO lowerCategorySaveDTO = new LowerCategorySaveDTO("test", upperCategoryNo);
-
+        LowerCategorySaveDTO lowerCategorySaveDTO = LowerCategorySaveDTO.builder()
+                .upperCategoryNo(upperCategoryNo)
+                .name("test")
+                .build();
         Long lowerCategoryNo = lowerCategoryService.save(lowerCategorySaveDTO);
 
         assertThat(lowerCategoryNo)
@@ -132,8 +152,10 @@ public class CategoryServiceTest {
         Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
         String name = "updateName";
 
-        UpperCategoryUpdateDTO upperCategoryUpdateDTO = new UpperCategoryUpdateDTO(upperCategoryNo, name);
-
+        UpperCategoryUpdateDTO upperCategoryUpdateDTO = UpperCategoryUpdateDTO.builder()
+                .upperCategoryNo(upperCategoryNo)
+                .name("test")
+                .build();
         upperCategoryService.update(upperCategoryUpdateDTO);
 
         assertThat(name).isEqualTo(upperCategoryRepository.findAll().get(0).getName());
@@ -145,9 +167,11 @@ public class CategoryServiceTest {
         Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
         String name = "updateName";
 
-        LowerCategoryUpdateDTO lowerCategoryUpdateDTO =
-                new LowerCategoryUpdateDTO(lowerCategoryNo, upperCategoryNo, name);
-
+        LowerCategoryUpdateDTO lowerCategoryUpdateDTO = LowerCategoryUpdateDTO.builder()
+                .lowerCategoryNo(lowerCategoryNo)
+                .upperCategoryNo(upperCategoryNo)
+                .name(name)
+                .build();
         lowerCategoryService.update(lowerCategoryUpdateDTO);
 
         assertThat(name).isEqualTo(lowerCategoryRepository.findAll().get(0).getName());

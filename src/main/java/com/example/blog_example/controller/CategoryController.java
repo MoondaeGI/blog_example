@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +31,11 @@ public class CategoryController {
     private final LowerCategoryService lowerCategoryService;
 
     @Operation(summary = "모든 상위 카테고리 검색", description = "데이터 베이스 내부의 모든 상위 카테고리를 검색하는 API")
-    @GetMapping("/upper/list")
-    public ResponseEntity<List<UpperCategoryVO>> findAllUpperCategory() {
-        return ResponseEntity.ok(upperCategoryService.findAll());
+    @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
+    @GetMapping("/upper/list/user")
+    public ResponseEntity<List<UpperCategoryVO>> findAllUpperCategory(
+            @RequestParam(name = "no") @PositiveOrZero Long userNo) {
+        return ResponseEntity.ok(upperCategoryService.findAll(userNo));
     }
 
     @Operation(summary = "모든 하위 카테고리 검색", description = "데이터 베이스 내부의 모든 하위 카테고리를 검색하는 API")
@@ -68,13 +71,15 @@ public class CategoryController {
     @Operation(summary = "상위 카테고리 등록", description = "DTO를 받아 상위 카테고리를 등록하는 API")
     @PostMapping("/upper")
     public ResponseEntity<Long> saveUpperCategory(@RequestBody UpperCategorySaveDTO upperCategorySaveDTO) {
-        return ResponseEntity.ok(upperCategoryService.save(upperCategorySaveDTO));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(upperCategoryService.save(upperCategorySaveDTO));
     }
 
     @Operation(summary = "하위 카테고리 등록", description = "DTO를 받아 하위 카테고리를 등록하는 API")
     @PostMapping("/lower")
     public ResponseEntity<Long> saveLowerCategory(@RequestBody LowerCategorySaveDTO lowerCategorySaveDTO) {
-        return ResponseEntity.ok(lowerCategoryService.save(lowerCategorySaveDTO));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(lowerCategoryService.save(lowerCategorySaveDTO));
     }
 
     @Operation(summary = "상위 카테고리 수정", description = "DTO를 받아 상위 카테고리를 수정하는 API")

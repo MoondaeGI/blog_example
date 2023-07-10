@@ -1,5 +1,6 @@
 package com.example.blog_example.model.domain.user.user;
 
+import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.comment.comment.Comment;
 import com.example.blog_example.model.domain.comment.liked.CommentLiked;
 import com.example.blog_example.model.domain.post.liked.PostLiked;
@@ -42,6 +43,9 @@ public class User extends TimeStamp {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BlogVisitCount> blogVisitCountList;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UpperCategory> upperCategoryList;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> postList;

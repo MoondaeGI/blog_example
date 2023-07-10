@@ -4,18 +4,21 @@ import com.example.blog_example.model.dto.comment.CommentSaveDTO;
 import com.example.blog_example.model.dto.comment.CommentUpdateDTO;
 import com.example.blog_example.model.vo.post.CommentVO;
 import com.example.blog_example.service.comment.CommentService;
+import com.example.blog_example.util.enums.LikedState;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
+import java.util.Objects;
 
 @Tag(name = "comment", description = "댓글 API")
 @Validated
@@ -58,7 +61,7 @@ public class CommentController {
     @Operation(summary = "댓글 등록", description = "DTO를 가지고 댓글을 등록하는 API")
     @PostMapping
     public ResponseEntity<Long> save(@RequestBody CommentSaveDTO commentSaveDTO) {
-        return ResponseEntity.ok(commentService.save(commentSaveDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(commentSaveDTO));
     }
 
     @Operation(summary = "댓글 수정", description = "DTO를 가지고 댓글을 수정하는 API")
@@ -86,7 +89,10 @@ public class CommentController {
     public ResponseEntity<String> changeLiked(
             @RequestParam(name = "comment-no") @PositiveOrZero Long commentNo,
             @RequestParam(name = "user-no") @PositiveOrZero Long userNo) {
-        return ResponseEntity.ok(commentService.changeLiked(commentNo, userNo).toString());
+        LikedState state = commentService.changeLiked(commentNo, userNo);
+
+        return Objects.equals(state, LikedState.LIKED) ?
+                ResponseEntity.ok(state.toString()) : ResponseEntity.status(HttpStatus.CREATED).body(state.toString());
     }
 
     @Operation(summary = "댓글 좋아요 확인", description = "해당 댓글 번호를 가진 댓글의 좋아요 여부를 확인하는 API")

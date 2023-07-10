@@ -4,6 +4,8 @@ import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.lower.LowerCategoryRepository;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategoryRepository;
+import com.example.blog_example.model.domain.user.user.User;
+import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.category.upper.UpperCategorySaveDTO;
 import com.example.blog_example.model.dto.category.upper.UpperCategoryUpdateDTO;
 import com.example.blog_example.model.vo.category.UpperCategoryVO;
@@ -19,10 +21,14 @@ import java.util.stream.Collectors;
 public class UpperCategoryService {
     private final UpperCategoryRepository upperCategoryRepository;
     private final LowerCategoryRepository lowerCategoryRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<UpperCategoryVO> findAll() {
-        return upperCategoryRepository.findAll().stream()
+    public List<UpperCategoryVO> findAll(Long userNo) {
+        User user = userRepository.findById(userNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+        return upperCategoryRepository.findByUser(user).stream()
                 .map(UpperCategoryVO::from)
                 .collect(Collectors.toList());
     }
@@ -35,9 +41,13 @@ public class UpperCategoryService {
 
     @Transactional
     public Long save(UpperCategorySaveDTO upperCategorySaveDTO) {
+        User user = userRepository.findById(upperCategorySaveDTO.getUserNo())
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
         UpperCategory upperCategory = upperCategoryRepository.save(
                 UpperCategory.builder()
                         .name(upperCategorySaveDTO.getName())
+                        .user(user)
                         .build());
 
         lowerCategoryRepository.save(

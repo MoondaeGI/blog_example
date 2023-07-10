@@ -1,11 +1,13 @@
 package com.example.blog_example.model.vo.category;
 
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
+import com.example.blog_example.model.vo.user.UserVO;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
@@ -25,6 +27,10 @@ public class UpperCategoryVO {
     @PastOrPresent
     private LocalDateTime regDt;
 
+    @ApiModelProperty(name = "userVO", value = "유저 VO", required = true)
+    @Valid
+    private UserVO userVO;
+
     @ApiModelProperty(name = "modDt", value = "수정 날짜", example = "2020-01-01T00:00:00", required = true)
     @PastOrPresent
     private  LocalDateTime modDt;
@@ -32,6 +38,7 @@ public class UpperCategoryVO {
     private UpperCategoryVO(UpperCategory upperCategory) {
         this.upperCategoryNo = upperCategory.getUpperCategoryNo();
         this.name = upperCategory.getName();
+        this.userVO = UserVO.from(upperCategory.getUser());
         this.regDt = upperCategory.getRegDt();
         this.modDt = upperCategory.getModDt();
     }

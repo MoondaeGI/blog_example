@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
 
 @Schema(description = "상위 카테고리 등록 요청 DTO")
 @Builder
@@ -19,4 +20,8 @@ public class UpperCategorySaveDTO {
     @ApiModelProperty(name = "name", value = "상위 카테고리 이름", example = "example", required = true)
     @NotBlank @Max(10)
     private String name;
+
+    @ApiModelProperty(name = "userNo", value = "유저 번호", example = "1", required = true)
+    @PositiveOrZero
+    private Long userNo;
 }
