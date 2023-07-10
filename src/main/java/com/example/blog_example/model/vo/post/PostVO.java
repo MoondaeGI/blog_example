@@ -4,7 +4,7 @@ import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.vo.category.LowerCategoryVO;
 import com.example.blog_example.model.vo.category.UpperCategoryVO;
 import com.example.blog_example.model.vo.user.UserVO;
-import com.example.blog_example.util.enums.OpenYN;
+import com.example.blog_example.util.enums.OpenState;
 import com.example.blog_example.util.annotation.valid.Enum;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -44,8 +44,8 @@ public class PostVO {
     private String content;
 
     @ApiModelProperty(name = "openYN", value = "공개 여부", example = "OPEN", required = true)
-    @Enum(enumClass = OpenYN.class, ignoreCase = true)
-    private OpenYN openYN;
+    @Enum(enumClass = OpenState.class, ignoreCase = true)
+    private OpenState openState;
 
     @ApiModelProperty(name = "views", value = "조회수", example = "1", required = true)
     @PositiveOrZero
@@ -66,7 +66,7 @@ public class PostVO {
         this.lowerCategoryVO = LowerCategoryVO.from(post.getLowerCategory());
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.openYN = post.getOpenYN();
+        this.openState = post.getOpenState();
         this.views = post.getViews();
         this.regDt = post.getRegDt();
         this.modDt = post.getModDt();

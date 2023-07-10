@@ -7,7 +7,7 @@ import com.example.blog_example.model.domain.post.file.File;
 import com.example.blog_example.model.domain.post.liked.PostLiked;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.util.TimeStamp;
-import com.example.blog_example.util.enums.OpenYN;
+import com.example.blog_example.util.enums.OpenState;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +44,7 @@ public class Post extends TimeStamp {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "OPEN_YN", nullable = false)
-    private OpenYN openYN;
+    private OpenState openState;
 
     @Column(name = "VIEWS", nullable = false)
     private Integer views;
@@ -65,7 +65,7 @@ public class Post extends TimeStamp {
         this.lowerCategory = lowerCategory;
         this.title = title;
         this.content = content;
-        this.openYN = OpenYN.OPEN;
+        this.openState = OpenState.OPEN;
         this.views = 0;
     }
 
@@ -80,7 +80,7 @@ public class Post extends TimeStamp {
         return this.views += 1;
     }
 
-    public OpenYN changeOpenYN() {
-        return this.openYN = (this.openYN == OpenYN.OPEN) ? OpenYN.CLOSE : OpenYN.OPEN;
+    public OpenState changeOpenYN() {
+        return this.openState = (this.openState == OpenState.OPEN) ? OpenState.CLOSE : OpenState.OPEN;
     }
 }
