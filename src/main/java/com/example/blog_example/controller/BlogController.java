@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,11 @@ public class BlogController {
             @Parameter(name = "visitorNo", description = "방문자 번호", example = "1", in = ParameterIn.QUERY, required = true),
             @Parameter(name = "bloggerNo", description = "블로거 번호", example = "1", in = ParameterIn.QUERY, required = true)
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동되었습니다."),
+            @ApiResponse(responseCode = "400", description = "해당 번호를 가진 유저(방문자)가 없습니다."),
+            @ApiResponse(responseCode = "400", description = "해당 번호를 가진 유저(블로거)가 없습니다.")
+    })
     @GetMapping("/count")
     public ResponseEntity<Integer> addVisitCount(
             @RequestParam(name = "visitor-no") @PositiveOrZero Long visitorNo,
@@ -40,6 +47,10 @@ public class BlogController {
 
     @Operation(summary = "블로그 누적 방문자 수 출력", description = "해당 유저 번호의 블로그의 누적 방문자 수를 출력하는 API")
     @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동되었습니다."),
+            @ApiResponse(responseCode = "400", description = "해당 번호를 가진 유저가 없습니다.")
+    })
     @GetMapping("/count/all")
     public ResponseEntity<Integer> countAllVisit(
             @RequestParam(name = "no") @PositiveOrZero Long userNo) {
@@ -48,6 +59,10 @@ public class BlogController {
 
     @Operation(summary = "블로그 일일 방문자 수 출력", description = "해당 유저 번호의 블로그의 일일 방문자 수를 출력하는 API")
     @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동되었습니다."),
+            @ApiResponse(responseCode = "400", description = "해당 번호를 가진 유저가 없습니다.")
+    })
     @GetMapping("/count/daily")
     public ResponseEntity<Integer> countDailyVisit(
             @RequestParam(name = "no") @PositiveOrZero Long userNo) {
