@@ -13,10 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
@@ -33,7 +31,7 @@ public class LowerCategoryService {
 
         List<UpperCategory> upperCategoryList = upperCategoryRepository.findByUser(user);
 
-        // if (upperCategoryList.isEmpty()) return null;
+        if (upperCategoryList.isEmpty()) return null;
 
         return upperCategoryList.stream()
                 .flatMap(upperCategory -> upperCategory.getLowerCategoryList().stream())
