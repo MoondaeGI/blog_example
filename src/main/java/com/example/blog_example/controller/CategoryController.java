@@ -58,6 +58,10 @@ public class CategoryController {
 
     @Operation(summary = "상위 카테고리 검색", description = "해당 상위 카테고리 번호를 가진 상위 카테고리를 검색하는 API")
     @Parameter(name = "upperCategoryNo", description = "상위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동되었습니다."),
+            @ApiResponse(responseCode = "400", description = "해당 번호를 가진 상위 카테고리가 없습니다.")
+    })
     @GetMapping("/upper")
     public ResponseEntity<UpperCategoryVO> findUpperCategory(
             @RequestParam(name = "no") @PositiveOrZero Long upperCategoryNo) {
@@ -66,6 +70,10 @@ public class CategoryController {
 
     @Operation(summary = "하위 카테고리 검색", description = "해당 하위 카테고리 번호를 가진 하위 카테고리를 검색하는 API")
     @Parameter(name = "lowerCategoryNo", description = "하위 카테고리 번호", example = "1", in = ParameterIn.QUERY, required = true)
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동되었습니다."),
+            @ApiResponse(responseCode = "400", description = "해당 번호를 가진 하위 카테고리가 없습니다.")
+    })
     @GetMapping("/lower")
     public ResponseEntity<LowerCategoryVO> findLowerCategory(
             @RequestParam(name = "no") @PositiveOrZero Long lowerCategoryNo) {
@@ -97,14 +105,14 @@ public class CategoryController {
     @Operation(summary = "상위 카테고리 수정", description = "DTO를 받아 상위 카테고리를 수정하는 API")
     @PutMapping("/upper")
     public ResponseEntity<Long> updateUpperCategory(@RequestBody UpperCategoryUpdateDTO upperCategoryUpdateDTO) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(upperCategoryService.update(upperCategoryUpdateDTO));
     }
 
     @Operation(summary = "하위 카테고리 수정", description = "DTO를 받아 하위 카테고리를 수정하는 API")
     @PutMapping("/lower")
     public ResponseEntity<Long> updateLowerCategory(@RequestBody LowerCategoryUpdateDTO lowerCategoryUpdateDTO) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(lowerCategoryService.update(lowerCategoryUpdateDTO));
     }
 
@@ -115,7 +123,7 @@ public class CategoryController {
             @RequestParam(name = "no") @PositiveOrZero Long upperCategoryNo) {
         upperCategoryService.delete(upperCategoryNo);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Operation(summary = "하위 카테고리 삭제", description = "해당 하위 카테고리 번호를 가진 하위 카테고리를 삭제하는 API")
@@ -125,6 +133,6 @@ public class CategoryController {
             @RequestParam(name = "no") @PositiveOrZero Long lowerCategoryNo) {
         lowerCategoryService.delete(lowerCategoryNo);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

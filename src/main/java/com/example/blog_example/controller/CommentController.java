@@ -93,7 +93,7 @@ public class CommentController {
     })
     @PutMapping
     public ResponseEntity<Long> update(@RequestBody CommentUpdateDTO commentUpdateDTO) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(commentService.update(commentUpdateDTO));
     }
 
@@ -108,7 +108,7 @@ public class CommentController {
             @RequestParam(name = "no") @PositiveOrZero Long commentNo) {
         commentService.delete(commentNo);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Operation(summary = "댓글 좋아요 변경", description = "해당 댓글 번호를 가진 댓글의 좋아요를 확인 후 변경하는 API")

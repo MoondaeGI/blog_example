@@ -123,7 +123,8 @@ public class PostController {
                     .build();
             fileService.update(fileUpdateDTO);
         }
-        return ResponseEntity.ok(postService.update(postUpdateDTO));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(postService.update(postUpdateDTO));
     }
 
     @Operation(summary = "게시글 삭제", description = "해당 게시글 번호의 게시글을 삭제하는 API")
@@ -134,7 +135,7 @@ public class PostController {
         fileService.deleteByPost(postNo);
         postService.delete(postNo);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Operation(summary = "게시글 좋아요 변경", description = "해당 게시글 번호의 게시글의 좋아요 여부를 확인 후 변경하는 API")

@@ -50,7 +50,7 @@ public class BlogController {
     @Parameter(name = "userNo", description = "유저 번호", example = "1", in = ParameterIn.QUERY, required = true)
     @GetMapping("/count/daily")
     public ResponseEntity<Integer> countDailyVisit(
-            @RequestParam @PositiveOrZero Long userNo) {
+            @RequestParam(name = "no") @PositiveOrZero Long userNo) {
         LocalDate date = LocalDate.now();
 
         BlogVisitCountDailyDTO blogVisitCountDailyDTO = BlogVisitCountDailyDTO.builder()
