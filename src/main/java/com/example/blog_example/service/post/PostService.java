@@ -144,7 +144,7 @@ public class PostService {
         Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
         if (Objects.equals(post.getUser().getUserNo(), userNo))
-            throw new IllegalArgumentException("좋아요 하려는 유저가 게시글을 쓴 유저와 같습니다.");
+            throw new IllegalArgumentException("좋아요 하려는 유저는 이 게시글을 쓴 유저입니다.");
 
         User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
@@ -175,6 +175,9 @@ public class PostService {
     public Boolean isLiked(Long postNo, Long userNo) {
         Post post = postRepository.findById(postNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        if (Objects.equals(post.getUser().getUserNo(), userNo))
+            throw new IllegalArgumentException("해당 번호를 가진 유저는 이 게시글을 쓴 유저입니다");
 
         User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));

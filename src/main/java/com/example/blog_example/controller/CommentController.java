@@ -88,7 +88,7 @@ public class CommentController {
 
     @Operation(summary = "댓글 수정", description = "DTO를 가지고 댓글을 수정하는 API")
     @ApiResponses({
-            @ApiResponse(responseCode = "202", description = "댓글이 수정되었습니다."),
+            @ApiResponse(responseCode = "201", description = "댓글이 수정되었습니다."),
             @ApiResponse(responseCode = "400", description = "해당 번호를 가진 댓글이 없습니다.")
     })
     @PutMapping
@@ -100,7 +100,7 @@ public class CommentController {
     @Operation(summary = "댓글 삭제", description = "해당 댓글 번호를 가진 댓글을 삭제하는 API")
     @Parameter(name = "commentNo", description = "댓글 번호", example = "1", in = ParameterIn.QUERY, required = true)
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "정상 작동되었습니다."),
+            @ApiResponse(responseCode = "204", description = "해당 번호를 가진 댓글이 삭제되었습니다."),
             @ApiResponse(responseCode = "400", description = "해당 번호를 가진 댓글이 없습니다.")
     })
     @DeleteMapping
