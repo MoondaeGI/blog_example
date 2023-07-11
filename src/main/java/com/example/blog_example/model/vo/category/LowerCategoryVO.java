@@ -22,10 +22,6 @@ public class LowerCategoryVO {
     @NotBlank @Max(10)
     private String name;
 
-    @ApiModelProperty(name = "upperCategoryVO", value = "상위 카테고리", required = true)
-    @Valid
-    private UpperCategoryVO upperCategoryVO;
-
     @ApiModelProperty(name = "regDt", value = "등록 날짜", example = "2020-01-01T00:00:00", required = true)
     @PastOrPresent
     private LocalDateTime regDt;
@@ -37,7 +33,6 @@ public class LowerCategoryVO {
     private LowerCategoryVO(LowerCategory lowerCategory) {
         this.lowerCategoryNo = lowerCategory.getLowerCategoryNo();
         this.name = lowerCategory.getName();
-        this.upperCategoryVO = UpperCategoryVO.from(lowerCategory.getUpperCategory());
         this.regDt = lowerCategory.getRegDt();
         this.modDt = lowerCategory.getModDt();
     }

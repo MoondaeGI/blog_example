@@ -11,10 +11,12 @@ import com.example.blog_example.model.dto.category.lower.LowerCategoryUpdateDTO;
 import com.example.blog_example.model.dto.category.upper.UpperCategorySaveDTO;
 import com.example.blog_example.model.dto.category.upper.UpperCategoryUpdateDTO;
 import com.example.blog_example.model.vo.category.LowerCategoryVO;
+import com.example.blog_example.model.vo.category.UpperCategoryVO;
 import com.example.blog_example.service.category.LowerCategoryService;
 import com.example.blog_example.service.category.UpperCategoryService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,7 @@ public class CategoryServiceTest {
     @AfterEach
     public void tearDown() {
         upperCategoryRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -79,17 +82,31 @@ public class CategoryServiceTest {
 
     @Test
     public void lowerCategoryFindAllTest() {
+        Long userNo = userRepository.findAll().get(0).getUserNo();
+
         Integer size = lowerCategoryRepository.findAll().size();
 
-        assertThat(size).isEqualTo(lowerCategoryService.findAll().size());
+        assertThat(size).isEqualTo(lowerCategoryService.findAll(userNo).size());
     }
 
+    @DisplayName("상위 카테고리 검색 동작 확인")
     @Test
-    public void upperCategoryFindTest() {
+    public void upperCategoryFindTest1() {
         Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
 
         assertThat(upperCategoryNo)
                 .isEqualTo(upperCategoryService.find(upperCategoryNo).getUpperCategoryNo());
+    }
+
+    @DisplayName("상위 카테고리 검색으로 받은 VO에서 lowerCategoryList가 정상으로 출력되는지 확인")
+    @Test
+    public void findUpperCategoryTest2() {
+        Long upperCategoryNo = upperCategoryRepository.findAll().get(0).getUpperCategoryNo();
+
+        UpperCategoryVO upperCategoryVO = upperCategoryService.find(upperCategoryNo);
+
+        assertThat(upperCategoryVO.getLowerCategoryVOList().get(0).getLowerCategoryNo())
+                .isEqualTo(lowerCategoryService.findByUpperCategory(upperCategoryNo).get(0).getLowerCategoryNo());
     }
 
     @Test

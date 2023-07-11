@@ -4,24 +4,39 @@ import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.lower.LowerCategoryRepository;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategoryRepository;
-import com.example.blog_example.model.dto.category.lower.*;
+import com.example.blog_example.model.domain.user.user.User;
+import com.example.blog_example.model.domain.user.user.UserRepository;
+import com.example.blog_example.model.dto.category.lower.LowerCategorySaveDTO;
+import com.example.blog_example.model.dto.category.lower.LowerCategoryUpdateDTO;
 import com.example.blog_example.model.vo.category.LowerCategoryVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
 public class LowerCategoryService {
     private final LowerCategoryRepository lowerCategoryRepository;
     private final UpperCategoryRepository upperCategoryRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<LowerCategoryVO> findAll() {
-        return lowerCategoryRepository.findAll().stream()
+    public List<LowerCategoryVO> findAll(Long userNo) {
+
+        User user = userRepository.findById(userNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 번호를 가진 유저가 없습니다."));
+
+        List<UpperCategory> upperCategoryList = upperCategoryRepository.findByUser(user);
+
+        // if (upperCategoryList.isEmpty()) return null;
+
+        return upperCategoryList.stream()
+                .flatMap(upperCategory -> upperCategory.getLowerCategoryList().stream())
                 .map(LowerCategoryVO::from)
                 .collect(Collectors.toList());
     }

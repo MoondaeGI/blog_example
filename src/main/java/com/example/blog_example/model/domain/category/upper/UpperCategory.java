@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,11 +28,11 @@ public class UpperCategory extends TimeStamp {
     @JoinColumn(name = "USER_NO", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "upperCategory", orphanRemoval = true)
-    private List<LowerCategory> lowerCategoryList;
+    @OneToMany(mappedBy = "upperCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LowerCategory> lowerCategoryList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "upperCategory", orphanRemoval = true)
-    private List<Post> postList;
+    @OneToMany(mappedBy = "upperCategory")
+    private List<Post> postList = new ArrayList<>();
 
     @Builder
     public UpperCategory(String name, User user) {
