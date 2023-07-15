@@ -12,7 +12,7 @@ import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.post.post.*;
 import com.example.blog_example.service.post.PostService;
-import com.example.blog_example.util.enums.OpenState;
+import com.example.blog_example.util.enums.state.OpenState;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

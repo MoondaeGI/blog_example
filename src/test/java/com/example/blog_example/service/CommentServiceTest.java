@@ -15,7 +15,7 @@ import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.comment.CommentSaveDTO;
 import com.example.blog_example.model.dto.comment.CommentUpdateDTO;
 import com.example.blog_example.service.comment.CommentService;
-import com.example.blog_example.util.enums.LikedState;
+import com.example.blog_example.util.enums.state.LikedState;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
