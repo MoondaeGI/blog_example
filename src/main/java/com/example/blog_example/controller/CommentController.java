@@ -5,7 +5,7 @@ import com.example.blog_example.model.dto.comment.CommentUpdateDTO;
 import com.example.blog_example.model.vo.enums.EnumStateVO;
 import com.example.blog_example.model.vo.post.CommentVO;
 import com.example.blog_example.service.comment.CommentService;
-import com.example.blog_example.util.enums.LikedState;
+import com.example.blog_example.util.enums.state.LikedState;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;

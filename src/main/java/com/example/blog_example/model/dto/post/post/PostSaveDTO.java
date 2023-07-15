@@ -19,8 +19,7 @@ public class PostSaveDTO {
     @PositiveOrZero
     private Long upperCategoryNo;
 
-    @ApiModelProperty(name = "lowerCategoryNo", value = "하위 카테고리 번호", example = "1", required = true)
-    @PositiveOrZero
+    @ApiModelProperty(name = "lowerCategoryNo", value = "하위 카테고리 번호", example = "1")
     private Long lowerCategoryNo;
 
     @ApiModelProperty(name = "userNo", value = "유저 번호", example = "1", required = true)

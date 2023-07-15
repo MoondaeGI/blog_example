@@ -9,8 +9,8 @@ import com.example.blog_example.model.vo.post.FileVO;
 import com.example.blog_example.model.vo.post.PostVO;
 import com.example.blog_example.service.post.FileService;
 import com.example.blog_example.service.post.PostService;
-import com.example.blog_example.util.enums.LikedState;
-import com.example.blog_example.util.enums.OpenState;
+import com.example.blog_example.util.enums.state.LikedState;
+import com.example.blog_example.util.enums.state.OpenState;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.PositiveOrZero;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -119,7 +120,7 @@ public class PostController {
 
     @Operation(summary = "게시글 등록", description = "DTO, MultipartFile을 받아 게시글을 등록하는 API")
     @Parameters({
-            @Parameter(name = "postSaveDTO", description = "게시글 등록 요청 DTO"),
+            @Parameter(name = "postSaveDTO", description = "게시글 등록 요청 DTO", required = true),
             @Parameter(name = "multipartFiles", description = "업로드한 파일 리스트")
     })
     @ApiResponses({
@@ -131,8 +132,8 @@ public class PostController {
     })
     @PostMapping
     public ResponseEntity<Long> save(
-            @RequestPart PostSaveDTO postSaveDTO,
-            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
+            @RequestPart(value = "dto") PostSaveDTO postSaveDTO,
+           @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) throws IOException {
         Long postNo = postService.save(postSaveDTO);
 
         if (multipartFiles != null) {
@@ -149,7 +150,7 @@ public class PostController {
 
     @Operation(summary = "게시글 수정", description = "DTO, MultipartFile을 받아 게시글을 수정하는 API")
     @Parameters({
-            @Parameter(name = "postUpdateDTO", description = "게시글 수정 요청 DTO"),
+            @Parameter(name = "postUpdateDTO", description = "게시글 수정 요청 DTO", required = true),
             @Parameter(name = "multipartFiles", description = "업로드한 파일 리스트")
     })
     @ApiResponses({
@@ -160,9 +161,9 @@ public class PostController {
     })
     @PutMapping
     public ResponseEntity<Long> update(
-            @RequestPart PostUpdateDTO postUpdateDTO,
-            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
-        if (!multipartFiles.isEmpty()) {
+            @RequestPart(value = "dto") PostUpdateDTO postUpdateDTO,
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) throws IOException {
+        if (multipartFiles != null) {
             FileUpdateDTO fileUpdateDTO = FileUpdateDTO.builder()
                     .postNo(postUpdateDTO.getPostNo())
                     .multipartFiles(multipartFiles)

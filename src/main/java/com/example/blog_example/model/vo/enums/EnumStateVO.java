@@ -1,6 +1,6 @@
 package com.example.blog_example.model.vo.enums;
 
-import com.example.blog_example.util.enums.EnumState;
+import com.example.blog_example.util.enums.state.EnumState;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

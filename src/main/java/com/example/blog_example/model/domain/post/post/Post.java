@@ -7,7 +7,7 @@ import com.example.blog_example.model.domain.post.file.File;
 import com.example.blog_example.model.domain.post.liked.PostLiked;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.util.TimeStamp;
-import com.example.blog_example.util.enums.OpenState;
+import com.example.blog_example.util.enums.state.OpenState;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

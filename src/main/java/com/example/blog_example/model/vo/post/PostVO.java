@@ -4,7 +4,7 @@ import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.vo.category.LowerCategoryVO;
 import com.example.blog_example.model.vo.category.UpperCategoryVO;
 import com.example.blog_example.model.vo.user.UserVO;
-import com.example.blog_example.util.enums.OpenState;
+import com.example.blog_example.util.enums.state.OpenState;
 import com.example.blog_example.util.annotation.valid.Enum;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;

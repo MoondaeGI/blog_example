@@ -1,5 +1,6 @@
-package com.example.blog_example.util.enums;
+package com.example.blog_example.util.enums.state;
 
+import com.example.blog_example.util.enums.state.EnumState;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

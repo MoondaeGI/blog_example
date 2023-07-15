@@ -13,8 +13,8 @@ import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.post.post.PostSaveDTO;
 import com.example.blog_example.model.dto.post.post.PostUpdateDTO;
 import com.example.blog_example.model.vo.post.PostVO;
-import com.example.blog_example.util.enums.LikedState;
-import com.example.blog_example.util.enums.OpenState;
+import com.example.blog_example.util.enums.state.LikedState;
+import com.example.blog_example.util.enums.state.OpenState;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,8 +98,10 @@ public class PostService {
                 upperCategoryRepository.findById(postSaveDTO.getUpperCategoryNo())
                         .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
+        Long lowerCategoryNo = (postSaveDTO.getLowerCategoryNo() != null) ?
+                postSaveDTO.getLowerCategoryNo() : upperCategory.getLowerCategoryList().get(0).getLowerCategoryNo();
         LowerCategory lowerCategory =
-                lowerCategoryRepository.findById(postSaveDTO.getLowerCategoryNo())
+                lowerCategoryRepository.findById(lowerCategoryNo)
                         .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
         return postRepository.save(

@@ -11,7 +11,7 @@ import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.comment.CommentSaveDTO;
 import com.example.blog_example.model.dto.comment.CommentUpdateDTO;
 import com.example.blog_example.model.vo.post.CommentVO;
-import com.example.blog_example.util.enums.LikedState;
+import com.example.blog_example.util.enums.state.LikedState;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

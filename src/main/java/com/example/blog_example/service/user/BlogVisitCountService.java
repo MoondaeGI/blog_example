@@ -37,10 +37,10 @@ public class BlogVisitCountService {
     @Transactional
     public Integer addVisitCount(Long visitorNo, Long bloggerNo) {
         User visitor = userRepository.findById(visitorNo)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 번호를 가진 유저(방문자)가 없습니다."));
 
         User blogger = userRepository.findById(bloggerNo)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 번호를 가진 유저(블로거)가 없습니다."));
         BlogVisitCount blogVisitCount = blogVisitCountRepository.findByUserAndDate(blogger, LocalDate.now());
 
         return (Objects.equals(visitor, blogger)) ? blogVisitCount.getVisitCount() : blogVisitCount.addVisitCount();

@@ -16,7 +16,6 @@ import com.example.blog_example.model.dto.comment.CommentSaveDTO;
 import com.example.blog_example.model.dto.comment.CommentUpdateDTO;
 import com.example.blog_example.model.vo.enums.EnumStateVO;
 import com.example.blog_example.model.vo.post.CommentVO;
-import com.example.blog_example.util.enums.LikedState;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
