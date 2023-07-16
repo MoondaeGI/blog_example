@@ -19,4 +19,19 @@ public class UserService {
 
         return UserVO.from(user);
     }
+
+    @Transactional(readOnly = true)
+    public Boolean isExistByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean isExistByName(String name) {
+        return userRepository.existsByName(name);
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean isExistByBlogName(String blogName) {
+        return userRepository.existsByBlogName(blogName);
+    }
 }
