@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Component
 public class FileHandler {
-    public void parseMultipartFile(Post post, MultipartFile multipartFile) {
+    public File parseMultipartFile(Post post, MultipartFile multipartFile) {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String currentDate = simpleDateFormat.format(new Date());
@@ -47,7 +47,7 @@ public class FileHandler {
             e.printStackTrace();
         }
 
-        File.builder()
+        return File.builder()
                 .name(uploadedFileName)
                 .originalFileName(originalFileName)
                 .path(path + "/" + uploadedFileName)

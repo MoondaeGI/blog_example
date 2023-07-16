@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.PositiveOrZero;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -133,7 +134,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<Long> save(
             @RequestPart(value = "dto") PostSaveDTO postSaveDTO,
-           @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) throws IOException {
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) throws IOException {
         Long postNo = postService.save(postSaveDTO);
 
         if (multipartFiles != null) {
@@ -159,19 +160,22 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "해당 번호를 가진 상위 카테고리가 없습니다."),
             @ApiResponse(responseCode = "400", description = "해당 번호를 가진 하위 카테고리가 없습니다.")
     })
-    @PutMapping
+    @PostMapping("/update")
     public ResponseEntity<Long> update(
             @RequestPart(value = "dto") PostUpdateDTO postUpdateDTO,
             @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) throws IOException {
-        if (multipartFiles != null) {
-            FileUpdateDTO fileUpdateDTO = FileUpdateDTO.builder()
-                    .postNo(postUpdateDTO.getPostNo())
-                    .multipartFiles(multipartFiles)
-                    .build();
-            fileService.update(fileUpdateDTO);
-        }
+        Long postNo = postService.update(postUpdateDTO);
+
+        List<MultipartFile> updateFileList = (multipartFiles != null) ? multipartFiles : new ArrayList<>();
+
+        FileUpdateDTO fileUpdateDTO = FileUpdateDTO.builder()
+                .postNo(postUpdateDTO.getPostNo())
+                .multipartFiles(updateFileList)
+                .build();
+        fileService.update(fileUpdateDTO);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(postService.update(postUpdateDTO));
+                .body(postNo);
     }
 
     @Operation(summary = "게시글 삭제", description = "해당 게시글 번호의 게시글을 삭제하는 API")
@@ -221,7 +225,7 @@ public class PostController {
     })
     @GetMapping("/state/open")
     public ResponseEntity<EnumStateVO> changeOpenYN(
-            @RequestParam(name = "post-no") @PositiveOrZero Long postNo) {
+            @RequestParam(name = "no") @PositiveOrZero Long postNo) {
         OpenState state = postService.changeOpenYN(postNo);
         EnumStateVO result = EnumStateVO.builder()
                 .enumState(state)

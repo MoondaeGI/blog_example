@@ -28,7 +28,7 @@ public class UpperCategoryVO {
     @NotBlank @Max(10)
     private String name;
 
-    @ApiModelProperty(name = "lowerCategoryVO", value = "하위 카테고리", required = true)
+    @ApiModelProperty(name = "lowerCategoryVOList", value = "하위 카테고리 목록", required = true)
     @Valid
     private List<LowerCategoryVO> lowerCategoryVOList;
 

@@ -4,16 +4,20 @@ import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.vo.category.LowerCategoryVO;
 import com.example.blog_example.model.vo.category.UpperCategoryVO;
 import com.example.blog_example.model.vo.user.UserVO;
-import com.example.blog_example.util.enums.state.OpenState;
 import com.example.blog_example.util.annotation.valid.Enum;
+import com.example.blog_example.util.enums.state.OpenState;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Schema(description = "게시글 VO")
 @NoArgsConstructor
@@ -58,6 +62,9 @@ public class PostVO {
     @ApiModelProperty(name = "modDt", value = "수정 날짜", example = "2020-01-01T00:00:00", required = true)
     @PastOrPresent
     private LocalDateTime modDt;
+
+    @ApiModelProperty(name = "fileVOList", value = "파일 VO 목록")
+    private List<FileVO> fileVOList;
 
     private PostVO(Post post) {
         this.postNo = post.getPostNo();

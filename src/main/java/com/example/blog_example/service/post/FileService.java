@@ -4,7 +4,8 @@ import com.example.blog_example.model.domain.post.file.File;
 import com.example.blog_example.model.domain.post.file.FileRepository;
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.post.post.PostRepository;
-import com.example.blog_example.model.dto.post.file.*;
+import com.example.blog_example.model.dto.post.file.FileSaveDTO;
+import com.example.blog_example.model.dto.post.file.FileUpdateDTO;
 import com.example.blog_example.model.vo.post.FileVO;
 import com.example.blog_example.util.FileHandler;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,8 +44,8 @@ public class FileService {
         Post post = postRepository.findById(fileSaveDTO.getPostNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
-        for(MultipartFile multipartFile : fileSaveDTO.getMultipartFiles()) {
-            fileHandler.parseMultipartFile(post, multipartFile);
+        for (MultipartFile multipartFile : fileSaveDTO.getMultipartFiles()) {
+            fileRepository.save(fileHandler.parseMultipartFile(post, multipartFile));
         }
     }
 
@@ -54,29 +54,26 @@ public class FileService {
         Post post = postRepository.findById(fileUpdateDTO.getPostNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
-        List<File> files = fileRepository.findByPost(post);
+        List<String> updateFileNameList = fileUpdateDTO.getMultipartFiles().stream()
+                .map(MultipartFile::getName)
+                .collect(Collectors.toList());
 
-        List<String> multipartFileNames = new ArrayList<>();
-        for (MultipartFile multipartFile : fileUpdateDTO.getMultipartFiles()) {
-            multipartFileNames.add(multipartFile.getName());
-        }
+        List<File> uploadedFileList = fileRepository.findByPost(post);
+        List<String> uploadedFileName = uploadedFileList.stream()
+                .map(File::getOriginalFileName)
+                .collect(Collectors.toList());
 
-        List<String> fileNames = new ArrayList<>();
-        for (File file : files) {
-            fileNames.add(file.getOriginalFileName());
-        }
-
-        for (MultipartFile multipartFile : fileUpdateDTO.getMultipartFiles()) {
-            String multipartFileName = multipartFile.getOriginalFilename();
-            if (!fileNames.contains(multipartFileName)) {
-                fileHandler.parseMultipartFile(post, multipartFile);
+        for (MultipartFile updateFile : fileUpdateDTO.getMultipartFiles()) {
+            String updateFileName = updateFile.getOriginalFilename();
+            if (!uploadedFileName.contains(updateFileName)) {
+                fileRepository.save(fileHandler.parseMultipartFile(post, updateFile));
             }
         }
 
-        for (File file : files) {
-            String fileName = file.getOriginalFileName();
-            if (!multipartFileNames.contains(fileName)) {
-                fileHandler.deleteFile(file);
+        for (File uploadedFile : uploadedFileList) {
+            String fileName = uploadedFile.getOriginalFileName();
+            if (!updateFileNameList.contains(fileName)) {
+                if (fileHandler.deleteFile(uploadedFile)) fileRepository.delete(uploadedFile);
             }
         }
     }
@@ -89,8 +86,6 @@ public class FileService {
         if (fileHandler.deleteFile(file)) {
             fileRepository.delete(file);
         }
-
-        fileRepository.delete(file);
     }
 
     @Transactional

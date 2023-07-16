@@ -34,10 +34,6 @@ public class FileVO {
     @Positive
     private Long size;
 
-    @ApiModelProperty(name = "postVO", value = "게시글 VO", required = true)
-    @Valid
-    private PostVO postVO;
-
     @ApiModelProperty(name = "regDt", value = "등록 날짜", example = "2020-01-01T00:00:00", required = true)
     @PastOrPresent
     private LocalDateTime regDt;
@@ -52,7 +48,6 @@ public class FileVO {
         this.originalFileName = file.getOriginalFileName();
         this.path = file.getPath();
         this.size = file.getSize();
-        this.postVO = PostVO.from(file.getPost());
         this.regDt = file.getRegDt();
         this.modDt = file.getModDt();
     }
