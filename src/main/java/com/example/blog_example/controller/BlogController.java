@@ -1,6 +1,7 @@
 package com.example.blog_example.controller;
 
 import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountDailyDTO;
+import com.example.blog_example.model.vo.user.BlogVisitCountVO;
 import com.example.blog_example.service.user.BlogVisitCountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,7 +29,7 @@ import java.time.LocalDate;
 public class BlogController {
     private final BlogVisitCountService blogVisitCountService;
 
-    @Operation(summary = "블로그 방문자 수 증가", description = "해당 유저 번호의 블로그의 방문자 수를 증가시키는 API")
+    @Operation(summary = "블로그 방문 기록 조회", description = "해당 번호를 가진 유저의 오늘자 블로그 방문 기록을 조회하는 API")
     @Parameters({
             @Parameter(name = "visitorNo", description = "방문자 번호", example = "1", in = ParameterIn.QUERY, required = true),
             @Parameter(name = "bloggerNo", description = "블로거 번호", example = "1", in = ParameterIn.QUERY, required = true)
@@ -38,11 +39,14 @@ public class BlogController {
             @ApiResponse(responseCode = "400", description = "해당 번호를 가진 유저(방문자)가 없습니다."),
             @ApiResponse(responseCode = "400", description = "해당 번호를 가진 유저(블로거)가 없습니다.")
     })
-    @GetMapping("/count")
-    public ResponseEntity<Integer> addVisitCount(
+    @GetMapping()
+    public ResponseEntity<BlogVisitCountVO> find(
             @RequestParam(name = "visitor-no") @PositiveOrZero Long visitorNo,
             @RequestParam(name = "blogger-no") @PositiveOrZero Long bloggerNo){
-        return ResponseEntity.ok(blogVisitCountService.addVisitCount(visitorNo, bloggerNo));
+        if (!blogVisitCountService.isVisit(visitorNo, bloggerNo))
+            blogVisitCountService.addVisitCount(bloggerNo);
+
+        return ResponseEntity.ok(blogVisitCountService.find(bloggerNo));
     }
 
     @Operation(summary = "블로그 누적 방문자 수 출력", description = "해당 유저 번호의 블로그의 누적 방문자 수를 출력하는 API")
@@ -51,10 +55,10 @@ public class BlogController {
             @ApiResponse(responseCode = "200", description = "정상 작동되었습니다."),
             @ApiResponse(responseCode = "400", description = "해당 번호를 가진 유저가 없습니다.")
     })
-    @GetMapping("/count/all")
-    public ResponseEntity<Integer> countAllVisit(
+    @GetMapping("/count/total")
+    public ResponseEntity<Integer> countTotalVisit(
             @RequestParam(name = "no") @PositiveOrZero Long userNo) {
-        return ResponseEntity.ok(blogVisitCountService.countAllVisit(userNo));
+        return ResponseEntity.ok(blogVisitCountService.countTotalVisit(userNo));
     }
 
     @Operation(summary = "블로그 일일 방문자 수 출력", description = "해당 유저 번호의 블로그의 일일 방문자 수를 출력하는 API")

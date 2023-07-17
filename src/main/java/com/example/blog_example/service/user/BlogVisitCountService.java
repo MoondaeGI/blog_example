@@ -5,6 +5,7 @@ import com.example.blog_example.model.domain.user.blog_visit_count.BlogVisitCoun
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.user.blog_visit_count.BlogVisitCountDailyDTO;
+import com.example.blog_example.model.vo.user.BlogVisitCountVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,17 @@ import java.util.Objects;
 public class BlogVisitCountService {
     private final BlogVisitCountRepository blogVisitCountRepository;
     private final UserRepository userRepository;
+
+    @Transactional(readOnly = true)
+    public BlogVisitCountVO find(Long userNo) {
+        User user = userRepository.findById(userNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 번호를 가진 유저(블로거)가 없습니다."));
+        BlogVisitCount blogVisitCount = blogVisitCountRepository.findByUserAndDate(user, LocalDate.now());
+
+        Integer totalVisit = blogVisitCountRepository.sumVisitCountByUser(user).intValue();
+
+        return BlogVisitCountVO.of(totalVisit, blogVisitCount.getVisitCount());
+    }
 
     @Scheduled(cron = "0 0 0 * * *")
     @Transactional
@@ -35,19 +47,16 @@ public class BlogVisitCountService {
     }
 
     @Transactional
-    public Integer addVisitCount(Long visitorNo, Long bloggerNo) {
-        User visitor = userRepository.findById(visitorNo)
-                .orElseThrow(() -> new IllegalArgumentException("해당 번호를 가진 유저(방문자)가 없습니다."));
-
-        User blogger = userRepository.findById(bloggerNo)
+    public void addVisitCount(Long userNo) {
+        User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 번호를 가진 유저(블로거)가 없습니다."));
-        BlogVisitCount blogVisitCount = blogVisitCountRepository.findByUserAndDate(blogger, LocalDate.now());
+        BlogVisitCount blogVisitCount = blogVisitCountRepository.findByUserAndDate(user, LocalDate.now());
 
-        return (Objects.equals(visitor, blogger)) ? blogVisitCount.getVisitCount() : blogVisitCount.addVisitCount();
+        blogVisitCount.addVisitCount();
     }
 
     @Transactional(readOnly = true)
-    public Integer countAllVisit(Long userNo) {
+    public Integer countTotalVisit(Long userNo) {
         User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 블로그가 없습니다."));
 
@@ -61,5 +70,16 @@ public class BlogVisitCountService {
 
         return blogVisitCountRepository.findByUserAndDate(user, blogVisitCountDailyDTO.getDate())
                 .getVisitCount();
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean isVisit(Long visitorNo, Long bloggerNo) {
+        User visitor = userRepository.findById(visitorNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저(방문자)가 없습니다."));
+
+        User blogger = userRepository.findById(bloggerNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저(블로거)가 없습니다."));
+
+        return Objects.equals(visitor, blogger);
     }
 }

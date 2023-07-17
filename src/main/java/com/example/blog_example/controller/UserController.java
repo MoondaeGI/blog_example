@@ -42,7 +42,7 @@ public class UserController {
     @Operation(summary = "이메일 중복 사용 확인", description = "해당 이메일을 가진 유저가 존재하는지 확인하는 API")
     @Parameter(name = "email", description = "이메일", example = "example1234@example.com", required = true)
     @ApiResponse(responseCode = "200", description = "정상 작동되었습니다.")
-    @GetMapping
+    @GetMapping("/email")
     public ResponseEntity<Boolean> isExistByEmail(@RequestParam("email") @Email String email) {
         return ResponseEntity.ok(userService.isExistByEmail(email));
     }
@@ -50,7 +50,7 @@ public class UserController {
     @Operation(summary = "이름 중복 사용 확인", description = "해당 이름을 가진 유저가 존재하는지 확인하는 API")
     @Parameter(name = "name", description = "이름", example = "example", required = true)
     @ApiResponse(responseCode = "200", description = "정상 작동되었습니다.")
-    @GetMapping
+    @GetMapping("/name")
     public ResponseEntity<Boolean> isExistByName(@RequestParam("name") @NotBlank @Max(10) String name) {
         return ResponseEntity.ok(userService.isExistByName(name));
     }
@@ -58,8 +58,8 @@ public class UserController {
     @Operation(summary = "블로그 이름 중복 사용 확인", description = "해당 블로그 이름을 가진 유저가 존재하는지 확인하는 API")
     @Parameter(name = "blogName", description = "블로그 이름", example = "example", required = true)
     @ApiResponse(responseCode = "200", description = "정상 작동되었습니다.")
-    @GetMapping
-    public ResponseEntity<Boolean> isExistByBlogName(@RequestParam("blog-name") @NotBlank @Max(20) String blogName) {
+    @GetMapping("/blog")
+    public ResponseEntity<Boolean> isExistByBlogName(@RequestParam("name") @NotBlank @Max(20) String blogName) {
         return ResponseEntity.ok(userService.isExistByBlogName(blogName));
     }
 }
