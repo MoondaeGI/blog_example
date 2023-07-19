@@ -23,7 +23,10 @@ public class AuthService {
 
     @Transactional
     public String signup(UserSignupDTO userSignUpDTO) {
-        if (userRepository.existsByEmail(userSignUpDTO.getEmail())) return null;
+        if (userRepository.existsByEmail(userSignUpDTO.getEmail()) &&
+            userRepository.existsByBlogName(userSignUpDTO.getBlogName()) &&
+            userRepository.existsByName(userSignUpDTO.getName()))
+            return null;
 
         User user = User.builder()
                 .name(userSignUpDTO.getName())

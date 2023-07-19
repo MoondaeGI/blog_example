@@ -1,14 +1,15 @@
 package com.example.blog_example.controller;
 
-import com.example.blog_example.model.vo.post.PostVO;
-import com.example.blog_example.service.category.LowerCategoryService;
+import com.example.blog_example.model.vo.user.UserVO;
 import com.example.blog_example.service.category.UpperCategoryService;
 import com.example.blog_example.service.comment.CommentService;
 import com.example.blog_example.service.post.FileService;
 import com.example.blog_example.service.post.PostService;
+import com.example.blog_example.service.user.BlogVisitCountService;
 import com.example.blog_example.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.PositiveOrZero;
 
 @Tag(name = "page", description = "페이지 API")
@@ -25,14 +27,19 @@ import javax.validation.constraints.PositiveOrZero;
 @RestController
 public class PageController {
     private final UserService userService;
+    private final BlogVisitCountService blogVisitCountService;
     private final UpperCategoryService upperCategoryService;
     private final PostService postService;
     private final FileService fileService;
     private final CommentService commentService;
+    private final HttpSession httpSession;
 
     @Operation(summary = "메인 화면 출력", description = "메인 화면을 가져오는 API")
     @GetMapping("/")
     public String index(Model model) {
+        UserVO user = (UserVO) httpSession.getAttribute("user");
+        if (user != null) model.addAttribute("user", user);
+
         model.addAttribute("posts", postService.findAll());
 
         return "index";
@@ -52,10 +59,13 @@ public class PageController {
 
     @Operation(summary = "유저 화면 출력", description = "해당 번호를 가진 유저의 화면을 가져오는 API")
     @Parameter(name = "userNo", description = "유저 번호", example = "1", required = true)
-    @GetMapping("/user")
+    @GetMapping("/user-page")
     public String userPage(
             @RequestParam("no") @PositiveOrZero Long userNo,
             Model model) {
+        UserVO user = (UserVO) httpSession.getAttribute("user");
+        if (user != null) model.addAttribute("user", user);
+
         model.addAttribute("user", userService.find(userNo));
         model.addAttribute("liked-posts", postService.findPostLikedList(userNo));
         model.addAttribute("comments", commentService.findByUser(userNo));
@@ -65,29 +75,40 @@ public class PageController {
 
     @Operation(summary = "블로그 화면 출력", description = "해당 번호를 가진 유저의 블로그 화면을 가져오는 API")
     @Parameter(name = "userNo", description = "유저 번호", example = "1", required = true)
-    @GetMapping("/blog")
+    @GetMapping("/blog-page")
     public String blogPage(
-            @RequestParam("no") @PositiveOrZero Long userNo,
+            @RequestParam("no") @PositiveOrZero Long bloggerNo,
             Model model) {
-        model.addAttribute("user", userService.find(userNo));
-        model.addAttribute("categories", upperCategoryService.findAll(userNo));
-        model.addAttribute("posts", postService.findByUser(userNo));
+        model.addAttribute("blogger", userService.find(bloggerNo));
+        model.addAttribute("categories", upperCategoryService.findAll(bloggerNo));
+        model.addAttribute("posts", postService.findByUser(bloggerNo));
+
+        UserVO user = (UserVO) httpSession.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("user", user);
+            if (!blogVisitCountService.isVisit(user.getUserNo(), bloggerNo))
+                blogVisitCountService.addVisitCount(bloggerNo);
+        }
 
         return "blog-page";
     }
 
     @Operation(summary = "게시글 화면 출력", description = "해당 번호를 가진 게시글 화면을 가져오는 API")
     @Parameter(name = "postNo", description = "게시글 번호", example = "1", required = true)
-    @GetMapping("/post")
+    @GetMapping("/post-page")
     public String post(
             @RequestParam("no") @PositiveOrZero Long postNo,
             Model model) {
+        UserVO user = (UserVO) httpSession.getAttribute("user");
+        if (user != null) model.addAttribute("user", user);
+
         model.addAttribute("post", postService.find(postNo));
+        model.addAttribute("liked-count", postService.countLiked(postNo));
         model.addAttribute("comments", commentService.findByPost(postNo));
         if(fileService.isExist(postNo))
             model.addAttribute("files", fileService.findByPost(postNo));
 
-        return "post";
+        return "post-page";
     }
 
     @Operation(summary = "게시글 작성 화면 출력", description = "게시글을 작성하기 위한 화면을 가져오는 API")
@@ -96,18 +117,30 @@ public class PageController {
     public String postSave(
             @RequestParam("no") @PositiveOrZero Long userNo,
             Model model) {
-        model.addAttribute("user", userService.find(userNo));
+        UserVO user = (UserVO) httpSession.getAttribute("user");
+        if (user != null) model.addAttribute("user", user);
+
+        model.addAttribute("blogger", userService.find(userNo));
         model.addAttribute("categories", upperCategoryService.findAll(userNo));
 
         return "post-save";
     }
 
     @Operation(summary = "게시글 수정 화면 출력", description = "해당 번호를 가진 게시글을 수정하는 화면을 가져오는 API")
-    @Parameter(name = "postNo", description = "게시글 번호", example = "1", required = true)
+    @Parameters({
+            @Parameter(name = "userNo", description = "유저 번호", example = "1", required = true),
+            @Parameter(name = "postNo", description = "게시글 번호", example = "1", required = true)
+    })
     @GetMapping("/post-update")
     public String postUpdate(
-            @RequestParam("no") @PositiveOrZero Long postNo,
+            @RequestParam("user-no") @PositiveOrZero Long userNo,
+            @RequestParam("post-no") @PositiveOrZero Long postNo,
             Model model) {
+        UserVO user = (UserVO) httpSession.getAttribute("user");
+        if (user != null) model.addAttribute("user", user);
+
+        model.addAttribute("blogger", userService.find(userNo));
+        model.addAttribute("categories", upperCategoryService.findAll(userNo));
         model.addAttribute("post", postService.find(postNo));
         if(fileService.isExist(postNo))
             model.addAttribute("files", fileService.findByPost(postNo));

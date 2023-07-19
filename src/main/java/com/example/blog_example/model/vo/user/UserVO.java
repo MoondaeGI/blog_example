@@ -12,12 +12,13 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Schema(description = "유저 VO")
 @NoArgsConstructor
 @Getter
-public class UserVO {
+public class UserVO implements Serializable {
     @ApiModelProperty(name = "userNo", value = "유저 번호", example = "1", required = true)
     @Positive
     private Long userNo;
