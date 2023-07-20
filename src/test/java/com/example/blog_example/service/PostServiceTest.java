@@ -15,6 +15,7 @@ import com.example.blog_example.service.post.PostService;
 import com.example.blog_example.util.enums.state.OpenState;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class PostServiceTest {
 
         UpperCategory upperCategory = upperCategoryRepository.save(
                 UpperCategory.builder()
+                        .user(user)
                         .name("test")
                         .build());
 
@@ -140,6 +142,52 @@ public class PostServiceTest {
         postService.delete(postNo);
 
         assertThat(postRepository.findById(postNo)).isEmpty();
+    }
+
+    @DisplayName("제목만으로 검색 검증")
+    @Test
+    public void searchTest1() {
+        postRepository.save(
+                Post.builder()
+                        .user(userRepository.findAll().get(0))
+                        .upperCategory(upperCategoryRepository.findAll().get(0))
+                        .lowerCategory(lowerCategoryRepository.findAll().get(0))
+                        .title("test1")
+                        .content("test1")
+                        .build());
+
+        PostSearchDTO postSearchDTO1 = PostSearchDTO.builder()
+                .title("test")
+                .build();
+        assertThat(postService.search(postSearchDTO1).size()).isEqualTo(2);
+
+        PostSearchDTO postSearchDTO2 = PostSearchDTO.builder()
+                .title("1")
+                .build();
+        assertThat(postService.search(postSearchDTO2).size()).isEqualTo(1);
+    }
+
+    @DisplayName("내용만으로 검색 검증")
+    @Test
+    public void searchTest2() {
+        postRepository.save(
+                Post.builder()
+                        .user(userRepository.findAll().get(0))
+                        .upperCategory(upperCategoryRepository.findAll().get(0))
+                        .lowerCategory(lowerCategoryRepository.findAll().get(0))
+                        .title("test1")
+                        .content("test1")
+                        .build());
+
+        PostSearchDTO postSearchDTO1 = PostSearchDTO.builder()
+                .content("test")
+                .build();
+        assertThat(postService.search(postSearchDTO1).size()).isEqualTo(2);
+
+        PostSearchDTO postSearchDTO2 = PostSearchDTO.builder()
+                .content("1")
+                .build();
+        assertThat(postService.search(postSearchDTO2).size()).isEqualTo(1);
     }
 
     @Test
