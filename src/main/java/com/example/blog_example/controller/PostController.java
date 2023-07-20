@@ -3,6 +3,7 @@ package com.example.blog_example.controller;
 import com.example.blog_example.model.dto.post.file.FileSaveDTO;
 import com.example.blog_example.model.dto.post.file.FileUpdateDTO;
 import com.example.blog_example.model.dto.post.post.PostSaveDTO;
+import com.example.blog_example.model.dto.post.post.PostSearchDTO;
 import com.example.blog_example.model.dto.post.post.PostUpdateDTO;
 import com.example.blog_example.model.vo.enums.EnumStateVO;
 import com.example.blog_example.model.vo.post.FileVO;
@@ -191,6 +192,24 @@ public class PostController {
         postService.delete(postNo);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Operation(summary = "게시글 검색", description = "해당 문자를 포함한 제목 또는 내용을 가진 모든 게시글을 검색하는 API")
+    @Parameters({
+            @Parameter(name = "title", description = "제목", example = "example", in = ParameterIn.QUERY),
+            @Parameter(name = "content", description = "내용", example = "example", in = ParameterIn.QUERY)
+    })
+    @ApiResponse(responseCode = "200", description = "정상 작동되었습니다.")
+    @GetMapping("/search")
+    public ResponseEntity<List<PostVO>> search(
+            @RequestParam(name = "title", required = false) String title,
+            @RequestParam(name = "content", required = false) String content
+    ) {
+        PostSearchDTO postSearchDTO = PostSearchDTO.builder()
+                .title(title)
+                .content(content)
+                .build();
+        return ResponseEntity.ok(postService.search(postSearchDTO));
     }
 
     @Operation(summary = "게시글 좋아요 변경", description = "해당 게시글 번호의 게시글의 좋아요 여부를 확인 후 변경하는 API")
