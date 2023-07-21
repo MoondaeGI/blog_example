@@ -1,5 +1,7 @@
 package com.example.blog_example.controller;
 
+import com.example.blog_example.model.dto.post.post.PostSearchDTO;
+import com.example.blog_example.model.vo.post.PostVO;
 import com.example.blog_example.model.vo.user.UserVO;
 import com.example.blog_example.service.category.UpperCategoryService;
 import com.example.blog_example.service.comment.CommentService;
@@ -7,9 +9,11 @@ import com.example.blog_example.service.post.FileService;
 import com.example.blog_example.service.post.PostService;
 import com.example.blog_example.service.user.BlogVisitCountService;
 import com.example.blog_example.service.user.UserService;
+import com.example.blog_example.util.exception.NotMatchUserException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
@@ -34,17 +38,6 @@ public class PageController {
     private final CommentService commentService;
     private final HttpSession httpSession;
 
-    @Operation(summary = "메인 화면 출력", description = "메인 화면을 가져오는 API")
-    @GetMapping("/")
-    public String index(Model model) {
-        UserVO user = (UserVO) httpSession.getAttribute("user");
-        if (user != null) model.addAttribute("user", user);
-
-        model.addAttribute("posts", postService.findAll());
-
-        return "index";
-    }
-
     @Operation(summary = "로그인 화면 출력", description = "로그인 화면을 가져오는 API")
     @GetMapping("/login")
     public String login() {
@@ -57,6 +50,39 @@ public class PageController {
         return "setup";
     }
 
+    @Operation(summary = "메인 화면 출력", description = "메인 화면을 가져오는 API")
+    @GetMapping("/")
+    public String index(Model model) {
+        UserVO user = (UserVO) httpSession.getAttribute("user");
+        if (user != null) model.addAttribute("user", user);
+
+        model.addAttribute("posts", postService.findAll());
+
+        return "index";
+    }
+
+    @Operation(summary = "검색 화면 출력", description = "검색 화면을 가져오는 API")
+    @Parameters({
+            @Parameter(name = "title", description = "제목", example = "example", in = ParameterIn.QUERY),
+            @Parameter(name = "content", description = "내용", example = "example", in = ParameterIn.QUERY)
+    })
+    @GetMapping("/search")
+    public String searchPage(
+            @RequestParam(name = "title", required = false) String title,
+            @RequestParam(name = "content", required = false) String content,
+            Model model) {
+        UserVO user = (UserVO) httpSession.getAttribute("user");
+        if (user != null) model.addAttribute("user", user);
+
+        PostSearchDTO postSearchDTO = PostSearchDTO.builder()
+                .title(title)
+                .content(content)
+                .build();
+        model.addAttribute("posts", postService.search(postSearchDTO));
+
+        return "search";
+    }
+
     @Operation(summary = "유저 화면 출력", description = "해당 번호를 가진 유저의 화면을 가져오는 API")
     @Parameter(name = "userNo", description = "유저 번호", example = "1", required = true)
     @GetMapping("/user-page")
@@ -66,7 +92,7 @@ public class PageController {
         UserVO user = (UserVO) httpSession.getAttribute("user");
         if (user != null) model.addAttribute("user", user);
 
-        model.addAttribute("user", userService.find(userNo));
+        model.addAttribute("blogger", userService.find(userNo));
         model.addAttribute("liked-posts", postService.findPostLikedList(userNo));
         model.addAttribute("comments", commentService.findByUser(userNo));
 
@@ -100,7 +126,9 @@ public class PageController {
             @RequestParam("no") @PositiveOrZero Long postNo,
             Model model) {
         UserVO user = (UserVO) httpSession.getAttribute("user");
-        if (user != null) model.addAttribute("user", user);
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
 
         model.addAttribute("post", postService.find(postNo));
         model.addAttribute("liked-count", postService.countLiked(postNo));
@@ -118,7 +146,11 @@ public class PageController {
             @RequestParam("no") @PositiveOrZero Long userNo,
             Model model) {
         UserVO user = (UserVO) httpSession.getAttribute("user");
-        if (user != null) model.addAttribute("user", user);
+        if (user != null) {
+            model.addAttribute("user", user);
+            if (blogVisitCountService.isVisit(user.getUserNo(), userNo))
+                throw new NotMatchUserException("해당 유저가 작성한 게시글이 아닙니다.");
+        }
 
         model.addAttribute("blogger", userService.find(userNo));
         model.addAttribute("categories", upperCategoryService.findAll(userNo));
@@ -137,7 +169,11 @@ public class PageController {
             @RequestParam("post-no") @PositiveOrZero Long postNo,
             Model model) {
         UserVO user = (UserVO) httpSession.getAttribute("user");
-        if (user != null) model.addAttribute("user", user);
+        if (user != null) {
+            model.addAttribute("user", user);
+            if (blogVisitCountService.isVisit(user.getUserNo(), userNo))
+                throw new NotMatchUserException("해당 유저가 작성한 게시글이 아닙니다.");
+        }
 
         model.addAttribute("blogger", userService.find(userNo));
         model.addAttribute("categories", upperCategoryService.findAll(userNo));

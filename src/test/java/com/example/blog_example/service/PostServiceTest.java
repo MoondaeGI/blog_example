@@ -76,11 +76,28 @@ public class PostServiceTest {
     @Test
     public void test() { System.out.println("test"); }
 
+    @DisplayName("게시글 전체 검색 동작 확인")
     @Test
-    public void findAllTest() {
+    public void findAllTest1() {
         Integer size = postRepository.findAll().size();
 
         assertThat(size).isEqualTo(postService.findAll().size());
+    }
+
+    @DisplayName("일부 OpenState가 CLOSE 상태일 경우의 게시글 전체 검색 동작 확인")
+    @Test
+    public void findAllTest2() {
+        Post post = postRepository.save(
+                Post.builder()
+                        .user(userRepository.findAll().get(0))
+                        .upperCategory(upperCategoryRepository.findAll().get(0))
+                        .lowerCategory(lowerCategoryRepository.findAll().get(0))
+                        .title("test1")
+                        .content("test1")
+                        .build());
+        post.changeOpenYN();
+
+        assertThat(1).isEqualTo(postService.findAll().size());
     }
 
     @Test
@@ -180,11 +197,13 @@ public class PostServiceTest {
                         .build());
 
         PostSearchDTO postSearchDTO1 = PostSearchDTO.builder()
+                .title(null)
                 .content("test")
                 .build();
         assertThat(postService.search(postSearchDTO1).size()).isEqualTo(2);
 
         PostSearchDTO postSearchDTO2 = PostSearchDTO.builder()
+                .title(null)
                 .content("1")
                 .build();
         assertThat(postService.search(postSearchDTO2).size()).isEqualTo(1);
