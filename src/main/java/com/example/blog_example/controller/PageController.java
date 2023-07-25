@@ -1,7 +1,6 @@
 package com.example.blog_example.controller;
 
 import com.example.blog_example.model.dto.post.post.PostSearchDTO;
-import com.example.blog_example.model.vo.post.PostVO;
 import com.example.blog_example.model.vo.user.UserVO;
 import com.example.blog_example.service.category.UpperCategoryService;
 import com.example.blog_example.service.comment.CommentService;
@@ -16,11 +15,11 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.PositiveOrZero;
@@ -28,7 +27,7 @@ import javax.validation.constraints.PositiveOrZero;
 @Tag(name = "page", description = "페이지 API")
 @Validated
 @RequiredArgsConstructor
-@RestController
+@Controller
 public class PageController {
     private final UserService userService;
     private final BlogVisitCountService blogVisitCountService;
