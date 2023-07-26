@@ -1,5 +1,6 @@
 package com.example.blog_example.controller;
 
+import com.example.blog_example.model.dto.post.post.PostSearchByCategoryDTO;
 import com.example.blog_example.model.dto.post.post.PostSearchDTO;
 import com.example.blog_example.model.vo.user.UserVO;
 import com.example.blog_example.service.category.UpperCategoryService;
@@ -99,43 +100,48 @@ public class PageController {
     }
 
     @Operation(summary = "블로그 화면 출력", description = "해당 번호를 가진 유저의 블로그 화면을 가져오는 API")
-    @Parameter(name = "userNo", description = "유저 번호", example = "1", required = true)
+    @Parameters({
+            @Parameter(name = "bloggerNo", description = "유저 번호", example = "1", required = true),
+            @Parameter(name = "upperCategoryNo", description = "상위 카테고리 번호", example = "1"),
+            @Parameter(name = "lowerCategoryNo", description = "하위 카테고리 번호", example = "1"),
+            @Parameter(name = "postNo", description = "게시글 번호", example = "1")
+    })
     @GetMapping("/blog-page")
     public String blogPage(
             @RequestParam("no") @PositiveOrZero Long bloggerNo,
+            @RequestParam(value = "upper-category", required = false) Long upperCategoryNo,
+            @RequestParam(value = "lower-category", required = false) Long lowerCategoryNo,
+            @RequestParam(value = "post", required = false) Long postNo,
             Model model) {
         model.addAttribute("blogger", userService.find(bloggerNo));
         model.addAttribute("categories", upperCategoryService.findAll(bloggerNo));
-        model.addAttribute("posts", postService.findByUser(bloggerNo));
+
+        if (postNo != null) {
+            model.addAttribute("post", postService.find(postNo));
+            model.addAttribute("likedCount", postService.countLiked(postNo));
+            model.addAttribute("comments", commentService.findByPost(postNo));
+            if(fileService.isExist(postNo))
+                model.addAttribute("files", fileService.findByPost(postNo));
+        } else if (upperCategoryNo != null || lowerCategoryNo != null) {
+            PostSearchByCategoryDTO postSearchByCategoryDTO = PostSearchByCategoryDTO.builder()
+                    .userNo(bloggerNo)
+                    .upperCategoryNo(upperCategoryNo)
+                    .lowerCategoryNo(lowerCategoryNo)
+                    .build();
+            model.addAttribute("posts", postService.findByCategory(postSearchByCategoryDTO));
+        } else {
+            model.addAttribute("posts", postService.findByUser(bloggerNo));
+        }
 
         UserVO user = (UserVO) httpSession.getAttribute("user");
         if (user != null) {
             model.addAttribute("user", user);
-            if (!blogVisitCountService.isVisit(user.getUserNo(), bloggerNo))
+            if (blogVisitCountService.isVisit(user.getUserNo(), bloggerNo))
                 blogVisitCountService.addVisitCount(bloggerNo);
         }
+        model.addAttribute("visitCount", blogVisitCountService.find(bloggerNo));
 
         return "blog-page";
-    }
-
-    @Operation(summary = "게시글 화면 출력", description = "해당 번호를 가진 게시글 화면을 가져오는 API")
-    @Parameter(name = "postNo", description = "게시글 번호", example = "1", required = true)
-    @GetMapping("/post-page")
-    public String post(
-            @RequestParam("no") @PositiveOrZero Long postNo,
-            Model model) {
-        UserVO user = (UserVO) httpSession.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("user", user);
-        }
-
-        model.addAttribute("post", postService.find(postNo));
-        model.addAttribute("liked-count", postService.countLiked(postNo));
-        model.addAttribute("comments", commentService.findByPost(postNo));
-        if(fileService.isExist(postNo))
-            model.addAttribute("files", fileService.findByPost(postNo));
-
-        return "post-page";
     }
 
     @Operation(summary = "게시글 작성 화면 출력", description = "게시글을 작성하기 위한 화면을 가져오는 API")

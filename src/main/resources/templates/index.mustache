@@ -1,17 +1,17 @@
 {{>layout/header}}
 <body>
+<div class="row">
+    {{#user}}
+        <span id="user">{{name}}</span>
+        <a href="/logout" class="btn btn-info active" role="button">로그 아웃</a>
+    {{/user}}
+    {{^user}}
+        <a href="/login" class="btn btn-login" role="button">로그인</a>
+        <a href="/signup" class="btn btn-signup" role="button">회원 가입</a>
+    {{/user}}
+</div>
 <h1>블로그 서비스</h1>
 <div class="col-md-12">
-    <div class="row">
-        {{#user}}
-            Logged in as: <span id="user">{{name}}</span>
-            <a href="/logout" class="btn btn-info active" role="button">로그 아웃</a>
-        {{/user}}
-        {{^user}}
-            <a href="/login" class="btn btn-login" role="button">로그인</a>
-            <a href="/signup" class="btn btn-signup" role="button">회원 가입</a>
-        {{/user}}
-    </div>
     <table class="table table-horizontal table-bordered">
         <thead class="thead-strong">
         <tr>
@@ -25,8 +25,8 @@
         {{#posts}}
             <tr>
                 <td>{{postNo}}</td>
-                <td><a href="/post-page?no={{postNo}}" id="post-select">{{title}}</a></td>
-                <td>{{#userVO}}<a href="/blog-page?no={{userNo}}" id="blog-select">{{blogName}}{{/userVO}}</td>
+                <td><a href="/post-page?no={{postNo}}" id="post-select">{{title}}</td>
+                <td><a href="/blog-page?no={{userVO.userNo}}" id="blog-select">{{userVO.blogName}}</td>
                 <td>{{regDt}}</td>
             </tr>
         {{/posts}}

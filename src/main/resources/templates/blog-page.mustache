@@ -1,0 +1,113 @@
+{{>layout/header}}
+<body>
+<div class="row">
+    {{#user}}
+        <span id="user">{{name}}</span>
+        <a href="/logout" class="btn btn-info active" role="button">로그 아웃</a>
+    {{/user}}
+    {{^user}}
+        <a href="/login" class="btn btn-login" role="button">로그인</a>
+        <a href="/signup" class="btn btn-signup" role="button">회원 가입</a>
+    {{/user}}
+</div>
+<h1>{{blogger.blogName}}</h1>
+<div>
+    <a href="/user-page?no={{blogger.userNo}}">{{blogger.name}}</a>
+</div>
+<div class="col-md-12">
+    <div>
+        <span id="total-visit">방문자 총합 : {{visitCount.totalVisitCount}}</span>
+        <span id="total-visit">금일 방문자 : {{visitCount.dailyVisitCount}}</span>
+    </div>
+    <div>
+        <ul>
+            <li><a href="/blog-page?no={{blogger.userNo}}">전체보기</li>
+            {{#categories}}
+            <li><a href="/blog-page?no={{blogger.userNo}}&upper-category={{upperCategoryNo}}">{{name}}</a>
+                <ul>
+                    {{#lowerCategoryVOList}}
+                        <a href="/blog-page?no={{blogger.userNo}}&upper-category={{upperCategoryNo}}&lower-category={{lowerCategoryNo}}">{{name}}</a>
+                    {{/lowerCategoryVOList}}
+                </ul>
+            </li>
+            {{/categories}}
+        </ul>
+    </div>
+    {{#post}}
+        <table class="table table-horizontal table-bordered">
+            <tbody class="thead-strong">
+                <tr>
+                    <th scope="row">글 번호</th>
+                    <td id="postNo">{{postNo}}</td>
+                    <th scope="row">조회수</th>
+                    <td id="views">{{views}}</td>
+                    <th scope="row">좋아요</th>
+                    <td id="likedCount">{{likedCount}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">작성자</th>
+                    <td id="postUserName">{{userVO.name}}</td>
+                    <th scope="row">등록 날짜</th>
+                    <td>{{modDt}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">제목</th>
+                    <td colspan="6">{{title}}</td>
+                </tr>
+            <tr>
+                <td colspan="6" class="view_text">
+                    <div>
+                        {{#files}}
+                            <img src="/upload/{{path}}">
+                        {{/files}}
+                        <p>{{content}}</p>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <from>
+            <label for="comment">댓글</label>
+            <div class="form-group">
+                <div class="form-group">
+                    <textarea type="text" class="form-control" id="comment" placeholder="댓글을 입력하십시오"></textarea>
+                    <button type="button" class="btn btn-primary" id="btn-comment">댓글 등록</button>
+                </div>
+                <table class="table table-horizontal table-bordered">
+                    <tbody class="tread-strong">
+                    {{#comments}}
+                        <tr>
+                            <td>{{userVO.name}}</td>
+                            <td>{{content}}</td>
+                            <td>{{regDt}}</td>
+                        </tr>
+                    {{/comments}}
+                    </tbody>
+                </table>
+            </div>
+        </from>
+    {{/post}}
+    {{^post}}
+    <table class="table table-horizontal table-bordered">
+        <thead class="thead-strong">
+        <tr>
+            <th>게시글번호</th>
+            <th>제목</th>
+            <th>등록 일자</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+            {{#posts}}
+            <tr>
+                <td>{{postNo}}</td>
+                <td><a href="/blog-page?no={{blogger.userNo}}&post={{postNo}}" id="post-select">{{title}}</td>
+                <td>{{regDt}}</td>
+                <td>{{views}}</td>
+            </tr>
+            {{/posts}}
+        </tbody>
+    </table>
+    {{/post}}
+</div>
+{{>layout/footer}}

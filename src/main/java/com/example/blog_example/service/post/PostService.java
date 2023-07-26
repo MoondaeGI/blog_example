@@ -12,6 +12,7 @@ import com.example.blog_example.model.domain.post.post.PostSpecification;
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.model.domain.user.user.UserRepository;
 import com.example.blog_example.model.dto.post.post.PostSaveDTO;
+import com.example.blog_example.model.dto.post.post.PostSearchByCategoryDTO;
 import com.example.blog_example.model.dto.post.post.PostSearchDTO;
 import com.example.blog_example.model.dto.post.post.PostUpdateDTO;
 import com.example.blog_example.model.vo.post.PostVO;
@@ -79,6 +80,20 @@ public class PostService {
                         .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
         return postRepository.findByLowerCategory(lowerCategory).stream()
+                .map(PostVO::from)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostVO> findByCategory(PostSearchByCategoryDTO postSearchByCategoryDTO) {
+        Map<String, Object> searchKey = new HashMap<>();
+        if (postSearchByCategoryDTO.getUpperCategoryNo() != null)
+            searchKey.put("upperCategory", postSearchByCategoryDTO.getUpperCategoryNo());
+        if (postSearchByCategoryDTO.getLowerCategoryNo() != null)
+            searchKey.put("lowerCategory", postSearchByCategoryDTO.getLowerCategoryNo());
+
+        return postRepository.findAll(PostSpecification.searchByCategory(searchKey, postSearchByCategoryDTO.getUserNo()))
+                .stream()
                 .map(PostVO::from)
                 .collect(Collectors.toList());
     }
