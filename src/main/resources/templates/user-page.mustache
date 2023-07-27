@@ -1,0 +1,82 @@
+{{>layout/header}}
+<body>
+<div class="row">
+    {{#user}}
+        <span id="user">{{name}}</span>
+        <a href="/logout" class="btn btn-info active" role="button">로그 아웃</a>
+    {{/user}}
+    {{^user}}
+        <a href="/login" class="btn btn-login" role="button">로그인</a>
+        <a href="/signup" class="btn btn-signup" role="button">회원 가입</a>
+    {{/user}}
+</div>
+<h1>{{blogger.name}}</h1>
+<div class="col-md-12">
+    <table class="table table-horizontal table-bordered">
+        <span>게시글</span>
+        <thead class="thead-strong">
+        <tr>
+            <th>게시글번호</th>
+            <th>제목</th>
+            <th>게시자</th>
+            <th>블로그</th>
+            <th>등록 일자</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        {{#posts}}
+            <tr>
+                <td>{{postNo}}</td>
+                <td><a href="/post-page?no={{postNo}}" id="post-select">{{title}}</td>
+                <td><a href="/user-page?no={{userVO.userNo}}" id="post-select">{{userVO.name}}</td>
+                <td><a href="/blog-page?no={{userVO.userNo}}" id="blog-select">{{userVO.blogName}}</td>
+                <td>{{regDt}}</td>
+            </tr>
+        {{/posts}}
+        </tbody>
+    </table>
+    <table class="table table-horizontal table-bordered">
+        <span>좋아요 표시한 게시글</span>
+        <thead class="thead-strong">
+        <tr>
+            <th>게시글번호</th>
+            <th>제목</th>
+            <th>게시자</th>
+            <th>블로그</th>
+            <th>등록 일자</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        {{#liked-posts}}
+            <tr>
+                <td>{{postNo}}</td>
+                <td><a href="/post-page?no={{postNo}}" id="post-select">{{title}}</td>
+                <td><a href="/user-page?no={{userVO.userNo}}" id="post-select">{{userVO.name}}</td>
+                <td><a href="/blog-page?no={{userVO.userNo}}" id="blog-select">{{userVO.blogName}}</td>
+                <td>{{regDt}}</td>
+            </tr>
+        {{/liked-posts}}
+        </tbody>
+    </table>
+    <table class="table table-horizontal table-bordered">
+        <span>등록한 댓글</span>
+        <tbody class="tread-strong">
+        <tr>
+            <th>블로그</th>
+            <th>게시글 제목</th>
+            <th>내용</th>
+            <th>등록 일자</th>
+        </tr>
+        </thead>
+        {{#comments}}
+            <tr>
+                <td><a href="/blog-page?no={{postVO.userVO.userNo}}">{{postVO.userVO.blogName}}</td>
+                <td><a href="/blog-page?no={{postVO.userVO.userNo}}&post={{postVO.postNo}}">{{postVO.title}}</td>
+                <td>{{content}}</td>
+                <td>{{regDt}}</td>
+            </tr>
+        {{/comments}}
+        </tbody>
+    </table>
+</div>
+{{>layout/footer}}

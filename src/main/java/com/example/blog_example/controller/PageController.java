@@ -93,6 +93,7 @@ public class PageController {
         if (user != null) model.addAttribute("user", user);
 
         model.addAttribute("blogger", userService.find(userNo));
+        model.addAttribute("posts", postService.findByUser(userNo));
         model.addAttribute("liked-posts", postService.findPostLikedList(userNo));
         model.addAttribute("comments", commentService.findByUser(userNo));
 
