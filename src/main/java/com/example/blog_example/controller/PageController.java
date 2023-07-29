@@ -45,9 +45,9 @@ public class PageController {
     }
 
     @Operation(summary = "회원 가입 화면 출력", description = "회원 가입 화면을 가져오는 API")
-    @GetMapping("/setup")
-    public String setup() {
-        return "setup";
+    @GetMapping("/signup")
+    public String signup() {
+        return "signup";
     }
 
     @Operation(summary = "메인 화면 출력", description = "메인 화면을 가져오는 API")
@@ -145,6 +145,23 @@ public class PageController {
         return "blog-page";
     }
 
+    @GetMapping("/blog-page/update")
+    public String blogUpdate(
+            @RequestParam("no") @PositiveOrZero Long userNo,
+            Model model) {
+        UserVO user = (UserVO) httpSession.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("user", user);
+            if (blogVisitCountService.isVisit(user.getUserNo(), userNo))
+                throw new NotMatchUserException("해당 번호를 가진 유저의 수정 페이지가 아닙니다.");
+        }
+
+        model.addAttribute("blogger", userService.find(userNo));
+        model.addAttribute("categories", upperCategoryService.findAll(userNo));
+
+        return "blog-update";
+    }
+
     @Operation(summary = "게시글 작성 화면 출력", description = "게시글을 작성하기 위한 화면을 가져오는 API")
     @Parameter(name = "userNo", description = "유저 번호", example = "1", required = true)
     @GetMapping("/post-save")
@@ -171,8 +188,8 @@ public class PageController {
     })
     @GetMapping("/post-update")
     public String postUpdate(
-            @RequestParam("user-no") @PositiveOrZero Long userNo,
-            @RequestParam("post-no") @PositiveOrZero Long postNo,
+            @RequestParam("user") @PositiveOrZero Long userNo,
+            @RequestParam("post") @PositiveOrZero Long postNo,
             Model model) {
         UserVO user = (UserVO) httpSession.getAttribute("user");
         if (user != null) {
