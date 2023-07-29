@@ -41,11 +41,12 @@ public class UpperCategoryVO {
     private  LocalDateTime modDt;
 
     private List<LowerCategoryVO> setLowerCategoryVOList(UpperCategory upperCategory) {
-        List<LowerCategory> lowerCategoryList = upperCategory.getLowerCategoryList();
-
-        return lowerCategoryList.stream()
+        List<LowerCategoryVO> lowerCategoryList = upperCategory.getLowerCategoryList().stream()
                 .map(LowerCategoryVO::from)
                 .collect(Collectors.toList());
+        lowerCategoryList.remove(0);
+
+        return lowerCategoryList;
     }
 
     private UpperCategoryVO(UpperCategory upperCategory) {
