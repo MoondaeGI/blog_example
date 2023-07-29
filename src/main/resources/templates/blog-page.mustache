@@ -34,6 +34,13 @@
         </ul>
     </div>
     {{#post}}
+        <div class="form-group">
+            <span>카테고리</span>
+            <span><a href="/blog-page?no={{blogger.userNo}}">전체</a>/
+            <a href="/blog-page?no={{blogger.userNo}}&{{upperCategoryVO.upperCategoryNo}}">{{upperCategoryVO.name}}</a>/
+            <a href="/blog-page?no={{blogger.userNo}}&{{upperCategoryVO.upperCategoryNo}}&{{lowerCategoryVO.lowerCategoryNo}}">{{lowerCategoryVO.name}}</a>
+        </span>
+        </div>
         <table class="table table-horizontal table-bordered">
             <tbody class="thead-strong">
                 <tr>
@@ -110,4 +117,5 @@
     </table>
     {{/post}}
 </div>
+<a href="/">메인으로 가기</a>
 {{>layout/footer}}

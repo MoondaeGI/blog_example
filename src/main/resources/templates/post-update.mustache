@@ -1,0 +1,46 @@
+{{>layout/header}}
+<body>
+<div class="row">
+    {{#user}}
+        <span id="user">{{name}}</span>
+        <a href="/logout" class="btn btn-info active" role="button">로그 아웃</a>
+    {{/user}}
+</div>
+<h2>게시글 수정 페이지</h2>
+<div>
+    <form>
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" class="form-control" id="title" value={{post.title}}>
+        </div>
+        <div class="form-group">
+            <label for="user">작성자</label>
+            <input type="text" class="form-control" id="user" value="{{blogger.name}}" name="{{blogger.userNo}}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="category">카테고리</label>
+            <div>
+                <select id="upper-category">
+                    {{#categories}}
+                        <option value={{upperCategoryNo}}>{{name}}</option>
+                    {{/categories}}
+                </select>
+                <select id="lower-category"></select>
+            </div>
+        </div>
+        <div>
+            <input type="checkbox" id="open-state" name="open-state">
+            <label for="open-state">비공개</label>
+        </div>
+        <div class="form-group">
+            <label for="content">내용</label>
+            <textarea type="text" class="form-control" id="content">{{post.content}}</textarea>
+        </div>
+        <div class="form-group">
+            <input type="file" id="files"/>
+        </div>
+    </form>
+    <button type="button" class="btn btn-primary" id="btn-save">등록</button>
+    <button type="button" class="btn btn-secondary" id="btn-save">취소</button>
+</div>
+{{>layout/footer}}

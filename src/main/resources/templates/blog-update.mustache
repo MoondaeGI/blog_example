@@ -1,0 +1,46 @@
+{{>layout/header}}
+<div class="row">
+    {{#user}}
+        <span id="user">{{name}}</span>
+        <a href="/logout" class="btn btn-info active" role="button">로그 아웃</a>
+    {{/user}}
+    {{^user}}
+        <a href="/login" class="btn btn-login" role="button">로그인</a>
+        <a href="/signup" class="btn btn-signup" role="button">회원 가입</a>
+    {{/user}}
+</div>
+<div class="form-group">
+    <label for="name">이름 변경하기</label>
+    <input type="text" class="form-control" id="name" value={{blogger.name}}>
+</div>
+<div class="form-group">
+    <label for="blog-name">블로그 이름 변경하기</label>
+    <input type="text" class="form-control" id="blog-name" value={{blogger.blogName}}>
+</div>
+<div class="form-group">
+    <label for="category">카테고리 수정</label>
+    <ul>
+        {{#categories}}
+            <li>
+                <input type="text" class="form-control" id="upper-category" value={{name}}>
+                <button type="button" class="btn btn-secondary" id="delete">삭제</button>
+                <ul>
+                    {{#lowerCategoryVOList}}
+                        <input type="text" class="form-control" id="lower-category" value={{name}}>
+                        <button type="button" class="btn btn-secondary" id="delete">삭제</button>
+                    {{/lowerCategoryVOList}}
+                </ul>
+                <ul>
+                    <button type="button" class="btn btn-primary" id="add-upper-category">카테고리 추가</button>
+                </ul>
+        {{/categories}}
+    </ul>
+    <ul>
+        <button type="button" class="btn btn-primary" id="add-lower-category">카테고리 추가</button>
+    </ul>
+</div>
+<div class="form-group">
+    <button type="button" class="btn btn-primary" id="update">변경 완료</button>
+    <button type="button" class="btn btn-secondary" id="cancel">취소</button>
+</div>
+{{>layout/footer}}
