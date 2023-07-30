@@ -6,21 +6,21 @@ function duplicateCheck (target) {
 
     switch(target) {
         case 'email':
-            url = `/user/email?email=${$('#email').value}`;
+            url = `/user/email?email=${$('#email').val()}`;
             checkTarget = {
                 button: $('#btn-email-check'),
                 description: '이메일'
             }
             break;
         case 'name':
-            url = `/user/email?email=${$('#name').value}`;
+            url = `/user/name?name=${$('#name').val()}`;
             checkTarget = {
                 button: $('#btn-name-check'),
                 description: '이름'
             }
             break;
         case 'blogName':
-            url = `/user/blog?name=${$('#blog-name').value}`;
+            url = `/user/blog?name=${$('#blog-name').val()}`;
             checkTarget = {
                 button: $('#btn-blog-name-check'),
                 description: '블로그 이름'
@@ -28,13 +28,16 @@ function duplicateCheck (target) {
             break;
     }
 
+    console.log(url);
+    console.log(checkTarget);
+
     $.ajax({
         type: 'GET',
         dataType: 'json',
         url: url,
         contentType: 'application/json; charset=UTF-8'
     }).done(function (result) {
-        if (result) {
+        if (!result) {
             alert('확인되었습니다.');
 
             const button = checkTarget.button;
