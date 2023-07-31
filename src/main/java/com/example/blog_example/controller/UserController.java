@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.*;
 
 @Tag(name = "user", description = "유저 API")
 @Validated
@@ -51,7 +48,7 @@ public class UserController {
     @Parameter(name = "name", description = "이름", example = "example", required = true)
     @ApiResponse(responseCode = "200", description = "정상 작동되었습니다.")
     @GetMapping("/name")
-    public ResponseEntity<Boolean> isExistByName(@RequestParam("name") @NotBlank @Max(10) String name) {
+    public ResponseEntity<Boolean> isExistByName(@RequestParam("name") @NotBlank @Size(max = 10) String name) {
         return ResponseEntity.ok(userService.isExistByName(name));
     }
 
@@ -59,7 +56,7 @@ public class UserController {
     @Parameter(name = "blogName", description = "블로그 이름", example = "example", required = true)
     @ApiResponse(responseCode = "200", description = "정상 작동되었습니다.")
     @GetMapping("/blog")
-    public ResponseEntity<Boolean> isExistByBlogName(@RequestParam("name") @NotBlank @Max(20) String blogName) {
+    public ResponseEntity<Boolean> isExistByBlogName(@RequestParam("name") @NotBlank @Size(max = 20) String blogName) {
         return ResponseEntity.ok(userService.isExistByBlogName(blogName));
     }
 }
