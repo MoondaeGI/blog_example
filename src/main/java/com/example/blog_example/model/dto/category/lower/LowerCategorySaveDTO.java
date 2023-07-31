@@ -7,9 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 
 @Schema(description = "하위 카테고리 등록 요정 DTO")
 @Builder
@@ -18,7 +18,7 @@ import javax.validation.constraints.PositiveOrZero;
 @Getter
 public class LowerCategorySaveDTO {
     @ApiModelProperty(name = "name", value = "하위 카테고리 이름", example = "example", required = true)
-    @NotBlank @Max(10)
+    @NotBlank @Size(max = 10)
     private String name;
 
     @ApiModelProperty(name = "upperCategoryNo", value = "상위 카테고리 번호", example = "1", required = true)

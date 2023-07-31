@@ -4,7 +4,6 @@ import com.example.blog_example.model.dto.auth.JwtRequestDTO;
 import com.example.blog_example.model.dto.auth.UserSignupDTO;
 import com.example.blog_example.service.security.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

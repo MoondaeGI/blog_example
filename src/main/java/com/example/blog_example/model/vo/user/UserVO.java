@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -24,11 +21,11 @@ public class UserVO implements Serializable {
     private Long userNo;
 
     @ApiModelProperty(name = "name", value = "유저 이름", example = "example", required = true)
-    @NotBlank @Max(10)
+    @NotBlank @Size(max = 10)
     private String name;
 
     @ApiModelProperty(name = "blogName", value = "블로그 이름", example = "example", required = true)
-    @NotBlank @Max(20)
+    @NotBlank @Size(max = 20)
     private String blogName;
 
     @ApiModelProperty(name = "role", value = "접근 권한", example = "USER", required = true)

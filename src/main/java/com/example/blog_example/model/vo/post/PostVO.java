@@ -12,10 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,7 +37,7 @@ public class PostVO {
     private LowerCategoryVO lowerCategoryVO;
 
     @ApiModelProperty(name = "title", value = "제목", example = "example", required = true)
-    @NotBlank @Max(30)
+    @NotBlank @Size(max = 30)
     private String title;
 
     @ApiModelProperty(name = "content", value = "내용", example = "example", required = true)

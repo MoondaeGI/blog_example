@@ -26,7 +26,7 @@ public class PostUpdateDTO {
     private Long lowerCategoryNo;
 
     @ApiModelProperty(name = "title", value = "제목", example = "example", required = true)
-    @NotBlank @Max(30)
+    @NotBlank @Size(max = 30)
     private String title;
 
     @ApiModelProperty(name = "content", value = "내용", example = "example", required = true)

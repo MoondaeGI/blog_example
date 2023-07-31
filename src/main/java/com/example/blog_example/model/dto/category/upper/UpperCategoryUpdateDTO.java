@@ -20,6 +20,6 @@ public class UpperCategoryUpdateDTO {
     private Long upperCategoryNo;
 
     @ApiModelProperty(name = "name", value = "상위 카테고리 이름", example = "example", required = true)
-    @NotBlank @Max(10)
+    @NotBlank @Size(max = 10)
     private String name;
 }

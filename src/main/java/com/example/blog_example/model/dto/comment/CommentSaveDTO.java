@@ -7,9 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 
 @Schema(description = "댓글 등록 요청 DTO")
 @Builder
@@ -18,7 +18,7 @@ import javax.validation.constraints.PositiveOrZero;
 @Getter
 public class CommentSaveDTO {
     @ApiModelProperty(name = "content", value = "댓글 내용", example = "example", required = true)
-    @NotBlank @Max(150)
+    @NotBlank @Size(max = 150)
     private String content;
 
     @ApiModelProperty(name = "userNo", value = "유저 번호", example = "1", required = true)

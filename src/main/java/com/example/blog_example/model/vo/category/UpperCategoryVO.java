@@ -1,6 +1,5 @@
 package com.example.blog_example.model.vo.category;
 
-import com.example.blog_example.model.domain.category.lower.LowerCategory;
 import com.example.blog_example.model.domain.category.upper.UpperCategory;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,10 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +24,7 @@ public class UpperCategoryVO {
     private Long upperCategoryNo;
 
     @ApiModelProperty(name = "name", value = "상위 카테고리 이름", example = "example", required = true)
-    @NotBlank @Max(10)
+    @NotBlank @Size(max = 10)
     private String name;
 
     @ApiModelProperty(name = "lowerCategoryVOList", value = "하위 카테고리 목록", required = true)

@@ -20,7 +20,7 @@ public class CommentVO {
     private Long commentNo;
 
     @ApiModelProperty(name = "content", value = "댓글 내용", example = "example", required = true)
-    @NotBlank @Max(150)
+    @NotBlank @Size(max = 150)
     private String content;
 
     @ApiModelProperty(name = "userVO", value = "유저 VO", required = true)

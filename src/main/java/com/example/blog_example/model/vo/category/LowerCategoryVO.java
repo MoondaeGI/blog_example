@@ -6,8 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Schema(description = "하위 카테고리 VO")
@@ -19,7 +21,7 @@ public class LowerCategoryVO {
     private Long lowerCategoryNo;
 
     @ApiModelProperty(name = "name", value = "하위 카테고리 이름", example = "example", required = true)
-    @NotBlank @Max(10)
+    @NotBlank @Size(max = 10)
     private String name;
 
     @ApiModelProperty(name = "regDt", value = "등록 날짜", example = "2020-01-01T00:00:00", required = true)
