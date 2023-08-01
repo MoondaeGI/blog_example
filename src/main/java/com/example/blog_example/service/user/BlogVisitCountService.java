@@ -80,13 +80,13 @@ public class BlogVisitCountService {
 
     @Transactional(readOnly = true)
     public Boolean isVisit(Long visitorNo, Long bloggerNo) {
-        User visitor = userRepository.findById(visitorNo)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저(방문자)가 없습니다."));
+        User visitor = (visitorNo != null) ? userRepository.findById(visitorNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저(방문자)가 없습니다.")) : null;
 
         User blogger = userRepository.findById(bloggerNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저(블로거)가 없습니다."));
 
-        return Objects.equals(visitor, blogger);
+        return !Objects.equals(visitor, blogger);
     }
 
     @Transactional(readOnly = true)

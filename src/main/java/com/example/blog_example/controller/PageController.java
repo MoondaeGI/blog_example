@@ -114,7 +114,11 @@ public class PageController {
             @RequestParam(value = "lower-category", required = false) Long lowerCategoryNo,
             @RequestParam(value = "post", required = false) Long postNo,
             Model model) {
+        UserVO user = (UserVO) httpSession.getAttribute("user");
+        if (user != null) model.addAttribute("user", user);
+
         model.addAttribute("blogger", userService.find(bloggerNo));
+        model.addAttribute("visitCount", blogVisitCountService.find(bloggerNo));
         model.addAttribute("categories", upperCategoryService.findAll(bloggerNo));
 
         if (postNo != null) {
@@ -134,13 +138,9 @@ public class PageController {
             model.addAttribute("posts", postService.findByUser(bloggerNo));
         }
 
-        UserVO user = (UserVO) httpSession.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("user", user);
-            if (blogVisitCountService.isVisit(user.getUserNo(), bloggerNo))
-                blogVisitCountService.addVisitCount(bloggerNo);
-        }
-        model.addAttribute("visitCount", blogVisitCountService.find(bloggerNo));
+        Long userNo = (user != null) ? user.getUserNo() : null;
+        if (blogVisitCountService.isVisit(userNo, bloggerNo))
+            blogVisitCountService.addVisitCount(bloggerNo);
 
         return "blog-page";
     }
