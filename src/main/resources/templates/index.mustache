@@ -1,15 +1,14 @@
 {{>layout/header}}
 <body>
-<div class="row">
+<a class="row">
     {{#user}}
-        <span id="user">{{name}}</span>
+        <a href="/user-page?no={{userNo}}" id="post-select">{{name}}님 방문을 환영합니다</a>
         <a href="/logout" class="btn btn-info active" role="button">로그 아웃</a>
     {{/user}}
     {{^user}}
         <a href="/login" class="btn btn-login" role="button">로그인</a>
         <a href="/signup" class="btn btn-signup" role="button">회원 가입</a>
     {{/user}}
-</div>
 <h1>블로그 서비스</h1>
 <div class="col-md-12">
     <table class="table table-horizontal table-bordered">
@@ -19,6 +18,7 @@
             <th>제목</th>
             <th>게시자</th>
             <th>블로그</th>
+            <th>조회수</th>
             <th>등록 일자</th>
         </tr>
         </thead>
@@ -29,6 +29,7 @@
                 <td><a href="/user-page?no={{userVO.userNo}}&post={{postNo}}" id="post-select">{{title}}</td>
                 <td><a href="/user-page?no={{userVO.userNo}}" id="post-select">{{userVO.name}}</td>
                 <td><a href="/blog-page?no={{userVO.userNo}}" id="blog-select">{{userVO.blogName}}</td>
+                <td>{{views}}</td>
                 <td>{{regDt}}</td>
             </tr>
         {{/posts}}
