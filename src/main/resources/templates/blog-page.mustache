@@ -1,8 +1,10 @@
 {{>layout/header}}
-<body>
+<body onload="userCheck()">
+<input type="hidden" id="blogger-no" value={{blogger.userNo}}>
 <div class="row">
     {{#user}}
-        <span id="user">{{name}}</span>
+        <input type="hidden" id="user-no" value={{userNo}}>
+        <a href="/user-page?no={{userNo}}" id="post-select">{{name}}님 방문을 환영합니다</a>
         <a href="/logout" class="btn btn-info active" role="button">로그 아웃</a>
     {{/user}}
     {{^user}}
@@ -34,6 +36,7 @@
         </ul>
     </div>
     {{#post}}
+        <input type="hidden" id="post-no" value={{postNo}}>
         <div class="form-group">
             <span>카테고리</span>
             <span><a href="/blog-page?no={{blogger.userNo}}">전체</a>/
@@ -73,49 +76,50 @@
             </tr>
             </tbody>
         </table>
-        <from>
+        <div class="form-group">
             <label for="comment">댓글</label>
             <div class="form-group">
+                <textarea type="text" class="form-control" id="comment" placeholder="댓글을 입력하십시오"></textarea>
+                <button type="button" class="btn btn-primary" id="btn-comment" onclick="commentSave()">댓글 등록</button>
                 <div class="form-group">
-                    <textarea type="text" class="form-control" id="comment" placeholder="댓글을 입력하십시오"></textarea>
-                    <button type="button" class="btn btn-primary" id="btn-comment">댓글 등록</button>
-                </div>
-                <table class="table table-horizontal table-bordered">
-                    <tbody class="tread-strong">
                     {{#comments}}
-                        <tr>
-                            <td>{{userVO.name}}</td>
-                            <td>{{content}}</td>
-                            <td>{{regDt}}</td>
-                        </tr>
+                        <input type="hidden" name="comments-user-no" id="comments-user-no" value={{userVO.userNo}}>
+                        <input type="hidden" name="comments-comment-no" id="comments-comment-no" value={{commentNo}}>
+                        <div class="form-group" id="comment-{{commentNo}}">
+                            <div>{{userVO.name}}  {{modDt}}</div><div id="btn-comment-update-{{commentNo}}"></div>
+                            <div id="comment-{{commentNo}}-content">{{content}}</div>
+                            <div id="btn-comment-selector-{{commentNo}}"></div>
+                        </div>
                     {{/comments}}
-                    </tbody>
-                </table>
+                </div>
             </div>
-        </from>
+        </div>
     {{/post}}
     {{^post}}
-    <table class="table table-horizontal table-bordered">
+    <table class="table table-horizontal table-bordered" id="posts-table">
         <thead class="thead-strong">
         <tr>
             <th>게시글번호</th>
             <th>제목</th>
-            <th>등록 일자</th>
             <th>조회수</th>
+            <th>등록 일자</th>
         </tr>
         </thead>
-        <tbody id="tbody">
+        <tbody id="comments-tbody">
             {{#posts}}
+            <input type="hidden" name="open-state" id="posts-open-state" value={{openState}}>
             <tr>
                 <td>{{postNo}}</td>
                 <td><a href="/blog-page?no={{blogger.userNo}}&post={{postNo}}" id="post-select">{{title}}</td>
-                <td>{{regDt}}</td>
                 <td>{{views}}</td>
+                <td>{{regDt}}</td>
             </tr>
             {{/posts}}
         </tbody>
     </table>
     {{/post}}
 </div>
+<div id="btn-post-save"></div>
 <a href="/">메인으로 가기</a>
+<script src="/js/app/blogPage.js"></script>
 {{>layout/footer}}
