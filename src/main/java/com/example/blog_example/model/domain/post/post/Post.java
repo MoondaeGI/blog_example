@@ -59,13 +59,13 @@ public class Post extends TimeStamp {
     private List<File> fileList;
 
     @Builder
-    public Post(User user, UpperCategory upperCategory, LowerCategory lowerCategory, String title, String content) {
+    public Post(User user, UpperCategory upperCategory, LowerCategory lowerCategory, String title, String content, OpenState openState) {
         this.user = user;
         this.upperCategory = upperCategory;
         this.lowerCategory = lowerCategory;
         this.title = title;
         this.content = content;
-        this.openState = OpenState.OPEN;
+        this.openState = openState;
         this.views = 0;
     }
 
@@ -76,8 +76,8 @@ public class Post extends TimeStamp {
         this.content = content;
     }
 
-    public Integer addViews() {
-        return this.views += 1;
+    public void addViews() {
+        this.views += 1;
     }
 
     public OpenState changeOpenYN() {

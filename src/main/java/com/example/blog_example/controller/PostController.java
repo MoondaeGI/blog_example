@@ -225,8 +225,8 @@ public class PostController {
     })
     @GetMapping("/state/liked")
     public ResponseEntity<EnumStateVO> changeLiked(
-            @RequestParam("post-no") @PositiveOrZero Long postNo,
-            @RequestParam("user-no") @PositiveOrZero Long userNo) {
+            @RequestParam("post") @PositiveOrZero Long postNo,
+            @RequestParam("user") @PositiveOrZero Long userNo) {
         LikedState state = postService.changeLiked(postNo, userNo);
         EnumStateVO result = EnumStateVO.builder()
                 .enumState(state)
@@ -266,8 +266,8 @@ public class PostController {
     })
     @GetMapping("/liked")
     public ResponseEntity<Boolean> isLiked(
-            @RequestParam(name = "post-no") @PositiveOrZero Long postNo,
-            @RequestParam(name = "user-no") @PositiveOrZero Long userNo) {
+            @RequestParam(name = "post") @PositiveOrZero Long postNo,
+            @RequestParam(name = "user") @PositiveOrZero Long userNo) {
         return ResponseEntity.ok(postService.isLiked(postNo, userNo));
     }
 

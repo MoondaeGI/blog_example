@@ -1,5 +1,7 @@
 package com.example.blog_example.model.dto.post.post;
 
+import com.example.blog_example.util.annotation.valid.Enum;
+import com.example.blog_example.util.enums.state.OpenState;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -33,4 +35,8 @@ public class PostSaveDTO {
     @ApiModelProperty(name = "content", value = "내용", example = "example", required = true)
     @NotBlank
     private String content;
+
+    @ApiModelProperty
+    @Enum(enumClass = OpenState.class, ignoreCase = true)
+    private OpenState openState;
 }

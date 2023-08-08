@@ -130,6 +130,7 @@ public class PostService {
                         .lowerCategory(lowerCategory)
                         .title(postSaveDTO.getTitle())
                         .content(postSaveDTO.getContent())
+                        .openState(postSaveDTO.getOpenState())
                         .build())
                 .getPostNo();
     }
