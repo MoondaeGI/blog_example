@@ -1,7 +1,9 @@
 {{>layout/header}}
-<body>
+<body onload="userPageCheck()">
+<input type="hidden" id="blogger-no" value={{blogger.userNo}}>
 <div class="row">
     {{#user}}
+        <input type="hidden" id="user-no" value={{userNo}}>
         <span id="user">{{name}}</span>
         <a href="/logout" class="btn btn-info active" role="button">로그 아웃</a>
     {{/user}}
@@ -12,7 +14,7 @@
 </div>
 <h1>{{blogger.name}}</h1>
 <div class="col-md-12">
-    <table class="table table-horizontal table-bordered">
+    <table class="table table-horizontal table-bordered" id="posts-table">
         <span>게시글</span>
         <thead class="thead-strong">
         <tr>
@@ -25,6 +27,7 @@
         </thead>
         <tbody id="tbody">
         {{#posts}}
+            <input type="hidden" name="post-open-state" id="posts-open-state" value={{openState}}>
             <tr>
                 <td>{{postNo}}</td>
                 <td><a href="/blog-page?no={{userVO.userNo}}&post={{postNo}}" id="post-select">{{title}}</td>
@@ -35,7 +38,7 @@
         {{/posts}}
         </tbody>
     </table>
-    <table class="table table-horizontal table-bordered">
+    <table class="table table-horizontal table-bordered" id="liked-posts-table">
         <span>좋아요 표시한 게시글</span>
         <thead class="thead-strong">
         <tr>
@@ -48,6 +51,7 @@
         </thead>
         <tbody id="tbody">
         {{#liked-posts}}
+            <input type="hidden" name="liked-post-open-state" id="liked-posts-open-state" value={{openState}}>
             <tr>
                 <td>{{postNo}}</td>
                 <td><a href="/blog-page?no={{userVO.userNo}}&post={{postNo}}" id="post-select">{{title}}</td>
@@ -81,4 +85,5 @@
 <div class="form-group">
     <a href="/">메인으로 가기</a>
 </div>
+<script src="/js/app/userPage.js"></script>
 {{>layout/footer}}
