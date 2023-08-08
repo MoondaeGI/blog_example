@@ -27,7 +27,7 @@
         {{#posts}}
             <tr>
                 <td>{{postNo}}</td>
-                <td><a href="/post-page?no={{postNo}}" id="post-select">{{title}}</td>
+                <td><a href="/blog-page?no={{userVO.userNo}}&post={{postNo}}" id="post-select">{{title}}</td>
                 <td><a href="/user-page?no={{userVO.userNo}}" id="post-select">{{userVO.name}}</td>
                 <td><a href="/blog-page?no={{userVO.userNo}}" id="blog-select">{{userVO.blogName}}</td>
                 <td>{{regDt}}</td>
@@ -50,7 +50,7 @@
         {{#liked-posts}}
             <tr>
                 <td>{{postNo}}</td>
-                <td><a href="/post-page?no={{postNo}}" id="post-select">{{title}}</td>
+                <td><a href="/blog-page?no={{userVO.userNo}}&post={{postNo}}" id="post-select">{{title}}</td>
                 <td><a href="/user-page?no={{userVO.userNo}}" id="post-select">{{userVO.name}}</td>
                 <td><a href="/blog-page?no={{userVO.userNo}}" id="blog-select">{{userVO.blogName}}</td>
                 <td>{{regDt}}</td>
@@ -67,7 +67,6 @@
             <th>내용</th>
             <th>등록 일자</th>
         </tr>
-        </thead>
         {{#comments}}
             <tr>
                 <td><a href="/blog-page?no={{postVO.userVO.userNo}}">{{postVO.userVO.blogName}}</td>
