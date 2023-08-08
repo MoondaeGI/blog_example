@@ -1,4 +1,4 @@
-function userCheck() {
+function blogPageCheck() {
     const bloggerNo = $('#blogger-no').val();
     const userNo = $('#user-no').val();
     const postNo = $('#post-no').val();
