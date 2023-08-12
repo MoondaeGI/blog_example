@@ -148,7 +148,7 @@ public class PostService {
                 lowerCategoryRepository.findById(postUpdateDTO.getLowerCategoryNo())
                         .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
-        post.update(upperCategory, lowerCategory, postUpdateDTO.getTitle(), postUpdateDTO.getContent());
+        post.update(upperCategory, lowerCategory, postUpdateDTO.getTitle(), postUpdateDTO.getContent(), postUpdateDTO.getOpenState());
 
         return post.getPostNo();
     }

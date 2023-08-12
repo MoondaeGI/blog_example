@@ -69,11 +69,12 @@ public class Post extends TimeStamp {
         this.views = 0;
     }
 
-    public void update(UpperCategory upperCategory, LowerCategory lowerCategory, String title, String content) {
+    public void update(UpperCategory upperCategory, LowerCategory lowerCategory, String title, String content, OpenState openState) {
         this.upperCategory = upperCategory;
         this.lowerCategory = lowerCategory;
         this.title = title;
         this.content = content;
+        this.openState = openState;
     }
 
     public void addViews() {
