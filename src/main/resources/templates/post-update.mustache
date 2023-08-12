@@ -1,5 +1,5 @@
 {{>layout/header}}
-<body>
+<body onload="postUpdateCheck()">
 <div class="row">
     {{#user}}
         <span id="user">{{name}}</span>
@@ -9,27 +9,34 @@
 <h2>게시글 수정 페이지</h2>
 <div>
     <form>
+        <input type="hidden" name="post-no" value="{{post.postNo}}">
         <div class="form-group">
             <label for="title">제목</label>
             <input type="text" class="form-control" id="title" value={{post.title}}>
         </div>
         <div class="form-group">
             <label for="user">작성자</label>
-            <input type="text" class="form-control" id="user" value="{{blogger.name}}" name="{{blogger.userNo}}" readonly>
+            <input type="hidden" name="user-no" value="{{blogger.userNo}}">
+            <input type="text" class="form-control" id="user" value="{{blogger.name}}" readonly>
         </div>
         <div class="form-group">
             <label for="category">카테고리</label>
+            <input type="hidden" name="upper-category" value="{{post.upperCategoryVO.upperCategoryNo}}">
+            <input type="hidden" name="lower-category" value="{{post.lowerCategoryVO.lowerCategoryNo}}">
             <div>
-                <select id="upper-category">
+                <select id="upper-category" onchange="categorySelect()">
+                        <option value="not-select">--</option>
                     {{#categories}}
                         <option value={{upperCategoryNo}}>{{name}}</option>
                     {{/categories}}
                 </select>
-                <select id="lower-category"></select>
+                <select id="lower-category">
+                    <option value="not-select">--</option>
+                </select>
             </div>
         </div>
-        <div>
-            <input type="checkbox" id="open-state" name="open-state">
+        <div class="form-group" id="open-state-selector">
+            <input type="hidden" name="open-state" value="{{post.openState}}">
             <label for="open-state">비공개</label>
         </div>
         <div class="form-group">
@@ -40,7 +47,8 @@
             <input type="file" id="files"/>
         </div>
     </form>
-    <button type="button" class="btn btn-primary" id="btn-save">등록</button>
-    <button type="button" class="btn btn-secondary" id="btn-save">취소</button>
+    <button type="button" class="btn btn-primary" id="btn-update" onclick="postUpdate()">등록</button>
+    <button type="button" class="btn btn-secondary" id="btn-cansel" onclick="updateCansel()">취소</button>
 </div>
+<script src="/js/app/postUpdate.js"></script>
 {{>layout/footer}}

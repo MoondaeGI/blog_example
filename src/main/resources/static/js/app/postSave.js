@@ -36,3 +36,24 @@ function postSave() {
 function saveCansel() {
     history.back();
 }
+
+function categorySelect() {
+    const upperCategoryNo = $(`#upper-category option:selected`).val();
+
+    $.ajax({
+        type: 'GET',
+        datatype: 'json',
+        url: `/category/lower/list/upper?no=${upperCategoryNo}`,
+        contentType: 'application/json; charset=UTF-8'
+    }).done(function (result) {
+        const lowerCategory = $('#lower-category');
+        lowerCategory.children().remove();
+
+        lowerCategory.append('<option>--</option>');
+        result.forEach(function (element) {
+            lowerCategory.append(`<option value=${element.lowerCategoryNo}>${element.name}</option>`);
+        });
+    }).fail(function (error) {
+        alert(JSON.stringify(error));
+    });
+}

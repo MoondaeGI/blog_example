@@ -21,7 +21,7 @@
         <div class="form-group">
             <label for="category">카테고리</label>
             <div id="category-selector">
-                <select id="upper-category">
+                <select id="upper-category" onchange="categorySelect()">
                     {{#categories}}
                         <option value={{upperCategoryNo}}>{{name}}</option>
                     {{/categories}}
