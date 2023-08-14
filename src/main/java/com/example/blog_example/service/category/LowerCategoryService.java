@@ -50,9 +50,12 @@ public class LowerCategoryService {
         UpperCategory upperCategory = upperCategoryRepository.findById(upperCategoryNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
-        return lowerCategoryRepository.findByUpperCategory(upperCategory).stream()
+        List<LowerCategoryVO> lowerCategoryVOList = lowerCategoryRepository.findByUpperCategory(upperCategory).stream()
                 .map(LowerCategoryVO::from)
                 .collect(Collectors.toList());
+        lowerCategoryVOList.remove(0);
+
+        return lowerCategoryVOList;
     }
 
     @Transactional
@@ -75,11 +78,7 @@ public class LowerCategoryService {
                 lowerCategoryRepository.findById(lowerCategoryUpdateDTO.getLowerCategoryNo())
                         .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
-        UpperCategory upperCategory =
-                upperCategoryRepository.findById(lowerCategoryUpdateDTO.getUpperCategoryNo())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
-
-        lowerCategory.update(lowerCategoryUpdateDTO.getName(), upperCategory);
+        lowerCategory.update(lowerCategoryUpdateDTO.getName());
 
         return lowerCategory.getLowerCategoryNo();
     }

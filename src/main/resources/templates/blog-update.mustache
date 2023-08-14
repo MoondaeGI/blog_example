@@ -24,14 +24,22 @@
             <li>
                 <div class="form-group">
                     <input type="text" class="form-control" id="upper-category-{{upperCategoryNo}}" value={{name}}>
-                    <button type="button" class="btn btn-primary" id="upper-update" onclick="categoryUpdate('upper-category', {{upperCategoryNo}})">수정</button>
-                    <button type="button" class="btn btn-secondary" id="upper-delete" onclick="categoryDelete('upper-category', {{upperCategoryNo}})">삭제</button>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" id="upper-update" onclick="categoryUpdate('upper-category', {{upperCategoryNo}})">수정</button>
+                        <button type="button" class="btn btn-secondary" id="upper-delete" onclick="categoryDelete('upper-category', {{upperCategoryNo}})">삭제</button>
+                    </div>
                 </div>
-                <ul id="lower-category-list">
+                <ul id="lower-category-list-{{upperCategoryNo}}">
                     {{#lowerCategoryVOList}}
-                        <input type="text" class="form-control" id="lower-category-{{lowerCategoryNo}}" value={{name}}>
-                        <button type="button" class="btn btn-primary" id="lower-update" onclick="categoryUpdate('lower-category', {{lowerCategoryNo}})">수정</button>
-                        <button type="button" class="btn btn-secondary" id="lower-delete" onclick="categoryDelete('lower-category', {{lowerCategoryNo}})">삭제</button>
+                        <li>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="lower-category-{{lowerCategoryNo}}" value={{name}}>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-primary" id="lower-update" onclick="categoryUpdate('lower-category', {{lowerCategoryNo}})">수정</button>
+                                    <button type="button" class="btn btn-secondary" id="lower-delete" onclick="categoryDelete('lower-category', {{lowerCategoryNo}})">삭제</button>
+                                </div>
+                            </div>
+                        </li>
                     {{/lowerCategoryVOList}}
                 </ul>
                 <ul>

@@ -37,8 +37,7 @@ public class LowerCategory extends TimeStamp {
         this.upperCategory = upperCategory;
     }
 
-    public void update(String name, UpperCategory upperCategory) {
+    public void update(String name) {
         this.name = name;
-        this.upperCategory = upperCategory;
     }
 }

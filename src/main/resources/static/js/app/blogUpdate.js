@@ -1,16 +1,50 @@
 function categorySave(categoryType) {
     const category = $(`#${categoryType}-list`);
-    category.appendChild(
+
+    category.append(
         `<div class="form-group">
-                <input type="text" class="form-control" id="${categoryType}">
-                <button type="button" class="btn btn-primary" id="upper-save" onClick="saveComplete('${categoryType}')">수정</button>
-                </div>`
-    );
+            <input type="text" class="form-control" id="${categoryType}-category-add">
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" id="add-category" onclick="categorySaveComplete('${categoryType}')">완료</button>
+                    <button type="button" class="btn btn-secondary" id="lower-delete" onclick="categorySaveCansel()">취소</button>
+                </div>
+            </div>`);
 }
 
-function saveComplete(categoryType) {
+function categorySaveComplete(categoryType) {
+    if (confirm("카테고리를 추가하시겠습니까?") === true) {
+        const name = $(`#${categoryType}-category-add`).val();
+        const dto = {
+            name: name
+        }
 
+        const url = (categoryType === 'upper-category') ? `/category/upper` : `/category/lower`;
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: JSON.stringify(dto),
+            contentType: 'application/json; charset=UTF-8'
+        }).done(function (result) {
+            alert("카테고리가 추가되었습니다.");
+            const target = $(`#${categoryType}-category-add`).parent();
+            target.children().remove();
+
+            target.append(`<div class="form-group">
+                <input type="text" class="form-control" id="${categoryType}-${result}" value=${name}>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" id="${categoryType}-update" onClick="categoryUpdate('${categoryType}', ${result})">수정</button>
+                        <button type="button" class="btn btn-secondary" id="${categoryType}-delete" onClick="categoryDelete('${categoryType}', ${result})">삭제</button>
+                    </div>
+            </div>`)
+
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    }
 }
+
+function categorySaveCansel() {}
 
 function categoryUpdate(categoryType, categoryNo) {
     let dto;
@@ -34,12 +68,13 @@ function categoryUpdate(categoryType, categoryNo) {
         url: url,
         contentType: 'application/json; charset=UTF-8',
         data: JSON.stringify(dto)
-    }).done(function (result) {
+    }).done(function () {
         alert("변경 완료되었습니다.");
     }).fail(function (error) {
         alert(JSON.stringify(error));
     });
 }
+
 function categoryDelete(categoryType, categoryNo) {
     const url = (categoryType === 'upper-category') ?
         `/category/upper?no=${categoryNo}` : `/category/lower?no=${categoryNo}`;
