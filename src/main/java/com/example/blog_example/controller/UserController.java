@@ -1,5 +1,6 @@
 package com.example.blog_example.controller;
 
+import com.example.blog_example.model.dto.user.user.UserInfoUpdateDTO;
 import com.example.blog_example.model.vo.user.UserVO;
 import com.example.blog_example.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,10 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.*;
 
@@ -58,5 +56,15 @@ public class UserController {
     @GetMapping("/blog")
     public ResponseEntity<Boolean> isExistByBlogName(@RequestParam("name") @NotBlank @Size(max = 20) String blogName) {
         return ResponseEntity.ok(userService.isExistByBlogName(blogName));
+    }
+
+    @Operation(summary = "유저 정보 수정", description = "해당 번호를 가진 유저의 정보를 수정하는 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동되었습니다."),
+            @ApiResponse(responseCode = "400", description = "해당 번호를 가진 유저가 없습니다.")
+    })
+    @PutMapping()
+    public ResponseEntity<Long> update(UserInfoUpdateDTO userInfoUpdateDTO) {
+        return ResponseEntity.ok(userService.update(userInfoUpdateDTO));
     }
 }

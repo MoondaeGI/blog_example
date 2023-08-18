@@ -10,8 +10,10 @@
     {{/user}}
 </div>
 <div class="form-group">
+    <input type="hidden" name="user-no" value="{{blogger.userNo}}">
     <label for="name">이름 변경하기</label>
     <input type="text" class="form-control" id="name" value={{blogger.name}}>
+    <button type="button" class="btn btn-primary" id="name-check" onclick="nameCheck({{blogger.userNo}})">중복 확인</button>
 </div>
 <div class="form-group">
     <label for="blog-name">블로그 이름 변경하기</label>
@@ -21,20 +23,20 @@
     <label for="category">카테고리 수정</label>
     <ul id="upper-category-list">
         {{#categories}}
-            <li>
+            <li id="li-upper-category-{{upperCategoryNo}}">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="upper-category-{{upperCategoryNo}}" value={{name}}>
-                    <div class="form-group">
+                    <input type="text" class="form-control" id="upper-category-{{upperCategoryNo}}" value="{{name}}" onkeyup="addUpdateCanselButton('upper-category', {{upperCategoryNo}})">
+                    <div class="form-group" id="upper-category-{{upperCategoryNo}}-btn-selector">
                         <button type="button" class="btn btn-primary" id="upper-update" onclick="categoryUpdate('upper-category', {{upperCategoryNo}})">수정</button>
                         <button type="button" class="btn btn-secondary" id="upper-delete" onclick="categoryDelete('upper-category', {{upperCategoryNo}})">삭제</button>
                     </div>
                 </div>
                 <ul id="lower-category-list-{{upperCategoryNo}}">
                     {{#lowerCategoryVOList}}
-                        <li>
+                        <li id="li-lower-category-{{lowerCategoryNo}}">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="lower-category-{{lowerCategoryNo}}" value={{name}}>
-                                <div class="form-group">
+                                <input type="text" class="form-control" id="lower-category-{{lowerCategoryNo}}" value="{{name}}" onkeyup="addUpdateCanselButton('lower-category', {{lowerCategoryNo}})">
+                                <div class="form-group" id="lower-category-{{lowerCategoryNo}}-btn-selector">
                                     <button type="button" class="btn btn-primary" id="lower-update" onclick="categoryUpdate('lower-category', {{lowerCategoryNo}})">수정</button>
                                     <button type="button" class="btn btn-secondary" id="lower-delete" onclick="categoryDelete('lower-category', {{lowerCategoryNo}})">삭제</button>
                                 </div>
@@ -43,19 +45,22 @@
                     {{/lowerCategoryVOList}}
                 </ul>
                 <ul>
-                    <div id="upper-category-save" class="form-group">
-                        <button type="button" class="btn btn-primary" id="add-upper-category" onclick="categorySave('lower-category')">카테고리 추가</button>
+                    <div id="lower-category-save" class="form-group">
+                        <button type="button" class="btn btn-primary" id="add-upper-category" onclick="categorySave('lower-category', {{upperCategoryNo}})">카테고리 추가</button>
                     </div>
                 </ul>
         {{/categories}}
     </ul>
     <ul>
-        <button type="button" class="btn btn-primary" id="add-lower-category" onclick="categorySave('upper-category')">카테고리 추가</button>
+        <div id="upper-category-save" class="form-group">
+            <button type="button" class="btn btn-primary" id="add-lower-category" onclick="categorySave('upper-category')">카테고리 추가</button>
+        </div>
     </ul>
 </div>
 <div class="form-group">
-    <button type="button" class="btn btn-primary" id="update" onclick="userUpdate()">변경 완료</button>
-    <button type="button" class="btn btn-secondary" id="cancel" onclick="updateCansel()">취소</button>
+    <button type="button" class="btn btn-primary" id="update" onclick="userUpdate({{blogger.userNo}})">변경 완료</button>
+    <button type="button" class="btn btn-secondary" id="cancel" onclick="cansel()">취소</button>
 </div>
 <script src="/js/app/blogUpdate.js"></script>
+<script src="/js/util/util.js"></script>
 {{>layout/footer}}

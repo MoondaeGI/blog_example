@@ -1,24 +1,36 @@
-function categorySave(categoryType) {
-    const category = $(`#${categoryType}-list`);
+function categorySave(categoryType, upperCategoryNo) {
+    const category = (categoryType === 'upper-category') ?
+        $(`#${categoryType}-list`) : $(`#${categoryType}-list-${upperCategoryNo}`);
 
     category.append(
         `<div class="form-group">
             <input type="text" class="form-control" id="${categoryType}-category-add">
                 <div class="form-group">
-                    <button type="button" class="btn btn-primary" id="add-category" onclick="categorySaveComplete('${categoryType}')">완료</button>
+                    <button type="button" class="btn btn-primary" id="add-category" onclick="categorySaveComplete('${categoryType}', ${upperCategoryNo})">완료</button>
                     <button type="button" class="btn btn-secondary" id="lower-delete" onclick="categorySaveCansel()">취소</button>
                 </div>
             </div>`);
 }
 
-function categorySaveComplete(categoryType) {
+function categorySaveComplete(categoryType, upperCategoryNo) {
     if (confirm("카테고리를 추가하시겠습니까?") === true) {
         const name = $(`#${categoryType}-category-add`).val();
-        const dto = {
-            name: name
-        }
 
-        const url = (categoryType === 'upper-category') ? `/category/upper` : `/category/lower`;
+        let dto;
+        let url;
+        if (categoryType === 'upper-category') {
+            url = '/category/upper';
+            dto =  {
+                userNo: $('input[name=user-no]').val(),
+                name: name
+            }
+        } else {
+            url = '/category/lower';
+            dto = {
+                upperCategoryNo: upperCategoryNo,
+                name: name
+            }
+        }
 
         $.ajax({
             type: 'POST',
@@ -30,13 +42,26 @@ function categorySaveComplete(categoryType) {
             const target = $(`#${categoryType}-category-add`).parent();
             target.children().remove();
 
-            target.append(`<div class="form-group">
-                <input type="text" class="form-control" id="${categoryType}-${result}" value=${name}>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary" id="${categoryType}-update" onClick="categoryUpdate('${categoryType}', ${result})">수정</button>
-                        <button type="button" class="btn btn-secondary" id="${categoryType}-delete" onClick="categoryDelete('${categoryType}', ${result})">삭제</button>
-                    </div>
-            </div>`)
+            target.append(`<li id="li-${categoryType}-${result}">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="${categoryType}-${result}" value=${name} onkeyup="">
+                        <div class="form-group" id="${categoryType}-${result}-btn-selector">
+                            <button type="button" class="btn btn-primary" id="${categoryType}-update" onClick="categoryUpdate('${categoryType}', ${result})">수정</button>
+                            <button type="button" class="btn btn-secondary" id="${categoryType}-delete" onClick="categoryDelete('${categoryType}', ${result})">삭제</button>
+                        </div>
+                </div>
+            </li>`);
+
+            if (categoryType === 'upper-category') {
+                const upperCategoryLi = $(`#li-upper-category-${result}`);
+                upperCategoryLi.append(
+                    `<ul id="lower-category-list-${result}"></ul>
+                    <ul>
+                        <div id="lower-category-save" class="form-group">
+                            <button type="button" class="btn btn-primary" id="add-upper-category" onclick="categorySave('lower-category', ${result})">카테고리 추가</button>
+                        </div>
+                    </ul>`);
+            }
 
         }).fail(function (error) {
             alert(JSON.stringify(error));
@@ -44,7 +69,15 @@ function categorySaveComplete(categoryType) {
     }
 }
 
-function categorySaveCansel() {}
+function categorySaveCansel(categoryType, upperCategoryNo) {
+    const target = (categoryType === 'upper-category') ?
+        $(`#${categoryType}-list`) : $(`#${categoryType}-list-${upperCategoryNo} :last`);
+    console.log(target);
+
+    if (confirm("카테고리 생성을 취소하시겠습니까?") === true) {
+        target.remove();
+    }
+}
 
 function categoryUpdate(categoryType, categoryNo) {
     let dto;
@@ -75,6 +108,31 @@ function categoryUpdate(categoryType, categoryNo) {
     });
 }
 
+function addUpdateCanselButton(categoryType, categoryNo) {
+    const target = $(`#${categoryType}-${categoryNo}-btn-selector`);
+    target.append(
+        `<button type="button" class="btn btn-secondary" id="${categoryType}-cansel-${categoryNo}" onClick="${categoryUpdateCansel(categoryType, categoryNo)}">취소</button>`);
+}
+
+function categoryUpdateCansel(categoryType, categoryNo) {
+    if (confirm("수정 작업을 취소하시겠습니까?") === true) {
+        const url = (categoryType === 'upper-category') ?
+            `/category/upper?no=` : `/category/lower?no=`;
+
+        $.ajax({
+            type: 'GET',
+            url: url + categoryNo,
+            contentType: 'application/json; charset=UTF-8'
+        }).done(function(result) {
+            $(`#${categoryType}-${categoryNo}`).text(result);
+            const canselButton = $(`#${categoryType}-cansel-${categoryNo}`);
+            canselButton.remove();
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    }
+}
+
 function categoryDelete(categoryType, categoryNo) {
     const url = (categoryType === 'upper-category') ?
         `/category/upper?no=${categoryNo}` : `/category/lower?no=${categoryNo}`;
@@ -85,16 +143,35 @@ function categoryDelete(categoryType, categoryNo) {
             dataType: 'json',
             url: url,
             contentType: 'application/json; charset=UTF-8'
-        }).done(function (result) {
-
+        }).done(function () {
+            const target = $(`#li-${categoryType}-${categoryNo}`);
+            target.remove();
         }).fail(function (error) {
             alert(JSON.stringify(error));
-        })
+        });
     }
 }
 
-function userUpdate() {}
+function userUpdate(userNo) {
+    if (confirm("수정을 완료하시겠습니까?") === true) {
+        console.log(`userNo: ${userNo}\nname: ${$('#name').val()}`)
 
-function updateCansel() {
-    history.back();
+        const dto = {
+            userNo: userNo,
+            name: $('#name').val(),
+            blogName: $('#blog-name').val()
+        }
+
+        $.ajax({
+            type: 'PUT',
+            url: `/user`,
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify(dto)
+        }).done(function (result) {
+            alert("수정 완료했습니다.");
+            window.location.herf = `/user-page?no=${result}`;
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    }
 }

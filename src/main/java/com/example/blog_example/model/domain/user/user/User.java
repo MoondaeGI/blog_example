@@ -69,6 +69,11 @@ public class User extends TimeStamp {
         this.role = Role.USER;
     }
 
+    public void updateUserInfo(String name, String blogName) {
+        this.name = name;
+        this.blogName = blogName;
+    }
+
     public void encryptPassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(password);
     }
