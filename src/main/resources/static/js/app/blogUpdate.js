@@ -108,12 +108,6 @@ function categoryUpdate(categoryType, categoryNo) {
     });
 }
 
-function addUpdateCanselButton(categoryType, categoryNo) {
-    const target = $(`#${categoryType}-${categoryNo}-btn-selector`);
-    target.append(
-        `<button type="button" class="btn btn-secondary" id="${categoryType}-cansel-${categoryNo}" onClick="${categoryUpdateCansel(categoryType, categoryNo)}">취소</button>`);
-}
-
 function categoryUpdateCansel(categoryType, categoryNo) {
     if (confirm("수정 작업을 취소하시겠습니까?") === true) {
         const url = (categoryType === 'upper-category') ?
@@ -124,9 +118,7 @@ function categoryUpdateCansel(categoryType, categoryNo) {
             url: url + categoryNo,
             contentType: 'application/json; charset=UTF-8'
         }).done(function(result) {
-            $(`#${categoryType}-${categoryNo}`).text(result);
-            const canselButton = $(`#${categoryType}-cansel-${categoryNo}`);
-            canselButton.remove();
+            $(`#${categoryType}-${categoryNo}`).val(result.name);
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });

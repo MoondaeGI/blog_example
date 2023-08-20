@@ -1,4 +1,25 @@
+function signup() {
+    const dto = {
+        email: $('#email'),
+        password: $('#password'),
+        name: $('#name'),
+        blogName: $('#blog-name')
+    };
 
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '/auth/signup',
+        contentType: 'application/json; charset=UTF-8',
+        data: JSON.stringify(dto)
+    }).done(function () {
+        alert("회원 가입이 완료되었습니다.");
+    }).fail(function (error) {
+        alert(JSON.stringify(error));
+    }).finally(function () {
+        window.location.href = '/';
+    });
+}
 
 function duplicateCheck (target) {
     let url;
@@ -49,27 +70,4 @@ function duplicateCheck (target) {
     }).fail(function (error) {
         alert(JSON.stringify(error));
     })
-}
-
-function signup() {
-    const dto = {
-        email: $('#email'),
-        password: $('#password'),
-        name: $('#name'),
-        blogName: $('#blog-name')
-    };
-
-    $.ajax({
-        type: 'POST',
-        dataType: 'json',
-        url: '/auth/signup',
-        contentType: 'application/json; charset=UTF-8',
-        data: JSON.stringify(dto)
-    }).done(function () {
-        alert("회원 가입이 완료되었습니다.");
-    }).fail(function (error) {
-        alert(JSON.stringify(error));
-    }).finally(function () {
-        window.location.href = '/';
-    });
 }
