@@ -26,7 +26,7 @@ public class FileService {
     @Transactional(readOnly = true)
     public FileVO find(Long fileNo) {
         return FileVO.from(fileRepository.findById(fileNo)
-                .orElseThrow(() -> new IllegalArgumentException("해당 파일이 없습니다.")));
+                .orElseThrow(() -> new IllegalArgumentException("해당 번호를 가진 파일이 없습니다.")));
     }
 
     @Transactional(readOnly = true)
