@@ -1,9 +1,9 @@
 function signup() {
     const dto = {
-        email: $('#email'),
-        password: $('#password'),
-        name: $('#name'),
-        blogName: $('#blog-name')
+        email: $('#email').val(),
+        password: $('#password').val(),
+        name: $('#name').val(),
+        blogName: $('#blog-name').val()
     };
 
     $.ajax({
