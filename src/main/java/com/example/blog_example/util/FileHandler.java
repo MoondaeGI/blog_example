@@ -56,19 +56,6 @@ public class FileHandler {
                 .build();
     }
 
-    public byte[] parseImageFile(File file) {
-        byte[] imageFile = new byte[0];
-
-        try {
-            InputStream inputStream = Files.newInputStream(Paths.get(file.getPath()));
-            imageFile = IOUtils.toByteArray(inputStream);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return imageFile;
-    }
-
     public Boolean deleteFile(File file) {
         java.io.File deleteFile = new java.io.File(file.getPath());
 
