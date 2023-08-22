@@ -22,7 +22,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     @Transactional
-    public String signup(UserSignupDTO userSignUpDTO) {
+    public Long signup(UserSignupDTO userSignUpDTO) {
         if (userRepository.existsByEmail(userSignUpDTO.getEmail()) &&
             userRepository.existsByBlogName(userSignUpDTO.getBlogName()) &&
             userRepository.existsByName(userSignUpDTO.getName()))
@@ -38,7 +38,7 @@ public class AuthService {
         user.encryptPassword(passwordEncoder);
 
         return userRepository.save(user)
-                .getEmail();
+                .getUserNo();
     }
 
     @Transactional

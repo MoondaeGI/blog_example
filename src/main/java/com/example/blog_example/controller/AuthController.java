@@ -28,7 +28,7 @@ public class AuthController {
     @Operation(summary = "회원 등록", description = "DTO를 받아 유저를 생성하는 API")
     @ApiResponse(responseCode = "201", description = "유저 정보가 생성되었습니다.")
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@ApiIgnore @RequestBody UserSignupDTO userSignupDTO) {
+    public ResponseEntity<Long> signup(@ApiIgnore @RequestBody UserSignupDTO userSignupDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(authService.signup(userSignupDTO));
     }
