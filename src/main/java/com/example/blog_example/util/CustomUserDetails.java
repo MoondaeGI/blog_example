@@ -2,7 +2,7 @@ package com.example.blog_example.util;
 
 import com.example.blog_example.model.domain.user.user.User;
 import com.example.blog_example.util.enums.Role;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
     private final User user;
 

@@ -1,5 +1,6 @@
 package com.example.blog_example.controller;
 
+import com.example.blog_example.model.dto.auth.UserSignupDTO;
 import com.example.blog_example.model.dto.user.user.UserInfoUpdateDTO;
 import com.example.blog_example.model.vo.user.UserVO;
 import com.example.blog_example.service.user.UserService;
@@ -9,9 +10,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.constraints.*;
 
@@ -22,6 +25,14 @@ import javax.validation.constraints.*;
 @RestController
 public class UserController {
     private final UserService userService;
+
+    @Operation(summary = "회원 등록", description = "DTO를 받아 유저를 생성하는 API")
+    @ApiResponse(responseCode = "201", description = "유저 정보가 생성되었습니다.")
+    @PostMapping("/signup")
+    public ResponseEntity<Long> signup(@ApiIgnore @RequestBody UserSignupDTO userSignupDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userService.save(userSignupDTO));
+    }
 
     @Operation(summary = "유저 검색", description = "해당 번호를 가진 유저를 검색하는 API")
     @Parameter(name = "userNo", description = "유저 번호", example = "1", required = true)
