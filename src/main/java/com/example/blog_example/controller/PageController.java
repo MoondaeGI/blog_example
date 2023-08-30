@@ -206,4 +206,7 @@ public class PageController {
 
         return "post-update";
     }
+
+    @GetMapping("/login/error")
+    public String loginFail() { return "login-fail"; }
 }
