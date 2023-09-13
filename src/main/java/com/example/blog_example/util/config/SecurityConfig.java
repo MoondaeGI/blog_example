@@ -30,7 +30,9 @@ public class SecurityConfig {
                     .failureUrl("/login/error")
                 .and()
                     .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .logoutSuccessUrl("/")
+                    .invalidateHttpSession(true)
                 .and()
                     .build();
     }
