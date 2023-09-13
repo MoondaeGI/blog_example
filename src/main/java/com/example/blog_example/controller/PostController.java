@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -44,8 +45,8 @@ public class PostController {
     @Operation(summary = "모든 게시글 검색", description = "데이터 베이스 내부의 모든 게시글을 검색하는 API")
     @ApiResponse(responseCode = "200", description = "정상 작동되었습니다.")
     @GetMapping("/list")
-    public List<PostVO> findAll() {
-        return postService.findAll();
+    public Page<PostVO> findAll(@RequestParam(value = "page", defaultValue = "0") @PositiveOrZero int page) {
+        return postService.findAll(page);
     }
 
     @Operation(summary = "게시글 검색", description = "해당 게시글 번호를 가진 게시글을 검색하는 API")
@@ -79,9 +80,10 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "해당 번호를 가진 유저가 없습니다.")
     })
     @GetMapping("/list/user")
-    public ResponseEntity<List<PostVO>> findByUser(
-            @RequestParam(name = "no") @PositiveOrZero Long userNo) {
-        return ResponseEntity.ok(postService.findByUser(userNo));
+    public ResponseEntity<Page<PostVO>> findByUser(
+            @RequestParam(name = "no") @PositiveOrZero Long userNo,
+            @RequestParam(value = "page", defaultValue = "0") @PositiveOrZero int page) {
+        return ResponseEntity.ok(postService.findByUser(page, userNo));
     }
 
     @Operation(summary = "상위 카테고리로 게시글 검색", description = "해당 상위 카테고리 번호를 가진 모든 게시글을 검색하는 API")
@@ -91,9 +93,10 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "해당 번호를 가진 상위 카테고리가 없습니다.")
     })
     @GetMapping("/list/upper-category")
-    public ResponseEntity<List<PostVO>> findByUpperCategory(
-            @RequestParam(name = "no") @PositiveOrZero Long upperCategoryNo) {
-        return ResponseEntity.ok(postService.findByUpperCategory(upperCategoryNo));
+    public ResponseEntity<Page<PostVO>> findByUpperCategory(
+            @RequestParam(name = "no") @PositiveOrZero Long upperCategoryNo,
+            @RequestParam(value = "page", defaultValue = "0") @PositiveOrZero int page) {
+        return ResponseEntity.ok(postService.findByUpperCategory(page, upperCategoryNo));
     }
 
     @Operation(summary = "하위 카테고리로 게시글 검색", description = "해당 하위 카테고리 번호를 가진 모든 게시글을 검색하는 API")
@@ -103,9 +106,10 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "해당 번호를 가진 하위 카테고리가 없습니다.")
     })
     @GetMapping("/list/lower-category")
-    public ResponseEntity<List<PostVO>> findByLowerCategory(
-            @RequestParam(name = "no") @PositiveOrZero Long lowerCategoryNo) {
-        return ResponseEntity.ok(postService.findByLowerCategory(lowerCategoryNo));
+    public ResponseEntity<Page<PostVO>> findByLowerCategory(
+            @RequestParam(name = "no") @PositiveOrZero Long lowerCategoryNo,
+            @RequestParam(value = "page", defaultValue = "0") @PositiveOrZero int page) {
+        return ResponseEntity.ok(postService.findByLowerCategory(page, lowerCategoryNo));
     }
 
     @Operation(summary = "유저가 좋아요를 누른 모든 게시글 검색", description = "해당 유저가 좋아요를 누른 모든 게시글을 검색하는 API")
@@ -115,9 +119,10 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "해당 번호를 가진 유저가 없습니다.")
     })
     @GetMapping("/liked/list/user")
-    public ResponseEntity<List<PostVO>> findPostLikedList(
-            @RequestParam(name = "no") @PositiveOrZero Long userNo) {
-        return ResponseEntity.ok(postService.findPostLikedList(userNo));
+    public ResponseEntity<Page<PostVO>> findPostLikedList(
+            @RequestParam(name = "no") @PositiveOrZero Long userNo,
+            @RequestParam(value = "page", defaultValue = "0") @PositiveOrZero int page) {
+        return ResponseEntity.ok(postService.findPostLikedList(page, userNo));
     }
 
     @Operation(summary = "게시글 등록", description = "DTO, MultipartFile을 받아 게시글을 등록하는 API")
@@ -201,7 +206,7 @@ public class PostController {
     })
     @ApiResponse(responseCode = "200", description = "정상 작동되었습니다.")
     @GetMapping("/search")
-    public ResponseEntity<List<PostVO>> search(
+    public ResponseEntity<Page<PostVO>> search(
             @RequestParam(name = "title", required = false) String title,
             @RequestParam(name = "content", required = false) String content
     ) {
@@ -209,7 +214,7 @@ public class PostController {
                 .title(title)
                 .content(content)
                 .build();
-        return ResponseEntity.ok(postService.search(postSearchDTO));
+        return ResponseEntity.ok(postService.search(10, postSearchDTO));
     }
 
     @Operation(summary = "게시글 좋아요 변경", description = "해당 게시글 번호의 게시글의 좋아요 여부를 확인 후 변경하는 API")

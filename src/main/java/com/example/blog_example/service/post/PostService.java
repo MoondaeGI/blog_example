@@ -19,6 +19,9 @@ import com.example.blog_example.model.vo.post.PostVO;
 import com.example.blog_example.util.enums.state.LikedState;
 import com.example.blog_example.util.enums.state.OpenState;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,11 +40,14 @@ public class PostService {
     private final LowerCategoryRepository lowerCategoryRepository;
     private final PostLikedRepository postLikedRepository;
 
+    private Pageable getPageable(Integer page) {
+        return PageRequest.of(page, 10);
+    }
+
     @Transactional(readOnly = true)
-    public List<PostVO> findAll() {
-        return postRepository.findAll(PostSpecification.findOpenState()).stream()
-                .map(PostVO::from)
-                .collect(Collectors.toList());
+    public Page<PostVO> findAll(Integer page) {
+        return postRepository.findAll(PostSpecification.findOpenState(), this.getPageable(page))
+                .map(PostVO::from);
     }
 
     @Transactional(readOnly = true)
@@ -54,34 +60,31 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostVO> findByUser(Long userNo) {
+    public Page<PostVO> findByUser(Integer page, Long userNo) {
         User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 
-        return postRepository.findByUser(user).stream()
-                .map(PostVO::from)
-                .collect(Collectors.toList());
+        return postRepository.findByUser(user, this.getPageable(page))
+                .map(PostVO::from);
     }
 
     @Transactional(readOnly = true)
-    public List<PostVO> findByUpperCategory(Long upperCategoryNo) {
+    public Page<PostVO> findByUpperCategory(Integer page, Long upperCategoryNo) {
         UpperCategory upperCategory = upperCategoryRepository.findById(upperCategoryNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
-        return postRepository.findByUpperCategory(upperCategory).stream()
-                .map(PostVO::from)
-                .collect(Collectors.toList());
+        return postRepository.findByUpperCategory(upperCategory, this.getPageable(page))
+                .map(PostVO::from);
     }
 
     @Transactional(readOnly = true)
-    public List<PostVO> findByLowerCategory(Long lowerCategoryNo) {
+    public Page<PostVO> findByLowerCategory(Integer page, Long lowerCategoryNo) {
         LowerCategory lowerCategory =
                 lowerCategoryRepository.findById(lowerCategoryNo)
                         .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
-        return postRepository.findByLowerCategory(lowerCategory).stream()
-                .map(PostVO::from)
-                .collect(Collectors.toList());
+        return postRepository.findByLowerCategory(lowerCategory, this.getPageable(page))
+                .map(PostVO::from);
     }
 
     @Transactional(readOnly = true)
@@ -99,13 +102,12 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostVO> findPostLikedList(Long userNo) {
+    public Page<PostVO> findPostLikedList(Integer page, Long userNo) {
         User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
 
-        return postLikedRepository.findPostByUser(user).stream()
-                .map(PostVO::from)
-                .collect(Collectors.toList());
+        return postLikedRepository.findPostByUser(user, this.getPageable(page))
+                .map(PostVO::from);
     }
 
     @Transactional
@@ -162,14 +164,13 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostVO> search(PostSearchDTO postSearchDTO) {
+    public Page<PostVO> search(Integer page, PostSearchDTO postSearchDTO) {
         Map<String, Object> searchKey = new HashMap<>();
         if (postSearchDTO.getTitle() != null) searchKey.put("title", postSearchDTO.getTitle());
         if (postSearchDTO.getContent() != null) searchKey.put("content", postSearchDTO.getContent());
 
-        return postRepository.findAll(PostSpecification.search(searchKey)).stream()
-                .map(PostVO::from)
-                .collect(Collectors.toList());
+        return postRepository.findAll(PostSpecification.search(searchKey), this.getPageable(page))
+                .map(PostVO::from);
     }
 
     @Transactional

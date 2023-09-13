@@ -2,6 +2,8 @@ package com.example.blog_example.model.domain.post.liked;
 
 import com.example.blog_example.model.domain.post.post.Post;
 import com.example.blog_example.model.domain.user.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -16,5 +18,5 @@ public interface PostLikedRepository extends JpaRepository<PostLiked, Long> {
             "WHERE post IN (SELECT postLiked.post " +
             "               FROM PostLiked  postLiked " +
             "               WHERE postLiked.user = :user)")
-    List<Post> findPostByUser(User user);
+    Page<Post> findPostByUser(User user, Pageable pageable);
 }

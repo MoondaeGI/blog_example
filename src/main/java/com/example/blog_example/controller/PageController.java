@@ -2,6 +2,7 @@ package com.example.blog_example.controller;
 
 import com.example.blog_example.model.dto.post.post.PostSearchByCategoryDTO;
 import com.example.blog_example.model.dto.post.post.PostSearchDTO;
+import com.example.blog_example.model.vo.post.PostVO;
 import com.example.blog_example.model.vo.user.UserVO;
 import com.example.blog_example.service.category.UpperCategoryService;
 import com.example.blog_example.service.comment.CommentService;
@@ -16,6 +17,10 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -38,6 +43,13 @@ public class PageController {
     private final CommentService commentService;
     private final HttpSession httpSession;
 
+    private void addPageable(Model model, Page<PostVO> post, Pageable pageable) {
+        model.addAttribute("prev", pageable.previousOrFirst().getPageNumber());
+        model.addAttribute("next", pageable.next().getPageNumber());
+        model.addAttribute("hasNext", post.hasNext());
+        model.addAttribute("hasPrev", post.hasPrevious());
+    }
+
     @Operation(summary = "로그인 화면 출력", description = "로그인 화면을 가져오는 API")
     @GetMapping("/login")
     public String login() {
@@ -52,11 +64,16 @@ public class PageController {
 
     @Operation(summary = "메인 화면 출력", description = "메인 화면을 가져오는 API")
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model) {
         UserVO user = (UserVO) httpSession.getAttribute("user");
         if (user != null) model.addAttribute("user", user);
 
-        model.addAttribute("posts", postService.findAll());
+        Page<PostVO> posts = postService.findAll(page);
+        model.addAttribute("posts", posts);
+        this.addPageable(model, posts, pageable);
 
         return "index";
     }
@@ -64,12 +81,15 @@ public class PageController {
     @Operation(summary = "검색 화면 출력", description = "검색 화면을 가져오는 API")
     @Parameters({
             @Parameter(name = "title", description = "제목", example = "example", in = ParameterIn.QUERY),
-            @Parameter(name = "content", description = "내용", example = "example", in = ParameterIn.QUERY)
+            @Parameter(name = "content", description = "내용", example = "example", in = ParameterIn.QUERY),
+            @Parameter(name = "page", description = "페이지 당 게시글 수", example = "1")
     })
     @GetMapping("/search")
     public String searchPage(
             @RequestParam(name = "title", required = false) String title,
             @RequestParam(name = "content", required = false) String content,
+            @RequestParam(value = "page", defaultValue = "0") @PositiveOrZero int page,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model) {
         UserVO user = (UserVO) httpSession.getAttribute("user");
         if (user != null) model.addAttribute("user", user);
@@ -78,7 +98,9 @@ public class PageController {
                 .title(title)
                 .content(content)
                 .build();
-        model.addAttribute("posts", postService.search(postSearchDTO));
+        Page<PostVO> posts = postService.search(page, postSearchDTO);
+        model.addAttribute("posts", posts);
+        this.addPageable(model, posts, pageable);
 
         return "search";
     }
@@ -88,14 +110,19 @@ public class PageController {
     @GetMapping("/user-page")
     public String userPage(
             @RequestParam("no") @PositiveOrZero Long userNo,
+            @RequestParam(value = "page", defaultValue = "0") @PositiveOrZero int page,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model) {
         UserVO user = (UserVO) httpSession.getAttribute("user");
         if (user != null) model.addAttribute("user", user);
 
         model.addAttribute("blogger", userService.find(userNo));
-        model.addAttribute("posts", postService.findByUser(userNo));
-        model.addAttribute("liked-posts", postService.findPostLikedList(userNo));
+        model.addAttribute("liked-posts", postService.findPostLikedList(page, userNo));
         model.addAttribute("comments", commentService.findByUser(userNo));
+
+        Page<PostVO> posts = postService.findByUser(page, userNo);
+        model.addAttribute("posts", posts);
+        this.addPageable(model, posts, pageable);
 
         return "user-page";
     }
@@ -113,6 +140,7 @@ public class PageController {
             @RequestParam(value = "upper-category", required = false) Long upperCategoryNo,
             @RequestParam(value = "lower-category", required = false) Long lowerCategoryNo,
             @RequestParam(value = "post", required = false) Long postNo,
+            @RequestParam(value = "page", defaultValue = "0") @PositiveOrZero int page,
             Model model) {
         UserVO user = (UserVO) httpSession.getAttribute("user");
         if (user != null) model.addAttribute("user", user);
@@ -135,7 +163,7 @@ public class PageController {
                     .build();
             model.addAttribute("posts", postService.findByCategory(postSearchByCategoryDTO));
         } else {
-            model.addAttribute("posts", postService.findByUser(bloggerNo));
+            model.addAttribute("posts", postService.findByUser(page, bloggerNo));
         }
 
         Long userNo = (user != null) ? user.getUserNo() : null;
